@@ -58,31 +58,105 @@
 
     <!-- Styles additionnels pour le layout desktop -->
     <style>
-        /* Assurer que le body utilise toute la largeur disponible */
-        body {
-            padding: 10px;
-            min-height: 100vh;
+        /* Reset et base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        /* Container prend 99% de la largeur */
+        /* Assurer que le body utilise toute la largeur disponible */
+        body {
+            padding: 10px !important;
+            min-height: 100vh !important;
+            width: 100% !important;
+            background: #ecf0f3 !important;
+        }
+
+        /* Container prend toute la largeur */
         .container {
-            max-width: 99%;
-            width: 99%;
-            margin: 0 auto;
+            max-width: 100% !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        /* App container pleine largeur */
+        #app-container {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        #app-container.visible {
+            opacity: 1 !important;
+        }
+
+        /* Pages container pleine largeur */
+        #pages-container {
+            width: 100% !important;
+            max-width: 100% !important;
         }
 
         /* Pages content */
         .page {
-            padding: 15px;
+            padding: 15px !important;
+            width: 100% !important;
+            max-width: 100% !important;
         }
 
-        /* App container visible */
-        #app-container {
-            width: 100%;
+        /* Navigation pleine largeur */
+        .nav-tabs {
+            width: 100% !important;
+            display: flex !important;
+            flex-wrap: wrap !important;
         }
 
-        #app-container.visible {
-            opacity: 1;
+        /* Stats grid responsive */
+        .stats-grid {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+            gap: 10px !important;
+            width: 100% !important;
+        }
+
+        /* Charts grid responsive */
+        .charts-grid {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 15px !important;
+            width: 100% !important;
+        }
+
+        /* Tasks grid responsive */
+        .tasks-grid {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+            gap: 15px !important;
+            width: 100% !important;
+        }
+
+        /* Desktop: 3 colonnes pour charts */
+        @media (min-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+            }
+        }
+
+        /* Tablette: 2 colonnes */
+        @media (max-width: 1199px) and (min-width: 768px) {
+            .charts-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+
+        /* Mobile: 1 colonne */
+        @media (max-width: 767px) {
+            .charts-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .tasks-grid {
+                grid-template-columns: 1fr !important;
+            }
         }
     </style>
 
