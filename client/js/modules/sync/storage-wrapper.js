@@ -1,30 +1,44 @@
 /******************************************************************************
  *
- *  🚨 ATTENTION IA: CE FICHIER EST 100% SERVEUR 🚨
+ *  🚨 ATTENTION IA: CE FICHIER EST 100% SERVEUR/FIREBASE 🚨
  *
- *  Malgré le nom "storage-wrapper", ce module N'UTILISE PAS localStorage!
+ *  Ce module détecte automatiquement le mode:
+ *  - Mode Firebase (GitHub Pages): utilise firebase-sync.js
+ *  - Mode Serveur (local): utilise server-sync.js
  *
- *  ✅ saveToStorage()  → Envoie au SERVEUR (pas localStorage)
- *  ✅ loadFromStorage() → Charge du SERVEUR (pas localStorage)
- *
- *  Toutes les données vont sur le serveur via Socket.IO
- *  et sont sauvegardées dans server/data/application-data.json
+ *  ✅ saveToStorage()  → Envoie au serveur/Firebase
+ *  ✅ loadFromStorage() → Charge du serveur/Firebase
  *
  *  ❌ AUCUNE donnée métier en localStorage
- *  ✅ TOUT sur le serveur (80+ modules)
- *
- *  Voir: ARCHITECTURE-STOCKAGE.md et POUR-LES-IA.md
+ *  ✅ TOUT sur le serveur ou Firebase
  *
  *****************************************************************************/
 
 /**
- * @fileoverview Wrapper pour sauvegarde serveur UNIQUEMENT - 100% serveur, 0% localStorage
+ * @fileoverview Wrapper universel - supporte serveur local ET Firebase
  * @module sync/storage-wrapper
- * @version 2.0
- * @important Ce module ne touche JAMAIS au localStorage. Tout est sur le serveur.
+ * @version 3.0
  */
 
-import { syncModuleToServer, getModuleDataFromServer } from './server-sync.js';
+// Détection du mode Firebase
+const IS_FIREBASE_MODE = typeof window !== 'undefined' && window.FIREBASE_MODE === true;
+
+// Import dynamique selon le mode
+let syncModuleToServer, getModuleDataFromServer;
+
+if (IS_FIREBASE_MODE) {
+    // Mode Firebase - import depuis firebase-sync
+    const firebaseSync = await import('./firebase-sync.js');
+    syncModuleToServer = firebaseSync.syncModuleToServer;
+    getModuleDataFromServer = firebaseSync.getModuleDataFromServer;
+    console.log('[STORAGE] Mode Firebase détecté - utilisation de firebase-sync.js');
+} else {
+    // Mode serveur local - import depuis server-sync
+    const serverSync = await import('./server-sync.js');
+    syncModuleToServer = serverSync.syncModuleToServer;
+    getModuleDataFromServer = serverSync.getModuleDataFromServer;
+    console.log('[STORAGE] Mode serveur local - utilisation de server-sync.js');
+}
 
 /**
  * Mapping des clés de stockage vers les noms de modules serveur
