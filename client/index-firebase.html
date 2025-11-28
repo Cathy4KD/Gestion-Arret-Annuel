@@ -51,10 +51,40 @@
         console.log('🔥 Firebase initialisé (mode statique)');
     </script>
 
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="css/main-new.css">
+    <!-- Stylesheets - Version compilée pour GitHub Pages -->
+    <link rel="stylesheet" href="css/dist/app.min.css">
     <link rel="stylesheet" href="css/assistant-briefing.css">
     <link rel="stylesheet" href="css/assistant-widget.css">
+
+    <!-- Styles additionnels pour le layout desktop -->
+    <style>
+        /* Assurer que le body utilise toute la largeur disponible */
+        body {
+            padding: 10px;
+            min-height: 100vh;
+        }
+
+        /* Container prend 99% de la largeur */
+        .container {
+            max-width: 99%;
+            width: 99%;
+            margin: 0 auto;
+        }
+
+        /* Pages content */
+        .page {
+            padding: 15px;
+        }
+
+        /* App container visible */
+        #app-container {
+            width: 100%;
+        }
+
+        #app-container.visible {
+            opacity: 1;
+        }
+    </style>
 
     <script>
         // Mode Firebase - pas besoin de Socket.IO
