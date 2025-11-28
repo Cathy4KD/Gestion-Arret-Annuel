@@ -330,6 +330,103 @@
             }
         });
 
+        // Fonction pour convertir les tableaux imbriqués en objets (Firestore ne supporte pas les nested arrays)
+        function sanitizeForFirestore(data) {
+            if (Array.isArray(data)) {
+                return data.map((item, index) => {
+                    if (Array.isArray(item)) {
+                        // Convertir le tableau imbriqué en objet avec index
+                        const obj = { _isArray: true, _length: item.length };
+                        item.forEach((subItem, subIndex) => {
+                            obj[`_${subIndex}`] = sanitizeForFirestore(subItem);
+                        });
+                        return obj;
+                    }
+                    return sanitizeForFirestore(item);
+                });
+            } else if (data !== null && typeof data === 'object') {
+                const result = {};
+                for (const [key, value] of Object.entries(data)) {
+                    result[key] = sanitizeForFirestore(value);
+                }
+                return result;
+            }
+            return data;
+        }
+
+        // Fonction récursive pour découper n'importe quelle structure
+        function splitLargeData(data, maxSize = 700000) {
+            const dataStr = JSON.stringify(data);
+            if (dataStr.length <= maxSize) {
+                return [data];
+            }
+
+            // Si c'est un tableau
+            if (Array.isArray(data)) {
+                const chunks = [];
+                let currentChunk = [];
+                let currentSize = 0;
+
+                for (const item of data) {
+                    const itemStr = JSON.stringify(item);
+                    if (itemStr.length > maxSize) {
+                        // Item trop gros, le découper récursivement
+                        if (currentChunk.length > 0) {
+                            chunks.push(currentChunk);
+                            currentChunk = [];
+                            currentSize = 0;
+                        }
+                        const subChunks = splitLargeData(item, maxSize);
+                        subChunks.forEach((sc, i) => chunks.push({ _subItem: true, index: i, total: subChunks.length, data: sc }));
+                    } else if (currentSize + itemStr.length > maxSize && currentChunk.length > 0) {
+                        chunks.push(currentChunk);
+                        currentChunk = [item];
+                        currentSize = itemStr.length;
+                    } else {
+                        currentChunk.push(item);
+                        currentSize += itemStr.length;
+                    }
+                }
+                if (currentChunk.length > 0) chunks.push(currentChunk);
+                return chunks;
+            }
+
+            // Si c'est un objet
+            if (typeof data === 'object' && data !== null) {
+                const chunks = [];
+                let currentChunk = {};
+                let currentSize = 0;
+
+                for (const [key, value] of Object.entries(data)) {
+                    const valueStr = JSON.stringify(value);
+                    if (valueStr.length > maxSize) {
+                        // Valeur trop grosse, la découper
+                        if (Object.keys(currentChunk).length > 0) {
+                            chunks.push(currentChunk);
+                            currentChunk = {};
+                            currentSize = 0;
+                        }
+                        const subChunks = splitLargeData(value, maxSize);
+                        subChunks.forEach((sc, i) => {
+                            chunks.push({ [`${key}__part${i}`]: sc, _partOf: key, _partIndex: i, _totalParts: subChunks.length });
+                        });
+                    } else if (currentSize + valueStr.length > maxSize && Object.keys(currentChunk).length > 0) {
+                        chunks.push(currentChunk);
+                        currentChunk = { [key]: value };
+                        currentSize = valueStr.length;
+                    } else {
+                        currentChunk[key] = value;
+                        currentSize += valueStr.length;
+                    }
+                }
+                if (Object.keys(currentChunk).length > 0) chunks.push(currentChunk);
+                return chunks;
+            }
+
+            // Sinon retourner tel quel
+            return [data];
+        }
+
         // Migration par modules (pour gros volumes)
         async function migrateByModules(data) {
             const modules = Object.keys(data).filter(k =>
@@ -338,25 +435,28 @@
 
             const totalModules = modules.length;
             let migratedCount = 0;
+            const MAX_DOC_SIZE = 800000; // 800KB pour être safe (limite = 1MB)
+            const MAX_ARRAY_CHUNK = 100; // Nombre d'éléments par chunk pour les tableaux
 
             // D'abord créer le document principal avec les métadonnées
             const mainDoc = {
                 lastUpdated: data.lastUpdated,
-                lastUpdatedBy: data.lastUpdatedBy
+                lastUpdatedBy: data.lastUpdatedBy,
+                _chunkedModules: [] // Liste des modules découpés
             };
 
-            // Ajouter les petits modules au document principal
+            // Ajouter les petits modules au document principal (sanitized)
             for (const moduleName of modules) {
                 const moduleData = data[moduleName];
                 const moduleSize = JSON.stringify(moduleData || null).length;
 
                 if (moduleSize < 50000) { // Moins de 50KB
-                    mainDoc[moduleName] = moduleData;
+                    mainDoc[moduleName] = sanitizeForFirestore(moduleData);
                     log(`📦 ${moduleName}: inclus dans le document principal`, 'info');
                 }
 
                 migratedCount++;
-                progressBar.style.width = `${(migratedCount / totalModules) * 100}%`;
+                progressBar.style.width = `${(migratedCount / totalModules) * 50}%`;
             }
 
             // Sauvegarder le document principal
@@ -364,16 +464,62 @@
             await setDoc(mainDocRef, mainDoc);
             log('✅ Document principal créé', 'success');
 
-            // Migrer les gros modules séparément
-            for (const moduleName of modules) {
+            // Migrer les gros modules séparément (avec découpage si nécessaire)
+            let processedLarge = 0;
+            const largeModules = modules.filter(m => {
+                const size = JSON.stringify(data[m] || null).length;
+                return size >= 50000;
+            });
+
+            for (const moduleName of largeModules) {
                 const moduleData = data[moduleName];
                 const moduleSize = JSON.stringify(moduleData || null).length;
 
-                if (moduleSize >= 50000) { // 50KB ou plus
+                if (moduleSize > MAX_DOC_SIZE) {
+                    // Module trop gros - utiliser la fonction de découpage récursif
+                    log(`⚠️ ${moduleName}: trop volumineux (${(moduleSize/1024/1024).toFixed(2)} MB), découpage...`, 'warning');
+
+                    const chunks = splitLargeData(moduleData, MAX_DOC_SIZE - 50000); // Marge de sécurité
+
+                    log(`   → Découpage en ${chunks.length} parties`, 'info');
+
+                    // Sauvegarder chaque chunk (sanitized)
+                    for (let i = 0; i < chunks.length; i++) {
+                        const sanitizedChunk = sanitizeForFirestore(chunks[i]);
+                        const chunkSize = JSON.stringify(sanitizedChunk).length;
+                        const chunkRef = doc(db, 'applicationData', `${moduleName}_chunk_${i}`);
+                        await setDoc(chunkRef, {
+                            data: sanitizedChunk,
+                            chunkIndex: i,
+                            totalChunks: chunks.length,
+                            moduleName: moduleName,
+                            updatedAt: new Date().toISOString()
+                        });
+                        log(`   → Chunk ${i+1}/${chunks.length} sauvegardé (${(chunkSize/1024).toFixed(0)} KB)`, 'info');
+                    }
+
+                    // Marquer ce module comme découpé
+                    mainDoc._chunkedModules.push({
+                        name: moduleName,
+                        chunks: chunks.length,
+                        type: Array.isArray(moduleData) ? 'array' : 'object'
+                    });
+                } else {
+                    // Module de taille acceptable - sanitize pour Firestore
+                    const sanitizedData = sanitizeForFirestore(moduleData);
                     const moduleDocRef = doc(db, 'applicationData', `module_${moduleName}`);
-                    await setDoc(moduleDocRef, { data: moduleData, updatedAt: new Date().toISOString() });
-                    log(`📦 ${moduleName}: migré séparément (${(moduleSize/1024).toFixed(1)} KB)`, 'warning');
+                    await setDoc(moduleDocRef, { data: sanitizedData, updatedAt: new Date().toISOString() });
+                    log(`📦 ${moduleName}: migré séparément (${(moduleSize/1024).toFixed(1)} KB)`, 'success');
                 }
+
+                processedLarge++;
+                progressBar.style.width = `${50 + (processedLarge / largeModules.length) * 50}%`;
+            }
+
+            // Mettre à jour le document principal avec la liste des modules découpés
+            if (mainDoc._chunkedModules.length > 0) {
+                await setDoc(mainDocRef, mainDoc);
+                log(`ℹ️ ${mainDoc._chunkedModules.length} modules ont été découpés`, 'info');
             }
 
             progressBar.style.width = '100%';
