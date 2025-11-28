@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Gestion Arrêt Annuel 2026</title>
+
+    <!-- CDN Libraries -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script defer>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof pdfjsLib !== 'undefined') {
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            }
+        });
+    </script>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Importer Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAbw3ygWzqCWd01eLfIP_qL0lUNb8oxE9U",
+            authDomain: "gestion-arret-annuel.firebaseapp.com",
+            projectId: "gestion-arret-annuel",
+            storageBucket: "gestion-arret-annuel.firebasestorage.app",
+            messagingSenderId: "667890337672",
+            appId: "1:667890337672:web:eb8385f9496c00ca911c3d"
+        };
+
+        // Initialiser Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Rendre disponible globalement
+        window.firebaseApp = app;
+        window.firebaseDb = db;
+        window.FIREBASE_MODE = true;
+
+        console.log('🔥 Firebase initialisé (mode statique)');
+    </script>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main-new.css">
+    <link rel="stylesheet" href="css/assistant-briefing.css">
+    <link rel="stylesheet" href="css/assistant-widget.css">
+
+    <script>
+        // Mode Firebase - pas besoin de Socket.IO
+        window.FIREBASE_MODE = true;
+
+        // Mock Socket.IO pour compatibilité
+        window.io = function() {
+            return {
+                on: function() {},
+                emit: function(event, data, callback) {
+                    if (callback) callback({ success: false, error: 'Firebase mode - no socket' });
+                },
+                connected: false,
+                connect: function() {},
+                disconnect: function() {}
+            };
+        };
+
+        // Fonction pour attendre que les bibliothèques CDN soient chargées
+        function waitForCDNLibraries() {
+            return new Promise((resolve) => {
+                const checkLibraries = () => {
+                    const allLoaded =
+                        typeof XLSX !== 'undefined' &&
+                        typeof Chart !== 'undefined' &&
+                        typeof jspdf !== 'undefined';
+
+                    if (allLoaded) {
+                        return true;
+                    }
+                    return false;
+                };
+
+                if (checkLibraries()) {
+                    console.log('[OK] Bibliothèques CDN chargées');
+                    resolve();
+                } else {
+                    const checkInterval = setInterval(() => {
+                        if (checkLibraries()) {
+                            clearInterval(checkInterval);
+                            console.log('[OK] Bibliothèques CDN chargées');
+                            resolve();
+                        }
+                    }, 100);
+                    // Timeout après 15 secondes
+                    setTimeout(() => {
+                        clearInterval(checkInterval);
+                        console.warn('[WARNING] Certaines bibliothèques CDN non chargées après 15s');
+                        resolve(); // Continuer quand même
+                    }, 15000);
+                }
+            });
+        }
+
+        // Attendre Firebase
+        function waitForFirebase() {
+            return new Promise((resolve) => {
+                const check = () => window.firebaseDb !== undefined;
+                if (check()) {
+                    resolve();
+                } else {
+                    const interval = setInterval(() => {
+                        if (check()) {
+                            clearInterval(interval);
+                            resolve();
+                        }
+                    }, 100);
+                    setTimeout(() => {
+                        clearInterval(interval);
+                        console.error('[ERROR] Firebase non initialisé après 10s');
+                        resolve();
+                    }, 10000);
+                }
+            });
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Attendre Firebase et les CDN
+                await Promise.all([waitForFirebase(), waitForCDNLibraries()]);
+                console.log('[OK] Firebase et bibliothèques CDN chargés');
+
+                // Charger les composants layout
+                await loadComponent('components/layout/app-loader.html', 'body');
+                await loadComponent('components/layout/app-header.html', 'app-header-container');
+                await loadComponent('components/layout/app-navigation.html', 'app-nav-container');
+                await loadComponent('components/layout/app-modals.html', 'body');
+
+                // Import et initialisation de l'app Firebase
+                const { initApp } = await import('./js/app-firebase.js');
+                await initApp();
+
+                // Cacher le loader
+                setTimeout(() => {
+                    document.getElementById('app-loader').classList.add('hidden');
+                    document.getElementById('app-container').classList.add('visible');
+                }, 200);
+            } catch (error) {
+                console.error('[ERROR] Initialisation:', error);
+                // Afficher l'erreur à l'utilisateur
+                document.body.innerHTML += `
+                    <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                                background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+                                text-align: center; max-width: 500px;">
+                        <h2 style="color: #e74c3c;">❌ Erreur d'initialisation</h2>
+                        <p style="color: #666; margin: 20px 0;">${error.message}</p>
+                        <button onclick="location.reload()" style="background: #3498db; color: #fff; border: none;
+                                        padding: 10px 30px; border-radius: 5px; cursor: pointer;">
+                            🔄 Réessayer
+                        </button>
+                    </div>
+                `;
+            }
+        });
+
+        // Helper pour charger les composants (chemins relatifs pour GitHub Pages)
+        async function loadComponent(url, containerId) {
+            const response = await fetch(url);
+            const html = await response.text();
+            const container = containerId === 'body' ? document.body : document.getElementById(containerId);
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
+        // Raccourcis clavier
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                window.appActions?.saveAllData();
+            }
+            if (e.ctrlKey && e.key === 'e') {
+                e.preventDefault();
+                window.appActions?.exportAllData();
+            }
+        });
+    </script>
+</head>
+<body>
+    <!-- Loader injecté dynamiquement -->
+
+    <!-- Container principal -->
+    <div id="app-container">
+        <div class="container">
+            <!-- Header injecté dynamiquement -->
+            <div id="app-header-container"></div>
+
+            <!-- Navigation injectée dynamiquement -->
+            <div id="app-nav-container"></div>
+
+            <!-- Pages container -->
+            <div id="pages-container"></div>
+        </div>
+    </div>
+
+    <!-- Textarea resize manager -->
+    <script src="js/textarea-resize-manager.js"></script>
+</body>
+</html>

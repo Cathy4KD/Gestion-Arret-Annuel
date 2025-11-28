@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Migration vers Firebase - Gestion Arrêt Annuel</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #1a1a2e;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .step {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .step h3 {
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .step-number {
+            background: #4f46e5;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .step p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .file-label {
+            display: inline-block;
+            background: #4f46e5;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .file-label:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+        }
+        .file-name {
+            margin-top: 10px;
+            color: #10b981;
+            font-weight: 500;
+        }
+        button {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        button:hover:not(:disabled) {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        .log {
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+        }
+        .log-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid #333;
+        }
+        .log-entry.success { color: #10b981; }
+        .log-entry.error { color: #ef4444; }
+        .log-entry.info { color: #60a5fa; }
+        .log-entry.warning { color: #f59e0b; }
+        .progress {
+            background: #e5e7eb;
+            border-radius: 10px;
+            height: 20px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, #4f46e5, #10b981);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s;
+            border-radius: 10px;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .stat {
+            background: #f0fdf4;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #10b981;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 Migration vers Firebase</h1>
+        <p class="subtitle">Transférez vos données locales vers Firestore</p>
+
+        <div class="step">
+            <h3><span class="step-number">1</span> Sélectionner le fichier de données</h3>
+            <p>Choisissez le fichier <code>application-data.json</code> depuis le dossier <code>server/data/</code></p>
+            <label class="file-label" for="dataFile">
+                📁 Choisir le fichier JSON
+            </label>
+            <input type="file" id="dataFile" accept=".json">
+            <div class="file-name" id="fileName"></div>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">2</span> Migrer vers Firebase</h3>
+            <p>Cliquez sur le bouton ci-dessous pour transférer toutes les données vers Firestore</p>
+            <button id="migrateBtn" disabled>🚀 Lancer la migration</button>
+        </div>
+
+        <div class="progress" style="display: none;">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="stats" id="stats" style="display: none;">
+            <div class="stat">
+                <div class="stat-value" id="statModules">0</div>
+                <div class="stat-label">Modules</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="statItems">0</div>
+                <div class="stat-label">Éléments</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="statSize">0 KB</div>
+                <div class="stat-label">Taille</div>
+            </div>
+        </div>
+
+        <div class="log" id="log" style="display: none;"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAbw3ygWzqCWd01eLfIP_qL0lUNb8oxE9U",
+            authDomain: "gestion-arret-annuel.firebaseapp.com",
+            projectId: "gestion-arret-annuel",
+            storageBucket: "gestion-arret-annuel.firebasestorage.app",
+            messagingSenderId: "667890337672",
+            appId: "1:667890337672:web:eb8385f9496c00ca911c3d"
+        };
+
+        // Initialiser Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Éléments DOM
+        const fileInput = document.getElementById('dataFile');
+        const fileName = document.getElementById('fileName');
+        const migrateBtn = document.getElementById('migrateBtn');
+        const progressBar = document.getElementById('progressBar');
+        const logContainer = document.getElementById('log');
+        const statsContainer = document.getElementById('stats');
+
+        let dataToMigrate = null;
+
+        // Fonction de log
+        function log(message, type = 'info') {
+            logContainer.style.display = 'block';
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logContainer.appendChild(entry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        // Gestionnaire de fichier
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            fileName.textContent = `📄 ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+
+            try {
+                const text = await file.text();
+                dataToMigrate = JSON.parse(text);
+
+                // Afficher les stats
+                const moduleCount = Object.keys(dataToMigrate).filter(k =>
+                    k !== 'lastUpdated' && k !== 'lastUpdatedBy'
+                ).length;
+
+                let itemCount = 0;
+                for (const [key, value] of Object.entries(dataToMigrate)) {
+                    if (Array.isArray(value)) {
+                        itemCount += value.length;
+                    } else if (value && typeof value === 'object') {
+                        itemCount += Object.keys(value).length;
+                    }
+                }
+
+                document.getElementById('statModules').textContent = moduleCount;
+                document.getElementById('statItems').textContent = itemCount;
+                document.getElementById('statSize').textContent = `${(file.size / 1024).toFixed(1)} KB`;
+                statsContainer.style.display = 'grid';
+
+                migrateBtn.disabled = false;
+                log(`Fichier chargé avec succès: ${moduleCount} modules, ${itemCount} éléments`, 'success');
+
+            } catch (error) {
+                log(`Erreur lors de la lecture du fichier: ${error.message}`, 'error');
+                migrateBtn.disabled = true;
+            }
+        });
+
+        // Gestionnaire de migration
+        migrateBtn.addEventListener('click', async () => {
+            if (!dataToMigrate) return;
+
+            migrateBtn.disabled = true;
+            migrateBtn.textContent = '⏳ Migration en cours...';
+            document.querySelector('.progress').style.display = 'block';
+
+            try {
+                log('Démarrage de la migration vers Firebase...', 'info');
+
+                // Ajouter un timestamp
+                dataToMigrate.lastUpdated = new Date().toISOString();
+                dataToMigrate.lastUpdatedBy = 'migration-tool';
+
+                // Calculer la taille des données
+                const dataSize = JSON.stringify(dataToMigrate).length;
+                log(`Taille totale des données: ${(dataSize / 1024).toFixed(1)} KB`, 'info');
+
+                // Vérifier si les données sont trop volumineuses (limite Firestore: ~1MB par document)
+                if (dataSize > 900000) {
+                    log('⚠️ Données volumineuses - Migration par modules...', 'warning');
+                    await migrateByModules(dataToMigrate);
+                } else {
+                    // Migration simple - un seul document
+                    progressBar.style.width = '50%';
+                    log('Envoi des données vers Firestore...', 'info');
+
+                    const docRef = doc(db, 'applicationData', 'mainData');
+                    await setDoc(docRef, dataToMigrate);
+
+                    progressBar.style.width = '100%';
+                    log('✅ Migration terminée avec succès!', 'success');
+                }
+
+                migrateBtn.textContent = '✅ Migration terminée!';
+                migrateBtn.style.background = '#10b981';
+
+                log('', 'info');
+                log('🎉 Vos données sont maintenant sur Firebase!', 'success');
+                log('Vous pouvez maintenant utiliser l\'application en mode Firebase.', 'info');
+
+            } catch (error) {
+                log(`❌ Erreur de migration: ${error.message}`, 'error');
+                console.error(error);
+                migrateBtn.textContent = '❌ Erreur - Réessayer';
+                migrateBtn.disabled = false;
+                migrateBtn.style.background = '#ef4444';
+            }
+        });
+
+        // Migration par modules (pour gros volumes)
+        async function migrateByModules(data) {
+            const modules = Object.keys(data).filter(k =>
+                k !== 'lastUpdated' && k !== 'lastUpdatedBy'
+            );
+
+            const totalModules = modules.length;
+            let migratedCount = 0;
+
+            // D'abord créer le document principal avec les métadonnées
+            const mainDoc = {
+                lastUpdated: data.lastUpdated,
+                lastUpdatedBy: data.lastUpdatedBy
+            };
+
+            // Ajouter les petits modules au document principal
+            for (const moduleName of modules) {
+                const moduleData = data[moduleName];
+                const moduleSize = JSON.stringify(moduleData || null).length;
+
+                if (moduleSize < 50000) { // Moins de 50KB
+                    mainDoc[moduleName] = moduleData;
+                    log(`📦 ${moduleName}: inclus dans le document principal`, 'info');
+                }
+
+                migratedCount++;
+                progressBar.style.width = `${(migratedCount / totalModules) * 100}%`;
+            }
+
+            // Sauvegarder le document principal
+            const mainDocRef = doc(db, 'applicationData', 'mainData');
+            await setDoc(mainDocRef, mainDoc);
+            log('✅ Document principal créé', 'success');
+
+            // Migrer les gros modules séparément
+            for (const moduleName of modules) {
+                const moduleData = data[moduleName];
+                const moduleSize = JSON.stringify(moduleData || null).length;
+
+                if (moduleSize >= 50000) { // 50KB ou plus
+                    const moduleDocRef = doc(db, 'applicationData', `module_${moduleName}`);
+                    await setDoc(moduleDocRef, { data: moduleData, updatedAt: new Date().toISOString() });
+                    log(`📦 ${moduleName}: migré séparément (${(moduleSize/1024).toFixed(1)} KB)`, 'warning');
+                }
+            }
+
+            progressBar.style.width = '100%';
+            log('✅ Migration complète terminée!', 'success');
+        }
+    </script>
+</body>
+</html>
