@@ -5,6 +5,27 @@
  */
 
 /**
+ * Détecte le chemin de base pour les ressources
+ * Supporte GitHub Pages et serveur local
+ */
+function getBasePath() {
+    // Si on est sur GitHub Pages, le chemin contient le nom du repo
+    const path = window.location.pathname;
+    if (path.includes('/Gestion-Arret-Annuel/')) {
+        // GitHub Pages - retourner le chemin jusqu'à /client/
+        const match = path.match(/(.+\/client)\//);
+        if (match) {
+            return match[1];
+        }
+        return '/Gestion-Arret-Annuel/client';
+    }
+    // Serveur local - chemin vide (relatif à la racine)
+    return '';
+}
+
+const BASE_PATH = getBasePath();
+
+/**
  * Cache for loaded page components
  * @type {Map<string, string>}
  */
@@ -88,8 +109,10 @@ async function loadPageComponent(pageId) {
 
     try {
         console.log(`[PAGE-LOADER] 📡 Chargement du composant: ${pageId}`);
-        // Pas de cache-busting: on fait confiance au cache HTTP du serveur
-        const response = await fetch(`/components/pages/${pageId}.html`);
+        // Utiliser le chemin de base détecté (supporte GitHub Pages)
+        const url = `${BASE_PATH}/components/pages/${pageId}.html`;
+        console.log(`[PAGE-LOADER] 📍 URL: ${url}`);
+        const response = await fetch(url);
 
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
