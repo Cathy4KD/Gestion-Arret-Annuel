@@ -1,0 +1,70 @@
+<div id="detail-equipements-hauteur" class="page">
+            <div class="summary-container" style="max-width: 98%;">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                    <h2 style="margin: 0; color: #333; flex: 1;">ÉTABLIR LES BESOIN EN ÉQUIPEMENTS DE TRAVAIL EN HAUTEUR</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="window.t57Actions.syncT57FromIW37N()"
+                                style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                            🔄 Synchroniser IW37N
+                        </button>
+                        <button onclick="window.t57Actions.addManualLine()"
+                                style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                            ➕ Ajouter Ligne Manuelle
+                        </button>
+                        <button onclick="window.t57Actions.exportT57ToExcel()"
+                                style="padding: 10px 20px; background: #ff9800; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                            📥 Exporter Excel
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Info card -->
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="font-size: 3em;">🏗️</div>
+                        <div style="flex: 1;">
+                            <h3 style="margin: 0 0 10px 0;">Nacelles et Équipements en Hauteur</h3>
+                            <p style="margin: 0; opacity: 0.9; font-size: 0.95em;">
+                                Synchronise automatiquement depuis IW37N: <strong>Désign.Opér contenant "NAC"</strong> ou <strong>Post.Trav.Opér contenant "BOOMTRK"</strong>
+                            </p>
+                        </div>
+                        <div style="text-align: center; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px;">
+                            <div style="font-size: 2em; font-weight: bold;"><span id="t57Count">0</span></div>
+                            <div style="font-size: 0.85em; opacity: 0.9;">Équipements</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="overflow-x: auto; max-height: 600px; overflow-y: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                            <thead style="position: sticky; top: 0; background: white; z-index: 10;">
+                                <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center; white-space: nowrap;">Source</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap;">Ordre</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap;">Opération</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; min-width: 250px;">Description</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap;">Type Équipement</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap;">Hauteur Requise</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap;">Durée</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap;">Date Début</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap;">Date Fin</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap;">Fournisseur</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap;">Statut</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center; white-space: nowrap;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="t57TableBody">
+                                <tr>
+                                    <td colspan="12" style="padding: 30px; text-align: center; color: #666;">
+                                        Aucun équipement. Cliquez sur "🔄 Synchroniser IW37N" ou "➕ Ajouter Ligne Manuelle".
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>

@@ -1,0 +1,105 @@
+<div id="detail-t83" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                    ← Retour
+                </button>
+                <h2 style="margin: 0; color: #333;">👥 PRÉPARER ADJUDICATION SYNDICALE SI REQUIS</h2>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin-bottom: 25px; border-left: 4px solid #2196f3;">
+            <h3 style="margin: 0 0 10px 0; color: #1565c0;">
+                ℹ️ À propos
+            </h3>
+            <p style="margin: 0; color: #333; line-height: 1.6;">
+                Préparez l'adjudication syndicale pour l'attribution des postes et horaires pendant l'arrêt annuel selon les conventions collectives en vigueur.
+            </p>
+        </div>
+
+        <!-- Content Area -->
+        <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <h3 style="margin: 0 0 20px 0; color: #667eea;">
+                📋 Préparation de l'Adjudication
+            </h3>
+
+            <div style="display: grid; gap: 20px;">
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Adjudication requise ?</label>
+                    <select id="isRequired" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px;">
+                        <option value="">-- Sélectionner --</option>
+                        <option value="oui">Oui</option>
+                        <option value="non">Non</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Date d'affichage prévue</label>
+                    <input type="date" id="postingDate" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px;">
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Date limite de réponse</label>
+                    <input type="date" id="deadlineDate" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px;">
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Postes à combler</label>
+                    <textarea id="positions" rows="8" placeholder="Liste des postes disponibles pendant l'arrêt (métiers, quarts de travail, durée, etc.)..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Nombre de postes par métier</label>
+                    <textarea id="positionCounts" rows="6" placeholder="Répartition du nombre de postes par métier/spécialité..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Horaires de travail</label>
+                    <textarea id="schedules" rows="5" placeholder="Description des horaires et quarts de travail pendant l'arrêt..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Critères d'attribution</label>
+                    <textarea id="criteria" rows="5" placeholder="Critères selon la convention collective (ancienneté, compétences, etc.)..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Contact syndical</label>
+                    <input type="text" id="unionContact" placeholder="Nom et coordonnées du représentant syndical..."
+                           style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px;">
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Statut de préparation</label>
+                    <select id="preparationStatus" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px;">
+                        <option value="">-- Sélectionner --</option>
+                        <option value="non-débuté">Non débuté</option>
+                        <option value="en-cours">En cours</option>
+                        <option value="prêt-à-afficher">Prêt à afficher</option>
+                        <option value="affiché">Affiché</option>
+                        <option value="complété">Complété</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Remarques</label>
+                    <textarea id="adjudicationRemarks" rows="4" placeholder="Remarques et notes particulières..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 20px;">
+                <button onclick="alert('Sauvegarde des données...')"
+                        class="btn" style="background: #28a745; color: white; padding: 12px 30px;">
+                    💾 Sauvegarder
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

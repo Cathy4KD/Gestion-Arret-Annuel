@@ -1,0 +1,52 @@
+{
+  "name": "gestionnaire-arret-acierie",
+  "version": "1.0.0",
+  "description": "Application de gestion d'arrêt d'aciérie avec architecture modulaire et temps réel",
+  "type": "module",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node --watch server/server.js",
+    "health": "node server/scripts/health-check.js",
+    "clean": "node server/scripts/cleanup.js",
+    "backup": "node server/scripts/manual-backup.js",
+    "build": "node server/scripts/build.js",
+    "build:css": "postcss client/css/main-new.css -o client/css/dist/app.min.css --map",
+    "watch:css": "postcss client/css/main-new.css -o client/css/dist/app.min.css --map --watch",
+    "test": "node server/scripts/test-server.js",
+    "generate-test-data": "node server/scripts/generate-test-data.js",
+    "migrate": "node server/scripts/migrate.js",
+    "docs": "node server/scripts/generate-docs.js",
+    "check-conventions": "node server/scripts/check-conventions.js",
+    "update-map": "node update-map.js"
+  },
+  "keywords": [
+    "acierie",
+    "gestion",
+    "temps-reel",
+    "socket.io"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "compression": "^1.8.1",
+    "docxtemplater": "^3.67.3",
+    "express": "^4.18.2",
+    "express-rate-limit": "^8.2.1",
+    "joi": "^18.0.1",
+    "multer": "^2.0.2",
+    "node-cron": "^4.2.1",
+    "pizzip": "^3.2.0",
+    "socket.io": "^4.6.1",
+    "winston": "^3.18.3",
+    "winston-daily-rotate-file": "^5.0.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.22",
+    "cssnano": "^7.1.2",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "postcss-import": "^16.1.1"
+  }
+}

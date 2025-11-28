@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-t27</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+<div id="detail-t27" class="page">
+            <div class="summary-container">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                    <h2 style="margin: 0; color: #333;">ÉTABLIR UNE STRATÉGIE D'APPROVISIONNEMENT</h2>
+                </div>
+                <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0; color: #333;">Liste des Fournisseurs et Travaux</h3>
+                        <div>
+                            <button onclick="addApprovisionnementRow()" style="padding: 10px 20px; background: #48bb78; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 10px;">➕ Ajouter</button>
+                            <button onclick="toggleHistoryColumns()" style="padding: 10px 20px; background: #4299e1; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">🗓️ Afficher/Cacher Historique</button>
+                        </div>
+                    </div>
+                    <div class="summary-table-wrapper">
+                        <table class="summary-table" id="approvisionnementTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 15%; min-width: 150px;">Fournisseur</th>
+                                    <th style="width: 15%; min-width: 150px;">Type de travaux</th>
+                                    <th style="width: 40%; min-width: 300px;">Justification</th>
+                                    <th style="width: 10%; min-width: 100px;">Estimé</th>
+                                    <th class="history-col" style="display: none; width: 10%; min-width: 100px;">Estimé 2021</th>
+                                    <th class="history-col" style="display: none; width: 10%; min-width: 100px;">Estimé 2022</th>
+                                    <th class="history-col" style="display: none; width: 10%; min-width: 100px;">Estimé 2023</th>
+                                    <th class="history-col" style="display: none; width: 10%; min-width: 100px;">Estimé 2024</th>
+                                    <th class="history-col" style="display: none; width: 10%; min-width: 100px;">Estimé 2025</th>
+                                    <th style="width: 10%; min-width: 100px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="approvisionnementTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

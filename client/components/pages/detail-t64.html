@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-t64</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+<div id="detail-t64" class="page">
+            <div class="summary-container" style="max-width: 98%; padding: 20px;">
+                <!-- En-tête -->
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px;">
+                    <div style="display: flex; align-items: center;">
+                        <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                        <h2 style="margin: 0; color: #333;">📋 REVISER PROTOCOLE D'ARRÊT ET DRAINAGE</h2>
+                    </div>
+                    <div style="display: flex; gap: 12px;">
+                        <button onclick="window.protocoleGantt.addNewEtape()"
+                                style="padding: 10px 20px; background: #10b981; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; display: flex; align-items: center; gap: 8px;">
+                            ➕ Nouvelle étape
+                        </button>
+                        <button onclick="window.protocoleGantt.genererExemples()"
+                                style="padding: 10px 20px; background: #f59e0b; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; display: flex; align-items: center; gap: 8px;">
+                            🔄 Générer exemples
+                        </button>
+                        <button onclick="window.protocoleGantt.exportToPDF()"
+                                style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; display: flex; align-items: center; gap: 8px;">
+                            📄 Export PDF
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Info sur le Gantt -->
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 10px; margin-bottom: 20px; color: white;">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 12px;">
+                        <span style="font-size: 32px;">📊</span>
+                        <div>
+                            <h3 style="margin: 0 0 5px 0; font-size: 18px;">Diagramme de Gantt du Protocole d'Arrêt</h3>
+                            <p style="margin: 0; opacity: 0.9; font-size: 14px;">
+                                Planifiez et visualisez les étapes du protocole d'arrêt et drainage avec précision.
+                            </p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 20px; font-size: 13px; margin-top: 15px;">
+                        <span>✏️ Cliquez sur une barre pour éditer</span>
+                        <span>🖱️ Glissez-déposez pour déplacer</span>
+                        <span>📅 Visualisation par jour</span>
+                    </div>
+                </div>
+
+                <!-- Légende des statuts -->
+                <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 25px; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <span style="font-weight: 600; color: #334155;">Légende :</span>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="width: 16px; height: 16px; background: #94a3b8; border-radius: 4px;"></div>
+                        <span style="color: #64748b; font-size: 14px;">Non démarré</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="width: 16px; height: 16px; background: #3b82f6; border-radius: 4px;"></div>
+                        <span style="color: #64748b; font-size: 14px;">En cours</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="width: 16px; height: 16px; background: #10b981; border-radius: 4px;"></div>
+                        <span style="color: #64748b; font-size: 14px;">Terminé</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="width: 16px; height: 16px; background: #ef4444; border-radius: 4px;"></div>
+                        <span style="color: #64748b; font-size: 14px;">En retard</span>
+                    </div>
+                </div>
+
+                <!-- Container du Gantt -->
+                <div id="ganttContainer" style="min-height: 400px; background: #f8fafc; border-radius: 10px; padding: 20px;">
+                    <div style="text-align: center; padding: 60px; color: #94a3b8;">
+                        <div style="font-size: 48px; margin-bottom: 15px;">⏳</div>
+                        <p>Chargement du diagramme de Gantt...</p>
+                    </div>
+                </div>
+
+                <!-- Instructions -->
+                <div style="background: #f0f9ff; border-left: 4px solid #3b82f6; padding: 15px 20px; margin-top: 20px; border-radius: 6px;">
+                    <h4 style="margin: 0 0 10px 0; color: #1e40af; font-size: 14px;">💡 Instructions</h4>
+                    <ul style="margin: 0; padding-left: 20px; color: #1e40af; font-size: 13px; line-height: 1.6;">
+                        <li>Créez des étapes en cliquant sur "➕ Nouvelle étape"</li>
+                        <li>Éditez une étape en cliquant sur le bouton ✏️ ou directement sur la barre du Gantt</li>
+                        <li>Déplacez les étapes dans le temps en glissant-déposant les barres</li>
+                        <li>Définissez les dépendances entre les étapes pour respecter l'ordre des opérations</li>
+                        <li>Les étapes en retard apparaissent automatiquement en rouge</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

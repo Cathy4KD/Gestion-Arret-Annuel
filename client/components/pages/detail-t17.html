@@ -1,0 +1,91 @@
+<div id="detail-t17" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; margin-bottom: 20px; gap: 15px;">
+            <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">← Retour</button>
+            <h2 style="margin: 0; color: #333;">SCOPE PAR SECTEURS DES TRAVAUX - EXPÉDITION</h2>
+        </div>
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                <label style="font-weight: bold; font-size: 1.1em;">Filtrer par Poste Technique:</label>
+                <div style="position: relative; flex: 1; min-width: 300px;">
+                    <button id="t17-dropdown-btn" onclick="window.scopeActions.togglePosteDropdown('t17')" style="width: 100%; padding: 10px 15px; background: white; border: 2px solid #4299e1; border-radius: 8px; cursor: pointer; text-align: left; font-size: 1em; display: flex; justify-content: space-between; align-items: center;">
+                        <span id="t17-selected-text">Tous les postes techniques sélectionnés</span>
+                        <span style="font-size: 1.2em;">▼</span>
+                    </button>
+                    <div id="t17-dropdown-menu" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 2px solid #4299e1; border-radius: 8px; margin-top: 5px; max-height: 400px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                        <div style="padding: 10px; border-bottom: 2px solid #4299e1; background: #e3f2fd;">
+                            <p style="margin: 0; font-size: 0.9em; color: #333; font-weight: 500;">
+                                ℹ️ <strong>Sélection multiple :</strong> Cochez/décochez les cases pour choisir les postes techniques à afficher
+                            </p>
+                        </div>
+                        <div style="padding: 10px; border-bottom: 1px solid #e9ecef; background: #f8f9fa; display: flex; gap: 10px;">
+                            <button onclick="window.scopeActions.selectAllPostesTechniques('t17')" style="flex: 1; padding: 8px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.9em; font-weight: bold;">✓ Tout sélectionner</button>
+                            <button onclick="window.scopeActions.deselectAllPostesTechniques('t17')" style="flex: 1; padding: 8px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.9em; font-weight: bold;">✗ Tout désélectionner</button>
+                        </div>
+                        <div id="t17-poste-filters" style="padding: 12px; background: #fafafa; min-height: 50px;"></div>
+                    </div>
+                </div>
+                <span id="t17-filter-count" style="background: #4299e1; color: white; padding: 8px 15px; border-radius: 20px; font-weight: bold; white-space: nowrap;">0 / 0 sélectionnés</span>
+            </div>
+        </div>
+        <div style="background: white; padding: 20px; border-radius: 10px;">
+            <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0;">Opérations (<span id="t17-count">0</span>)</h3>
+                <button onclick="window.scopeActions.exportScopeToExcel('t17', 'EXPEDITION')" class="btn" style="background: #4299e1; color: white;">📥 Exporter Excel</button>
+            </div>
+            <div style="overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 8px;">
+                <table id="t17-table" class="summary-table" style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                    <thead style="position: sticky; top: 0; background: white; z-index: 5;">
+                        <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Statut</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Opération</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Désign. opér.</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Post.trav.opér.</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Ordre</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Poste technique</th>
+                        </tr>
+                    </thead>
+                    <tbody id="t17-tbody">
+                        <tr><td colspan="6" style="padding: 30px; text-align: center; color: #666;">Aucune donnée IW37N disponible.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <!-- Section Plan avec Marqueurs -->
+        <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
+            <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0;">📍 Plan et Localisation des Travaux</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="document.getElementById('t17-plan-upload').click()" class="btn" style="background: #4a7c59; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        📤 Charger Plan (Image/PDF)
+                    </button>
+                    <button onclick="window.scopeMarkersActions.clearScopePlan('t17')" class="btn" style="background: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        🗑️ Supprimer Plan
+                    </button>
+                </div>
+                <input type="file" id="t17-plan-upload" accept="image/*,.pdf" style="display: none;" onchange="window.scopeMarkersActions.handleScopePlanUpload(event, 't17')">
+            </div>
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #4299e1;">
+                <p style="margin: 0; color: #666; font-size: 0.9em;">
+                    <strong>Instructions:</strong> Importez un ou plusieurs plans (images/PDF). Sélectionnez un travail dans la liste, puis cliquez sur le plan pour placer un marqueur.
+                </p>
+            </div>
+
+            <!-- Sélecteur de plans -->
+            <div id="t17-plan-selector" style="background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #dee2e6;">
+                <p style="color: #999; font-size: 0.9em;">Aucun plan chargé</p>
+            </div>
+
+            <!-- Sélecteur de travaux pour marqueurs -->
+            <div id="t17-work-selector-container" style="background: #fffbf0; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ffc107;">
+                <p style="color: #999; font-size: 0.9em;">Chargez d'abord les données IW37N et un plan</p>
+            </div>
+
+            <div id="t17-plan-container" style="border: 2px dashed #dee2e6; border-radius: 8px; padding: 20px; min-height: 300px; background: #fafafa; text-align: center; overflow: auto;">
+                <p style="color: #666; padding: 40px;">Aucun plan chargé. Utilisez le bouton "Charger Plan" ci-dessus.</p>
+            </div>
+        </div>
+    </div>
+</div>

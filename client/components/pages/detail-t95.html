@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-t95</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+<div id="detail-t95" class="page">
+            <div class="summary-container" style="max-width: 98%;">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                    <h2 style="margin: 0; color: #333;">ÉTABLIR LES ZONES DE VERROUILLAGE</h2>
+                </div>
+
+                <!-- Section Tableau des Zones de Verrouillage -->
+                <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="color: #667eea; margin: 0;">📋 Liste des Zones de Verrouillage</h3>
+                        <button onclick="showAddZoneT95()" style="padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                            ➕ Ajouter une Zone
+                        </button>
+                    </div>
+
+                    <!-- Formulaire d'ajout de zone (caché par défaut) -->
+                    <div id="t95-zoneForm" style="display: none; background: #e3f2fd; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <h4 style="margin-top: 0; color: #000000;">✏️ Nouvelle Zone de Verrouillage</h4>
+
+                        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 15px; margin-bottom: 15px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Nom de la zone:</label>
+                                <input type="text" id="t95-zoneNom" placeholder="Ex: Zone Convertisseur 1" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                <div style="font-size: 11px; color: #666; margin-top: 5px;">💡 Nom descriptif de la zone</div>
+                            </div>
+
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Commentaire / Description:</label>
+                                <textarea id="t95-zoneCommentaire" rows="3" placeholder="Ex: Zone électrique haute tension, accès restreint, verrouillage obligatoire avant intervention..." style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-family: Arial, sans-serif; resize: vertical;"></textarea>
+                                <div style="font-size: 11px; color: #666; margin-top: 5px;">💡 Équipements concernés, procédures spéciales, niveau de danger</div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                            <button onclick="cancelZoneT95()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                ❌ Annuler
+                            </button>
+                            <button onclick="saveZoneT95()" style="padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                💾 Sauvegarder
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tableau des zones -->
+                    <div id="t95-zonesTable" style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; background: white;">
+                            <thead>
+                                <tr style="background: #667eea; color: white;">
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd; width: 50px;">#</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd; width: 250px;">Nom de la Zone</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Commentaire / Description</th>
+                                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd; width: 100px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="t95-zonesTableBody">
+                                <tr>
+                                    <td colspan="4" style="padding: 20px; text-align: center; color: #999;">Aucune zone de verrouillage définie</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section Upload et Placement sur Plan -->
+                <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                    <h3 style="color: #667eea; margin-top: 0;">🗺️ Étape 1 : Charger le Plan</h3>
+                    <p style="color: #000000; margin-bottom: 15px;">Uploadez le plan de l'usine/chantier pour placer visuellement les zones de verrouillage.</p>
+
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <input type="file" id="t95planUpload" accept="image/*" onchange="uploadT95Plan(event)"
+                               style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; flex: 1;">
+                        <button onclick="clearT95Plan()" style="padding: 10px 20px; background: #c5554a; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                            🗑️ Effacer Plan
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Zone de placement des zones sur le plan -->
+                <div id="t95planContainer" style="display: none;">
+                    <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h3 style="color: #667eea; margin: 0;">🗺️ Étape 2 : Placer les Zones sur le Plan</h3>
+                            <div style="display: flex; gap: 10px;">
+                                <button onclick="addZoneModeT95()" id="addZoneModeT95Btn" style="padding: 8px 15px; background: #4a7c59; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                    ➕ Mode Placement
+                                </button>
+                                <button onclick="cancelZoneModeT95()" id="cancelZoneModeT95Btn" style="display: none; padding: 8px 15px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                    ❌ Annuler Mode
+                                </button>
+                            </div>
+                        </div>
+                        <p style="color: #000000; margin-bottom: 15px;">Cliquez sur le plan pour placer une zone de verrouillage. Vous pourrez ensuite sélectionner quelle zone dans la liste.</p>
+
+                        <div style="position: relative; border: 2px solid #ddd; border-radius: 8px; overflow: hidden; background: #f8f9fa; max-width: 100%;">
+                            <canvas id="t95planCanvas" style="display: block; max-width: 100%; cursor: crosshair;"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Liste des zones placées sur le plan -->
+                    <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <h3 style="color: #667eea; margin-top: 0;">📍 Zones Placées sur le Plan</h3>
+                        <div id="t95placedZonesList">
+                            <p style="text-align: center; color: #999; padding: 20px;">Aucune zone placée sur le plan</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

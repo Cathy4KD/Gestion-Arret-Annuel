@@ -1,0 +1,287 @@
+<div id="detail-amdec" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; margin-bottom: 20px; gap: 15px;">
+            <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                ← Retour
+            </button>
+            <h2 style="margin: 0; color: #333;">ANALYSE AMDEC - ANALYSE DES RISQUES</h2>
+        </div>
+
+        <!-- Statistiques Globales -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px;">
+            <div class="card" style="text-align: center; padding: 20px; background: linear-gradient(145deg, #667eea, #764ba2);">
+                <div style="font-size: 0.85em; color: white; margin-bottom: 10px; text-transform: uppercase;">Travaux Analysés</div>
+                <div style="font-size: 2.5em; font-weight: bold; color: white;" id="amdecTotalTravaux">0</div>
+            </div>
+            <div class="card" style="text-align: center; padding: 20px; background: linear-gradient(145deg, #dc3545, #c82333);">
+                <div style="font-size: 0.85em; color: white; margin-bottom: 10px; text-transform: uppercase;">Criticité Élevée</div>
+                <div style="font-size: 2.5em; font-weight: bold; color: white;" id="amdecCriticiteElevee">0</div>
+            </div>
+            <div class="card" style="text-align: center; padding: 20px; background: linear-gradient(145deg, #ffc107, #e0a800);">
+                <div style="font-size: 0.85em; color: white; margin-bottom: 10px; text-transform: uppercase;">Criticité Moyenne</div>
+                <div style="font-size: 2.5em; font-weight: bold; color: white;" id="amdecCriticiteMoyenne">0</div>
+            </div>
+            <div class="card" style="text-align: center; padding: 20px; background: linear-gradient(145deg, #28a745, #218838);">
+                <div style="font-size: 0.85em; color: white; margin-bottom: 10px; text-transform: uppercase;">Criticité Faible</div>
+                <div style="font-size: 2.5em; font-weight: bold; color: white;" id="amdecCriticiteFaible">0</div>
+            </div>
+            <div class="card" style="text-align: center; padding: 20px; background: linear-gradient(145deg, #17a2b8, #138496);">
+                <div style="font-size: 0.85em; color: white; margin-bottom: 10px; text-transform: uppercase;">Actions Correctives</div>
+                <div style="font-size: 2.5em; font-weight: bold; color: white;" id="amdecActionsTotal">0</div>
+            </div>
+        </div>
+
+        <!-- Section Sélection des Travaux IW37N -->
+        <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: #333;">📋 Sélection des Travaux pour Analyse AMDEC</h3>
+                <button onclick="window.amdecActions.showWorkSelection()" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                    ➕ Sélectionner Travaux
+                </button>
+            </div>
+            <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">
+                Sélectionnez les travaux depuis IW37N qui nécessitent une analyse AMDEC (Analyse des Modes de Défaillance, de leurs Effets et de leur Criticité)
+            </p>
+
+            <div style="overflow-x: auto;">
+                <table class="summary-table" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Ordre de Travail</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Opération</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Description</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6;">Statut AMDEC</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6;">Criticité</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 150px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="amdecSelectedWorksTableBody">
+                        <tr><td colspan="6" style="padding: 30px; text-align: center; color: #666;">Aucun travail sélectionné. Cliquez sur "Sélectionner Travaux" pour commencer.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section Analyses AMDEC -->
+        <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: #333;">🔍 Analyses AMDEC Détaillées</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="window.amdecActions.exportToExcel()" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                        📊 Exporter Excel
+                    </button>
+                    <button onclick="window.amdecActions.exportToPDF()" class="btn" style="background: linear-gradient(145deg, #dc3545, #c82333); color: white; padding: 10px 20px;">
+                        📄 Exporter PDF
+                    </button>
+                </div>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table class="summary-table" style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                    <thead>
+                        <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                            <th style="padding: 10px; text-align: left; border: 1px solid #dee2e6; min-width: 120px;">Travail / Opération</th>
+                            <th style="padding: 10px; text-align: left; border: 1px solid #dee2e6; min-width: 150px;">Mode de Défaillance</th>
+                            <th style="padding: 10px; text-align: left; border: 1px solid #dee2e6; min-width: 150px;">Cause</th>
+                            <th style="padding: 10px; text-align: left; border: 1px solid #dee2e6; min-width: 150px;">Effet</th>
+                            <th style="padding: 10px; text-align: center; border: 1px solid #dee2e6; width: 60px;" title="Gravité (1-10)">G</th>
+                            <th style="padding: 10px; text-align: center; border: 1px solid #dee2e6; width: 60px;" title="Occurrence (1-10)">O</th>
+                            <th style="padding: 10px; text-align: center; border: 1px solid #dee2e6; width: 60px;" title="Détection (1-10)">D</th>
+                            <th style="padding: 10px; text-align: center; border: 1px solid #dee2e6; width: 80px;" title="Criticité = G × O × D">Criticité</th>
+                            <th style="padding: 10px; text-align: left; border: 1px solid #dee2e6; min-width: 200px;">Actions Correctives</th>
+                            <th style="padding: 10px; text-align: center; border: 1px solid #dee2e6; width: 100px;">Responsable</th>
+                            <th style="padding: 10px; text-align: center; border: 1px solid #dee2e6; width: 100px;">Statut</th>
+                            <th style="padding: 10px; text-align: center; border: 1px solid #dee2e6; width: 120px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="amdecAnalysesTableBody">
+                        <tr><td colspan="12" style="padding: 30px; text-align: center; color: #666;">Aucune analyse AMDEC. Sélectionnez des travaux et cliquez sur "Analyser" pour commencer.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Légende AMDEC -->
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <h4 style="margin: 0 0 15px 0; color: #555;">📖 Légende et Guide d'Évaluation AMDEC</h4>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                <!-- Gravité -->
+                <div>
+                    <h5 style="margin: 0 0 10px 0; color: #667eea;">🎯 Gravité (G)</h5>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 0.85em; color: #666;">
+                        <li><strong>1-3:</strong> Mineur - Impact négligeable</li>
+                        <li><strong>4-6:</strong> Modéré - Impact limité</li>
+                        <li><strong>7-8:</strong> Majeur - Impact significatif</li>
+                        <li><strong>9-10:</strong> Critique - Impact catastrophique</li>
+                    </ul>
+                </div>
+
+                <!-- Occurrence -->
+                <div>
+                    <h5 style="margin: 0 0 10px 0; color: #ffc107;">⚡ Occurrence (O)</h5>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 0.85em; color: #666;">
+                        <li><strong>1-3:</strong> Rare - Peu probable</li>
+                        <li><strong>4-6:</strong> Occasionnel - Possible</li>
+                        <li><strong>7-8:</strong> Fréquent - Probable</li>
+                        <li><strong>9-10:</strong> Très fréquent - Quasi certain</li>
+                    </ul>
+                </div>
+
+                <!-- Détection -->
+                <div>
+                    <h5 style="margin: 0 0 10px 0; color: #17a2b8;">🔎 Détection (D)</h5>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 0.85em; color: #666;">
+                        <li><strong>1-3:</strong> Élevée - Détection quasi certaine</li>
+                        <li><strong>4-6:</strong> Moyenne - Détection probable</li>
+                        <li><strong>7-8:</strong> Faible - Détection difficile</li>
+                        <li><strong>9-10:</strong> Très faible - Détection quasi impossible</li>
+                    </ul>
+                </div>
+
+                <!-- Criticité -->
+                <div>
+                    <h5 style="margin: 0 0 10px 0; color: #dc3545;">⚠️ Criticité (C = G × O × D)</h5>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 0.85em; color: #666;">
+                        <li><strong>1-99:</strong> <span style="color: #28a745; font-weight: 600;">Faible</span> - Actions préventives recommandées</li>
+                        <li><strong>100-299:</strong> <span style="color: #ffc107; font-weight: 600;">Moyenne</span> - Actions correctives nécessaires</li>
+                        <li><strong>300-1000:</strong> <span style="color: #dc3545; font-weight: 600;">Élevée</span> - Actions urgentes requises</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Matrice de Criticité -->
+        <div style="background: white; padding: 20px; border-radius: 10px;">
+            <h4 style="margin: 0 0 15px 0; color: #555;">📊 Matrice de Criticité</h4>
+            <div style="overflow-x: auto;">
+                <canvas id="amdecCriticalityMatrix" width="800" height="400" style="max-width: 100%;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de sélection des travaux IW37N -->
+<div id="amdecWorkSelectionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+    <div style="background: white; padding: 30px; border-radius: 15px; max-width: 900px; width: 90%; max-height: 90vh; overflow-y: auto;">
+        <h3 style="margin: 0 0 20px 0; color: #333;">Sélectionner les Travaux IW37N</h3>
+
+        <div style="margin-bottom: 20px;">
+            <input type="text" id="amdecWorkSearchInput" placeholder="🔍 Rechercher par ordre, opération ou description..." style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1em;">
+        </div>
+
+        <div style="overflow-x: auto; max-height: 400px; overflow-y: auto; margin-bottom: 20px;">
+            <table class="summary-table" style="width: 100%; border-collapse: collapse;">
+                <thead style="position: sticky; top: 0; z-index: 10;">
+                    <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                        <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 50px;">
+                            <input type="checkbox" id="amdecSelectAllWorks" onchange="window.amdecActions.toggleSelectAll(this.checked)" style="cursor: pointer; width: 18px; height: 18px;">
+                        </th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Ordre</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Opération</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Description</th>
+                        <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6;">Type</th>
+                    </tr>
+                </thead>
+                <tbody id="amdecWorkSelectionTableBody">
+                    <tr><td colspan="5" style="padding: 30px; text-align: center; color: #666;">Chargement des travaux...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button onclick="window.amdecActions.cancelWorkSelection()" class="btn" style="background: #6c757d; color: white; padding: 10px 20px;">
+                Annuler
+            </button>
+            <button onclick="window.amdecActions.confirmWorkSelection()" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                Confirmer Sélection
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal d'analyse AMDEC -->
+<div id="amdecAnalysisModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+    <div style="background: white; padding: 30px; border-radius: 15px; max-width: 1000px; width: 90%; max-height: 90vh; overflow-y: auto;">
+        <h3 style="margin: 0 0 20px 0; color: #333;">Analyse AMDEC</h3>
+
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <div><strong>Ordre de Travail:</strong> <span id="amdecModalWorkOrder"></span></div>
+            <div><strong>Opération:</strong> <span id="amdecModalOperation"></span></div>
+            <div><strong>Description:</strong> <span id="amdecModalDescription"></span></div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr; gap: 15px;">
+            <div>
+                <label style="font-weight: 600; display: block; margin-bottom: 5px;">Mode de Défaillance *</label>
+                <textarea id="amdecModeDefaillance" placeholder="Décrivez le mode de défaillance potentiel..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; min-height: 80px; resize: vertical;"></textarea>
+            </div>
+
+            <div>
+                <label style="font-weight: 600; display: block; margin-bottom: 5px;">Cause *</label>
+                <textarea id="amdecCause" placeholder="Décrivez la cause possible de la défaillance..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; min-height: 80px; resize: vertical;"></textarea>
+            </div>
+
+            <div>
+                <label style="font-weight: 600; display: block; margin-bottom: 5px;">Effet *</label>
+                <textarea id="amdecEffet" placeholder="Décrivez l'effet de la défaillance..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; min-height: 80px; resize: vertical;"></textarea>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                <div>
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px;">Gravité (G) *</label>
+                    <input type="number" id="amdecGravite" min="1" max="10" value="5" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    <small style="color: #666;">1 (mineur) à 10 (critique)</small>
+                </div>
+
+                <div>
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px;">Occurrence (O) *</label>
+                    <input type="number" id="amdecOccurrence" min="1" max="10" value="5" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    <small style="color: #666;">1 (rare) à 10 (fréquent)</small>
+                </div>
+
+                <div>
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px;">Détection (D) *</label>
+                    <input type="number" id="amdecDetection" min="1" max="10" value="5" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    <small style="color: #666;">1 (élevée) à 10 (faible)</small>
+                </div>
+            </div>
+
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                <div style="font-weight: 600; margin-bottom: 5px;">Criticité Calculée (C = G × O × D)</div>
+                <div style="font-size: 2em; font-weight: bold; color: #667eea;" id="amdecCalculatedCriticality">125</div>
+                <div style="font-size: 0.9em; color: #666;" id="amdecCriticalityLevel">Niveau: Moyenne</div>
+            </div>
+
+            <div>
+                <label style="font-weight: 600; display: block; margin-bottom: 5px;">Actions Correctives *</label>
+                <textarea id="amdecActionsCorrectives" placeholder="Décrivez les actions correctives à mettre en place..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; min-height: 100px; resize: vertical;"></textarea>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div>
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px;">Responsable</label>
+                    <input type="text" id="amdecResponsable" placeholder="Nom du responsable" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+
+                <div>
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px;">Statut</label>
+                    <select id="amdecStatut" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        <option value="en_cours">En cours</option>
+                        <option value="complete">Complété</option>
+                        <option value="en_attente">En attente</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+            <button onclick="window.amdecActions.cancelAnalysis()" class="btn" style="background: #6c757d; color: white; padding: 10px 20px;">
+                Annuler
+            </button>
+            <button onclick="window.amdecActions.saveAnalysis()" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                Enregistrer Analyse
+            </button>
+        </div>
+    </div>
+</div>

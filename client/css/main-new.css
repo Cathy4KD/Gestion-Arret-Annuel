@@ -1,0 +1,50 @@
+/* ==============================================
+   MAIN CSS - ARCHITECTURE OPTIMISÉE
+   Point d'entrée unique - Single Source of Truth
+   ============================================== */
+
+/* ========================================
+   COUCHE 1 : FONDATIONS (Core)
+   Variables, Reset, Utilitaires
+   ======================================== */
+@import url('core/variables.css');
+@import url('core/reset.css');
+@import url('core/utilities.css');
+
+/* ========================================
+   COUCHE 2 : BASE
+   Éléments HTML de base
+   ======================================== */
+@import url('base/forms.css');
+@import url('base/tables.css');
+
+/* ========================================
+   COUCHE 3 : COMPOSANTS
+   Composants réutilisables
+   ======================================== */
+@import url('components/buttons.css');
+@import url('components/cards.css');
+@import url('components/modals.css');
+@import url('components/responsive-modal.css');
+@import url('components/navigation.css');
+@import url('components/header.css');
+@import url('components/timeline.css');
+@import url('components/kanban.css');
+@import url('components/stats.css');
+@import url('components/charts.css');
+@import url('components/loader.css');
+@import url('components/assistant.css');
+
+/* ========================================
+   COUCHE 4 : LAYOUTS
+   Layouts de pages spécifiques
+   ======================================== */
+@import url('layouts/dashboard.css');
+
+/* ========================================
+   COUCHE 5 : THÈMES
+   Thèmes et variantes
+   ======================================== */
+@import url('modern-theme.css');
+@import url('compact-mode.css');
+@import url('professional-enhancements.css');

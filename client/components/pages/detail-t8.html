@@ -1,0 +1,71 @@
+<div id="detail-t8" class="page">
+                    <div class="summary-container" style="max-width: 98%; padding: 20px;">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                            <h2 style="margin: 0; color: #333; flex: 1;">RÉVISION DE LA LISTE DES TRAVAUX (AVIS / ORDRE RELATIFS AUX TRAVAUX (SAP)</h2>
+                        </div>
+
+                        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                            <div style="display: flex; gap: 15px; margin-bottom: 15px; align-items: center; flex-wrap: wrap;">
+                                <p style="margin: 0; color: #666; flex: 1; min-width: 300px;">
+                                    Cette liste importe la liste complète des travaux de IW37N (excluant les Désignations contenant PSV, TPAA, PW et NOTE).
+                                    <br><strong>Mapping des colonnes IW37N:</strong> Opération → Opération | Désignation → Désign. opér. | Post.trav.opér. → Post.trav.opér. | Ordre → Ordre | Poste technique → Poste technique
+                                    <br><strong>⚠️ IMPORTANT:</strong> La synchronisation remplace complètement la liste existante par les données actuelles de IW37N.
+                                </p>
+                                <button onclick="syncRevisionListeFromIw37n()"
+                                        style="padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; white-space: nowrap;">
+                                    🔄 Synchroniser avec IW37N
+                                </button>
+                                <button onclick="exportRevisionListeToExcel()"
+                                        style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; white-space: nowrap;">
+                                    📥 Exporter Excel
+                                </button>
+                                <button onclick="clearAllRevisionListe()"
+                                        style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; white-space: nowrap;">
+                                    🗑️ Supprimer Toute la Liste
+                                </button>
+                            </div>
+
+                            <div style="background: #e3f2fd; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                                <strong>Total de travaux:</strong> <span id="revisionListeCount">0</span>
+                            </div>
+                        </div>
+
+                        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            <div style="overflow-x: auto; max-height: calc(100vh - 350px); overflow-y: auto; position: relative;">
+                                <table class="summary-table" style="width: 100%; border-collapse: collapse;">
+                                    <thead style="position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                        <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; white-space: nowrap; background: inherit;">Statut</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; white-space: nowrap; background: inherit;">Opération</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; min-width: 250px; background: inherit;">Désign. opér.</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; white-space: nowrap; background: inherit;">Post.trav.opér.</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; white-space: nowrap; background: inherit;">Ordre</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; white-space: nowrap; background: inherit;">Poste technique</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; min-width: 150px; background: inherit;">Infos</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; min-width: 200px; background: inherit;">Commentaire</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; white-space: nowrap; background: inherit;">Avis Synd.</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; white-space: nowrap; background: inherit;">DA-PO</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; white-space: nowrap; background: inherit;">Nacelle</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; white-space: nowrap; background: inherit;">Echaf.</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; white-space: nowrap; background: inherit;">Grue</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; min-width: 150px; background: inherit;">Tache Cognibox</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; white-space: nowrap; background: inherit;">Date de début</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; white-space: nowrap; background: inherit;">Date de fin</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; white-space: nowrap; background: inherit;">Date début Avis synd.</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; white-space: nowrap; background: inherit;">Date fin Avis synd.</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; white-space: nowrap; background: inherit;">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="revisionListeTableBody">
+                                        <tr>
+                                            <td colspan="19" style="padding: 30px; text-align: center; color: #666;">
+                                                Aucun travail dans la liste. Cliquez sur "Synchroniser avec IW37N" pour importer les travaux.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Arrêt Annuel 2026</title>
+
+    <!-- CDN Libraries -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script defer>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof pdfjsLib !== 'undefined') {
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            }
+        });
+    </script>
+    <script defer src="/socket.io/socket.io.js"></script>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/compact-mode.css">
+
+    <script>
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Charger les composants layout
+                await loadComponent('/components/layout/app-loader.html', 'body');
+                await loadComponent('/components/layout/app-header.html', 'app-header-container');
+                await loadComponent('/components/layout/app-navigation.html', 'app-nav-container');
+
+                // Import et initialisation de l'app
+                const { initApp } = await import('./js/app.js');
+                await initApp();
+
+                // Cacher le loader
+                setTimeout(() => {
+                    document.getElementById('app-loader').classList.add('hidden');
+                    document.getElementById('app-container').classList.add('visible');
+                }, 200);
+            } catch (error) {
+                console.error('[ERROR] Initialisation:', error);
+            }
+        });
+
+        // Helper pour charger les composants
+        async function loadComponent(url, containerId) {
+            const response = await fetch(url);
+            const html = await response.text();
+            const container = containerId === 'body' ? document.body : document.getElementById(containerId);
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
+        // Raccourcis clavier
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                window.appActions?.saveAllData();
+            }
+            if (e.ctrlKey && e.key === 'e') {
+                e.preventDefault();
+                window.appActions?.exportAllData();
+            }
+        });
+    </script>
+</head>
+<body>
+    <!-- Loader injecté dynamiquement -->
+
+    <!-- Container principal -->
+    <div id="app-container">
+        <div class="container">
+            <!-- Header injecté dynamiquement -->
+            <div id="app-header-container"></div>
+
+            <!-- Navigation injectée dynamiquement -->
+            <div id="app-nav-container"></div>
+
+            <!-- Pages container -->
+            <div id="pages-container"></div>
+        </div>
+    </div>
+
+    <!-- Textarea resize manager -->
+    <script src="./js/textarea-resize-manager.js"></script>
+</body>
+</html>

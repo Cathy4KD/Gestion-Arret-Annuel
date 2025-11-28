@@ -1,0 +1,133 @@
+<div id="detail-purges-gaz" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; margin-bottom: 20px; gap: 15px;">
+            <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                ← Retour
+            </button>
+            <h2 style="margin: 0; color: #333;">VALIDATION DE POINTS DE PURGES GAZ CO</h2>
+        </div>
+
+        <!-- Section Compte-Rendu et Documents -->
+        <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <h3 style="margin: 0 0 15px 0; color: #333; font-size: 1.2em;">📝 Compte-Rendu de Visite / Réunion</h3>
+
+            <!-- Date et Participants -->
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px; color: #555;">Date de la visite/réunion</label>
+                    <input type="date" id="purgesGazDate" onchange="window.purgesGazActions.updateField('date', this.value)"
+                           style="width: 100%; padding: 8px; border: 2px solid #ddd; border-radius: 6px; font-size: 0.95em;">
+                </div>
+                <div>
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px; color: #555;">Participants</label>
+                    <input type="text" id="purgesGazParticipants" placeholder="Ex: Jean Dupont, Marie Martin"
+                           onchange="window.purgesGazActions.updateField('participants', this.value)"
+                           style="width: 100%; padding: 8px; border: 2px solid #ddd; border-radius: 6px; font-size: 0.95em;">
+                </div>
+            </div>
+
+            <!-- Commentaires/Observations -->
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: 600; display: block; margin-bottom: 5px; color: #555;">Observations / Commentaires</label>
+                <textarea id="purgesGazCommentaires" placeholder="Décrivez les observations, points importants, décisions prises..."
+                          onchange="window.purgesGazActions.updateField('commentaires', this.value)"
+                          class="auto-resize"
+                          style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; min-height: 100px; resize: vertical; font-size: 0.95em; line-height: 1.5;"></textarea>
+            </div>
+
+            <!-- Actions et Suivis -->
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: 600; display: block; margin-bottom: 5px; color: #555;">Actions à suivre</label>
+                <textarea id="purgesGazActions" placeholder="Listez les actions à suivre, responsabilités, échéances..."
+                          onchange="window.purgesGazActions.updateField('actionsSuivre', this.value)"
+                          class="auto-resize"
+                          style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; min-height: 80px; resize: vertical; font-size: 0.95em; line-height: 1.5;"></textarea>
+            </div>
+
+            <!-- Upload de documents -->
+            <div style="border-top: 2px solid #f0f0f0; padding-top: 15px;">
+                <label style="font-weight: 600; display: block; margin-bottom: 10px; color: #555;">📎 Documents Attachés</label>
+                <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
+                    <label class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px; cursor: pointer; margin: 0;">
+                        📁 Ajouter un Document
+                        <input type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
+                               onchange="window.purgesGazActions.addDocument(event)"
+                               style="display: none;">
+                    </label>
+                    <span style="font-size: 0.9em; color: #666;">PDF, Word, Excel, Images acceptés</span>
+                </div>
+
+                <!-- Liste des documents -->
+                <div id="purgesGazDocumentsList" style="background: #f8f9fa; padding: 15px; border-radius: 8px; min-height: 60px;">
+                    <div style="text-align: center; color: #999; font-size: 0.95em;">Aucun document attaché</div>
+                </div>
+            </div>
+
+            <!-- Boutons d'export -->
+            <div style="display: flex; gap: 10px; margin-top: 20px; padding-top: 15px; border-top: 2px solid #f0f0f0;">
+                <button onclick="window.purgesGazActions.exportCompteRenduPDF()" class="btn"
+                        style="background: linear-gradient(145deg, #dc3545, #c82333); color: white; padding: 10px 20px;">
+                    📄 Exporter Compte-Rendu PDF
+                </button>
+                <button onclick="window.purgesGazActions.saveDraft()" class="btn"
+                        style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                    💾 Sauvegarder Brouillon
+                </button>
+            </div>
+        </div>
+
+        <!-- Filtre par Poste Technique -->
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <div style="margin-bottom: 15px;">
+                <button onclick="window.dataActions.togglePosteDropdown('purges-gaz')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px; width: 100%; text-align: left; display: flex; justify-content: space-between; align-items: center;">
+                    <span id="purges-gaz-selected-text">Filtrer par Poste Technique</span>
+                    <span>▼</span>
+                </button>
+            </div>
+
+            <!-- Menu déroulant -->
+            <div id="purges-gaz-dropdown-menu" style="display: none; background: white; border: 2px solid #ddd; border-radius: 8px; padding: 15px; margin-top: 10px; max-height: 300px; overflow-y: auto;">
+                <div style="display: flex; gap: 10px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 2px solid #eee;">
+                    <button onclick="window.dataActions.selectAllPostesTechniques('purges-gaz')" class="btn" style="background: #4a7c59; color: white; padding: 8px 16px; flex: 1;">
+                        Tout sélectionner
+                    </button>
+                    <button onclick="window.dataActions.deselectAllPostesTechniques('purges-gaz')" class="btn" style="background: #dc3545; color: white; padding: 8px 16px; flex: 1;">
+                        Tout désélectionner
+                    </button>
+                </div>
+
+                <div style="margin-bottom: 10px; padding: 10px; background: #e3f2fd; border-radius: 5px;">
+                    <span id="purges-gaz-filter-count" style="font-weight: 600; color: #1976d2;">0 / 0 sélectionnés</span>
+                </div>
+
+                <div id="purges-gaz-poste-filters"></div>
+            </div>
+        </div>
+
+        <!-- Tableau des opérations -->
+        <div style="background: white; padding: 20px; border-radius: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: #333;">Opérations (<span id="purges-gaz-count">0</span>)</h3>
+                <button onclick="window.dataActions.exportToExcel('purges-gaz', 'VALIDATION DE POINTS DE PURGES GAZ CO')" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                    📊 Exporter Excel
+                </button>
+            </div>
+
+            <table id="purges-gaz-table" class="summary-table" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">État</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Ordre</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Désignation</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Opération</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Post. Trav.</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Poste Technique</th>
+                    </tr>
+                </thead>
+                <tbody id="purges-gaz-tbody">
+                    <tr><td colspan="6" style="padding: 30px; text-align: center; color: #666;">Aucune donnée IW37N disponible.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div><!-- Version: 1763767555 -->

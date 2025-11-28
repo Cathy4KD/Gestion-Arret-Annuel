@@ -1,0 +1,754 @@
+<div id="summary" class="page">
+    <div class="summary-container">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <h2 style="margin: 0; color: #000000;">📝 Préparation de l'Arrêt</h2>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <!-- Bouton de basculement de vue -->
+                <div style="background: white; border-radius: 12px; padding: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; gap: 5px;">
+                    <button id="btnViewTable" data-view="table" class="summary-view-btn" style="padding: 8px 16px; background: linear-gradient(145deg, #667eea, #764ba2); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">
+                        📊 Tableau
+                    </button>
+                    <button id="btnViewTimeline" data-view="timeline" class="summary-view-btn" style="padding: 8px 16px; background: transparent; color: #667eea; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">
+                        📅 Timeline
+                    </button>
+                </div>
+
+                <button onclick="window.switchToPage('bilan-reunions')" style="padding: 10px 20px; background: linear-gradient(145deg, #667eea, #764ba2); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.3); transition: all 0.3s ease;">
+                    📅 Bilan des Réunions
+                </button>
+                <button onclick="window.switchToPage('detail-avis-syndicaux')" style="padding: 10px 20px; background: linear-gradient(145deg, #667eea, #764ba2); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.3); transition: all 0.3s ease;">
+                    📢 Avis Syndicaux
+                </button>
+                <button onclick="window.pdfExportActions.exportPreparationPDF()" style="padding: 10px 20px; background: linear-gradient(145deg, #e53935, #d32f2f); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.3); transition: all 0.3s ease;">
+                    📄 Export PDF
+                </button>
+            </div>
+        </div>
+
+        <!-- Vue Tableau (actuelle) -->
+        <div id="summary-table-view" style="display: block;">
+            <div class="summary-table-wrapper">
+                <table class="summary-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 30%; color: white;">Tâche / Phase</th>
+                            <th style="width: 15%; color: white;">Responsable</th>
+                            <th style="width: 5%; text-align: center; color: white;">Statut</th>
+                            <th style="width: 8%; text-align: center; color: white;">Avancement Réel</th>
+                            <th style="width: 5%; text-align: center; color: white;">État</th>
+                            <th style="width: 37%; color: white;">Commentaire</th>
+                        </tr>
+                    </thead>
+                    <tbody id="summaryTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Vue Timeline (nouvelle) -->
+        <div id="summary-timeline-view" style="display: none;">
+            <div id="summaryTimelineContainer"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Styles pour la timeline verticale - Design moderne et élégant */
+.timeline-container {
+    position: relative;
+    padding: 30px 0;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.timeline-phase {
+    position: relative;
+    margin-bottom: 50px;
+}
+
+/* En-tête de phase avec design glassmorphism moderne */
+.timeline-phase-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 20px 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    color: white;
+    box-shadow:
+        0 8px 32px rgba(102, 126, 234, 0.25),
+        0 2px 8px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.timeline-phase-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+    pointer-events: none;
+}
+
+.timeline-phase-header:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 12px 40px rgba(102, 126, 234, 0.35),
+        0 4px 12px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.timeline-phase-icon {
+    font-size: 2.2em;
+    margin-right: 20px;
+    background: white;
+    color: #667eea;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.timeline-phase-header:hover .timeline-phase-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.timeline-phase-info {
+    flex: 1;
+    z-index: 1;
+}
+
+.timeline-phase-title {
+    font-size: 1.4em;
+    font-weight: 800;
+    margin: 0 0 6px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    letter-spacing: 0.3px;
+}
+
+.timeline-phase-subtitle {
+    font-size: 0.95em;
+    opacity: 0.95;
+    margin: 0;
+    font-weight: 500;
+}
+
+.timeline-phase-stats {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    z-index: 1;
+}
+
+.timeline-stat {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-size: 0.9em;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.timeline-stat:hover {
+    background: rgba(255, 255, 255, 0.35);
+    transform: translateY(-2px);
+}
+
+/* Zone des tâches */
+.timeline-tasks {
+    position: relative;
+    padding-left: 70px;
+}
+
+/* Ligne de temps avec dégradé élégant */
+.timeline-line {
+    position: absolute;
+    left: 35px;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg,
+        #667eea 0%,
+        #764ba2 50%,
+        rgba(118, 75, 162, 0.3) 100%
+    );
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+}
+
+/* Cartes de tâches avec design moderne */
+.timeline-task {
+    position: relative;
+    margin-bottom: 20px;
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.08),
+        0 1px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(102, 126, 234, 0.1);
+    overflow: hidden;
+    position: relative;
+}
+
+.timeline-task::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background: linear-gradient(180deg, #667eea, #764ba2);
+    border-radius: 16px 0 0 16px;
+    transition: width 0.3s ease;
+}
+
+.timeline-task:hover {
+    box-shadow:
+        0 8px 30px rgba(102, 126, 234, 0.15),
+        0 2px 8px rgba(0, 0, 0, 0.08);
+    transform: translateX(8px);
+    border-color: rgba(102, 126, 234, 0.3);
+}
+
+.timeline-task:hover::before {
+    width: 8px;
+}
+
+.timeline-task.completed::before {
+    background: linear-gradient(180deg, #28a745, #20c997);
+}
+
+.timeline-task.completed {
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(212, 237, 218, 0.3) 100%
+    );
+}
+
+.timeline-task.inprogress::before {
+    background: linear-gradient(180deg, #ffc107, #ff9800);
+}
+
+.timeline-task.inprogress {
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(255, 243, 205, 0.3) 100%
+    );
+}
+
+.timeline-task.notstarted::before {
+    background: linear-gradient(180deg, #6c757d, #495057);
+}
+
+/* Points de la timeline avec design amélioré */
+.timeline-task-dot {
+    position: absolute;
+    left: -50px;
+    top: 28px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: white;
+    border: 4px solid #667eea;
+    box-shadow:
+        0 0 0 6px white,
+        0 0 0 8px #667eea,
+        0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.timeline-task:hover .timeline-task-dot {
+    transform: scale(1.2);
+    box-shadow:
+        0 0 0 6px white,
+        0 0 0 10px #667eea,
+        0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+.timeline-task-dot.completed {
+    background: #28a745;
+    border-color: #28a745;
+    box-shadow:
+        0 0 0 6px white,
+        0 0 0 8px #28a745,
+        0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.timeline-task-dot.completed::after {
+    content: "✓";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.timeline-task-dot.inprogress {
+    background: #ffc107;
+    border-color: #ffc107;
+    box-shadow:
+        0 0 0 6px white,
+        0 0 0 8px #ffc107,
+        0 4px 12px rgba(255, 193, 7, 0.3);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.timeline-task-dot.notstarted {
+    background: #e9ecef;
+    border-color: #6c757d;
+    box-shadow:
+        0 0 0 6px white,
+        0 0 0 8px #6c757d,
+        0 4px 12px rgba(108, 117, 125, 0.2);
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow:
+            0 0 0 6px white,
+            0 0 0 8px #ffc107,
+            0 4px 12px rgba(255, 193, 7, 0.3);
+    }
+    50% {
+        box-shadow:
+            0 0 0 6px white,
+            0 0 0 12px rgba(255, 193, 7, 0.5),
+            0 6px 20px rgba(255, 193, 7, 0.5);
+    }
+}
+
+/* En-tête de tâche */
+.timeline-task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    gap: 16px;
+}
+
+.timeline-task-title {
+    font-weight: 700;
+    font-size: 1.15em;
+    color: #2c3e50;
+    flex: 1;
+    margin: 0;
+    cursor: pointer;
+    line-height: 1.4;
+    transition: color 0.3s ease;
+}
+
+.timeline-task-title:hover {
+    color: #667eea;
+}
+
+.timeline-task-badges {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* Badges de statut modernisés */
+.timeline-badge {
+    padding: 6px 14px;
+    border-radius: 10px;
+    font-size: 0.8em;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.timeline-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.timeline-badge.status-completed {
+    background: linear-gradient(135deg, #d4edda, #c3e6cb);
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.timeline-badge.status-inprogress {
+    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.timeline-badge.status-notstarted {
+    background: linear-gradient(135deg, #e2e3e5, #d6d8db);
+    color: #383d41;
+    border: 1px solid #d6d8db;
+}
+
+/* Corps de tâche */
+.timeline-task-body {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.timeline-task-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95em;
+    color: #555;
+    padding: 8px 12px;
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.timeline-task-info:hover {
+    background: rgba(102, 126, 234, 0.1);
+    transform: translateX(4px);
+}
+
+.timeline-task-info-icon {
+    color: #667eea;
+    font-weight: 600;
+    font-size: 1.1em;
+}
+
+/* Barre de progression élégante */
+.timeline-task-progress {
+    margin-top: 16px;
+}
+
+.timeline-progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.88em;
+    color: #555;
+    font-weight: 600;
+}
+
+.timeline-progress-bar-container {
+    height: 10px;
+    background: linear-gradient(90deg, #f0f2f5, #e9ecef);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.timeline-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border-radius: 10px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    box-shadow: 0 2px 6px rgba(102, 126, 234, 0.4);
+}
+
+.timeline-progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    border-radius: 10px 10px 0 0;
+}
+
+.timeline-progress-bar.completed {
+    background: linear-gradient(90deg, #28a745, #20c997);
+    box-shadow: 0 2px 6px rgba(40, 167, 69, 0.4);
+}
+
+.timeline-progress-bar.inprogress {
+    background: linear-gradient(90deg, #ffc107, #ff9800);
+    box-shadow: 0 2px 6px rgba(255, 193, 7, 0.4);
+}
+
+/* Commentaire avec design moderne */
+.timeline-task-comment {
+    margin-top: 16px;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 10px;
+    font-size: 0.92em;
+    color: #555;
+    font-style: italic;
+    border-left: 3px solid #667eea;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.timeline-task-comment:hover {
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    border-left-width: 4px;
+}
+
+.timeline-task-comment:empty {
+    display: none;
+}
+
+/* Animation d'entrée fluide */
+.timeline-task {
+    animation: slideInRight 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Vue vide élégante */
+.timeline-empty {
+    text-align: center;
+    padding: 80px 20px;
+    color: #999;
+}
+
+.timeline-empty-icon {
+    font-size: 5em;
+    margin-bottom: 24px;
+    opacity: 0.4;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.timeline-empty-text {
+    font-size: 1.3em;
+    color: #666;
+    font-weight: 600;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .timeline-phase-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+
+    .timeline-phase-icon {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .timeline-phase-stats {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .timeline-stat {
+        width: 100%;
+    }
+
+    .timeline-tasks {
+        padding-left: 40px;
+    }
+
+    .timeline-line {
+        left: 20px;
+    }
+
+    .timeline-task-dot {
+        left: -35px;
+    }
+
+    .timeline-task-body {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================
+   STYLES SIMPLES - Carrés colorés et timeline
+   ============================================ */
+
+.timeline-simple-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    background: #f5f5f5;
+}
+
+/* Rangées de carrés (haut et bas) */
+.timeline-row {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.timeline-square {
+    flex: 1;
+    min-height: 150px;
+    border-radius: 12px;
+    padding: 20px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.timeline-square:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.square-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+.square-period {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.square-subtitle {
+    font-size: 12px;
+    line-height: 1.4;
+    opacity: 0.95;
+}
+
+/* Timeline centrale horizontale */
+.timeline-center-bar {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    border: 3px solid #4CAF50;
+}
+
+.timeline-center-segment {
+    color: white;
+    padding: 20px 15px;
+    border-radius: 8px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.timeline-center-segment:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.center-title {
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+
+.center-period {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.timeline-center-arrow {
+    font-size: 24px;
+    color: #666;
+    margin: 0 10px;
+    font-weight: bold;
+}
+
+/* Jalons clés */
+.timeline-milestones {
+    display: flex;
+    gap: 10px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.milestone-item {
+    background: #f8f9fa;
+    border-left: 4px solid #2196F3;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.6;
+    transition: all 0.3s ease;
+}
+
+.milestone-item:hover {
+    background: #e3f2fd;
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.milestone-item strong {
+    color: #1976D2;
+    font-weight: 800;
+    font-size: 13px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .timeline-row {
+        flex-direction: column;
+    }
+
+    .timeline-center-bar {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .timeline-center-arrow {
+        transform: rotate(90deg);
+        margin: 10px 0;
+    }
+
+    .timeline-milestones {
+        flex-direction: column;
+    }
+}
+</style>

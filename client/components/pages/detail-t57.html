@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-t57</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+<div id="detail-t57" class="page">
+            <div class="summary-container" style="max-width: 98%; padding: 20px;">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                    <h2 style="margin: 0; color: #333; flex: 1;">ÉTABLIR LES BESOIN EN ÉQUIPEMENTS DE TRAVAIL EN HAUTEUR</h2>
+                    <button onclick="syncTravailHauteurFromIw37n()" style="padding: 10px 20px; background: #48bb78; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 10px;">
+                        🔄 Synchroniser avec IW37N
+                    </button>
+                    <button onclick="addTravailHauteur()" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        ➕ Ajouter Équipement
+                    </button>
+                </div>
+
+                <!-- Section Tableau des Équipements de Travail en Hauteur -->
+                <div style="background: white; padding: 12px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <div>
+                            <h3 style="margin: 0 0 3px 0; color: #333; font-size: 1.1em;">📋 Liste des Équipements de Travail en Hauteur</h3>
+                            <p style="margin: 0; color: #666; font-size: 0.9em;">
+                                Total: <strong><span id="travailHauteurCount">0</span></strong> équipement(s)
+                            </p>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="exportTravailHauteurToExcel()" style="padding: 6px 14px; background: #4299e1; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.9em;">
+                                📥 Exporter Excel
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Limiter la hauteur pour ne pas prendre tout l'écran -->
+                    <div style="overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                            <thead style="position: sticky; top: 0; z-index: 10;">
+                                <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                    <th style="padding: 6px 8px; border: 1px solid #dee2e6; text-align: left; min-width: 100px;">Ordre</th>
+                                    <th style="padding: 6px 8px; border: 1px solid #dee2e6; text-align: left; min-width: 300px;">Désign. Opér.</th>
+                                    <th style="padding: 6px 8px; border: 1px solid #dee2e6; text-align: left; min-width: 150px;">Poste technique</th>
+                                    <th style="padding: 6px 8px; border: 1px solid #dee2e6; text-align: left; min-width: 200px;">Commentaire</th>
+                                </tr>
+                            </thead>
+                            <tbody id="travailHauteurTableBody">
+                                <tr>
+                                    <td colspan="4" style="padding: 20px; text-align: center; color: #666;">
+                                        Aucun équipement de travail en hauteur enregistré. Cliquez sur "Synchroniser avec IW37N" pour charger les données.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section Tableau des Demandes Standard de Nacelles -->
+                <div style="background: white; padding: 12px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <div>
+                            <h3 style="margin: 0 0 3px 0; color: #333; font-size: 1.1em;">🏗️ Demandes Standard de Nacelles</h3>
+                            <p style="margin: 0; color: #666; font-size: 0.9em;">
+                                Total: <strong><span id="nacellesCount">0</span></strong> demande(s)
+                            </p>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="addNacelle()" style="padding: 6px 14px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.9em;">
+                                ➕ Ajouter Nacelle
+                            </button>
+                            <button onclick="exportNacellesToExcel()" style="padding: 6px 14px; background: #ff9800; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.9em;">
+                                📥 Exporter Excel
+                            </button>
+                        </div>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                            <thead>
+                                <tr style="background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); color: white;">
+                                    <th style="padding: 6px 8px; border: 1px solid #dee2e6; text-align: left; min-width: 200px;">Équipement mobile léger</th>
+                                    <th style="padding: 6px 8px; border: 1px solid #dee2e6; text-align: center; min-width: 80px;">Quantité</th>
+                                    <th style="padding: 6px 8px; border: 1px solid #dee2e6; text-align: left; min-width: 130px;">Date de début</th>
+                                    <th style="padding: 6px 8px; border: 1px solid #dee2e6; text-align: left; min-width: 130px;">Date de fin</th>
+                                    <th style="padding: 6px 8px; border: 1px solid #dee2e6; text-align: left; min-width: 220px;">Justification</th>
+                                    <th style="padding: 6px 8px; border: 1px solid #dee2e6; text-align: left; min-width: 270px;">Décrire travail à exécuter</th>
+                                    <th style="padding: 6px 8px; border: 1px solid #dee2e6; text-align: center; min-width: 80px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="nacellesTableBody">
+                                <tr>
+                                    <td colspan="7" style="padding: 20px; text-align: center; color: #666;">
+                                        Aucune demande de nacelle enregistrée. Cliquez sur "➕ Ajouter Nacelle" pour créer une nouvelle demande.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<div id="detail-t9" class="page">
+                    <div class="summary-container" style="max-width: 95%;">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <button onclick="switchPage('summary')"
+                                    style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">
+                                ← Retour
+                            </button>
+                            <h2 style="margin: 0; color: #333;">OBTENIR LA LISTE DES MAINTENANCES CAPITALISABLES</h2>
+                        </div>
+
+                        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            <!-- Boutons d'action -->
+                            <div style="margin-bottom: 20px; display: flex; gap: 10px;">
+                                <button onclick="addMaintenanceCapitalisableRow()"
+                                        style="padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                                    ➕ Ajouter une Maintenance
+                                </button>
+                                <button onclick="document.getElementById('uploadMaintenancesCapExcel').click()"
+                                        style="padding: 10px 20px; background: #217346; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                                    📤 Importer Excel/CSV
+                                </button>
+                                <input type="file" id="uploadMaintenancesCapExcel" accept=".xlsx,.xls,.csv" style="display: none;" onchange="handleMaintenancesCapitalisablesUpload(event)">
+                            </div>
+
+                            <!-- Tableau des maintenances -->
+                            <div style="overflow-x: auto; max-height: 600px; overflow-y: auto;">
+                                <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                                    <thead style="position: sticky; top: 0; background: white; z-index: 10;">
+                                        <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap;">Poste Responsable</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap;">Ordre</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap;">Avis</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; min-width: 150px;">Poste Technique</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; min-width: 200px;">Description</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap;">Créé par</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center; white-space: nowrap;">Décision</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center; white-space: nowrap;">Date</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; min-width: 150px;">Commentaire</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center; min-width: 180px;">Documents/Photos</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="maintenancesCapitalisablesTableBody">
+                                        <tr>
+                                            <td colspan="10" style="padding: 30px; text-align: center; color: #666;">
+                                                Aucune maintenance ajoutée. Cliquez sur "Ajouter une Maintenance" pour commencer.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-t55-historique</title>
+    <!-- Styles seront chargés par l'app principale -->
+    <style>
+        /* Style compact pour le tableau d'historique T55 */
+        #t55HistoriqueStandaloneTableBody tr {
+            height: 22px;
+        }
+        #t55HistoriqueStandaloneTableBody td {
+            padding: 2px 4px !important;
+            border: 1px solid #dee2e6 !important;
+            font-size: 11px !important;
+            line-height: 1.2 !important;
+            vertical-align: middle !important;
+        }
+        #t55HistoriqueStandaloneTableBody input,
+        #t55HistoriqueStandaloneTableBody textarea,
+        #t55HistoriqueStandaloneTableBody select {
+            padding: 2px 3px !important;
+            font-size: 10px !important;
+            line-height: 1.2 !important;
+            height: 18px !important;
+            border: 1px solid #ddd !important;
+        }
+        #t55HistoriqueStandaloneTableBody textarea {
+            min-height: 18px !important;
+            resize: vertical !important;
+        }
+        #t55HistoriqueStandaloneTableBody button {
+            padding: 2px 5px !important;
+            font-size: 10px !important;
+            line-height: 1.2 !important;
+        }
+    </style>
+</head>
+<body>
+<div id="detail-t55-historique" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <button onclick="switchToPage('detail-t55')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+            <h2 style="margin: 0; color: #333; flex: 1;">HISTORIQUE DES DEVIS ET CORRECTIONS</h2>
+        </div>
+
+        <!-- Barre d'actions -->
+        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: #333;">📋 Données Historiques</h3>
+                <div style="display: flex; gap: 10px;">
+                    <input type="file" id="t55HistoriqueExcelUpload" accept=".xlsx,.xls" style="display: none;" onchange="window.t55Historique.uploadFromExcel(event)">
+                    <button onclick="document.getElementById('t55HistoriqueExcelUpload').click()"
+                            style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        📤 Upload Excel
+                    </button>
+                    <button onclick="window.t55Historique.addRow()"
+                            style="padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        ➕ Ajouter Ligne
+                    </button>
+                    <button onclick="window.t55Historique.exportToExcel()"
+                            style="padding: 10px 20px; background: #4299e1; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        📥 Exporter Excel
+                    </button>
+                    <button onclick="window.t55Historique.clearAll()"
+                            style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        🗑️ Effacer Tout
+                    </button>
+                </div>
+            </div>
+            <p style="margin: 0; color: #666; font-size: 0.95em;">
+                Total: <strong><span id="t55HistoriqueCount">0</span></strong> enregistrement(s)
+            </p>
+        </div>
+
+        <!-- Tableau Historique -->
+        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                    <thead>
+                        <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; height: 22px;">
+                            <th style="padding: 2px 4px; border: 1px solid #dee2e6; text-align: left; font-size: 10px; line-height: 1.2; min-width: 60px;">Occ.</th>
+                            <th style="padding: 2px 4px; border: 1px solid #dee2e6; text-align: left; font-size: 10px; line-height: 1.2; min-width: 80px;">Révision</th>
+                            <th style="padding: 2px 4px; border: 1px solid #dee2e6; text-align: left; font-size: 10px; line-height: 1.2; min-width: 70px;">Item</th>
+                            <th style="padding: 2px 4px; border: 1px solid #dee2e6; text-align: left; font-size: 10px; line-height: 1.2; min-width: 120px;">Équipement</th>
+                            <th style="padding: 2px 4px; border: 1px solid #dee2e6; text-align: left; font-size: 10px; line-height: 1.2; min-width: 80px;">Ordre</th>
+                            <th style="padding: 2px 4px; border: 1px solid #dee2e6; text-align: left; font-size: 10px; line-height: 1.2; min-width: 250px;">Description des travaux</th>
+                            <th style="padding: 2px 4px; border: 1px solid #dee2e6; text-align: left; font-size: 10px; line-height: 1.2; min-width: 150px;">Matériel RTFT</th>
+                            <th style="padding: 2px 4px; border: 1px solid #dee2e6; text-align: left; font-size: 10px; line-height: 1.2; min-width: 150px;">Matériel Entr.</th>
+                            <th style="padding: 2px 4px; border: 1px solid #dee2e6; text-align: left; font-size: 10px; line-height: 1.2; min-width: 120px;">Dessins - Réf.</th>
+                            <th style="padding: 2px 4px; border: 1px solid #dee2e6; text-align: left; font-size: 10px; line-height: 1.2; min-width: 100px;">Gammes</th>
+                            <th style="padding: 2px 4px; border: 1px solid #dee2e6; text-align: left; font-size: 10px; line-height: 1.2; min-width: 100px;">CptrGrpGam</th>
+                            <th style="padding: 2px 4px; border: 1px solid #dee2e6; text-align: left; font-size: 10px; line-height: 1.2; min-width: 120px;">Poste Tech.</th>
+                            <th style="padding: 2px 4px; border: 1px solid #dee2e6; text-align: center; font-size: 10px; line-height: 1.2; min-width: 80px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="t55HistoriqueStandaloneTableBody">
+                        <tr>
+                            <td colspan="13" style="padding: 20px; text-align: center; color: #666; border: 1px solid #dee2e6; font-size: 11px;">
+                                Aucun historique disponible. Cliquez sur "Upload Excel" ou "Ajouter Ligne" pour commencer.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div id="t55HistoriquePagination"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

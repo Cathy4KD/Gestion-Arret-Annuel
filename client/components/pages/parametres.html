@@ -1,0 +1,147 @@
+<div id="parametres" class="page">
+    <div class="card">
+        <h2 style="margin-bottom: 20px; color: #333; font-size: 1.4em;">⚙️ Paramètres de l'Arrêt Annuel</h2>
+
+        <!-- Configuration des Dates et Budget -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+            <!-- Dates de l'Arrêt -->
+            <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
+                <h3 style="margin: 0 0 12px 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 6px; font-size: 1.1em;">
+                    📅 Dates de l'Arrêt
+                </h3>
+
+                <div style="margin-bottom: 12px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #555; font-size: 0.9em;">
+                        Date de début <span style="color: red;">*</span>
+                    </label>
+                    <input type="date" id="settingsStartDate"
+                           onchange="window.settingsActions.handleStartDateChange()"
+                           style="width: 100%; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.95em;">
+                </div>
+
+                <div style="background: #fff3cd; padding: 8px; border-radius: 4px; margin-bottom: 10px; border-left: 3px solid #ffc107;">
+                    <p style="margin: 0; color: #856404; font-size: 0.85em;">
+                        ⚙️ Choisissez une option:
+                    </p>
+                </div>
+
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #555; font-size: 0.9em;">
+                        Option 1: Date de fin
+                    </label>
+                    <input type="date" id="settingsEndDate"
+                           onchange="window.settingsActions.handleEndDateChange()"
+                           style="width: 100%; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.95em;">
+                </div>
+
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #555; font-size: 0.9em;">
+                        Option 2: Durée (jours)
+                    </label>
+                    <input type="number" id="settingsDuration" min="1" placeholder="Ex: 14"
+                           onchange="window.settingsActions.handleDurationChange()"
+                           style="width: 100%; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.95em;">
+                </div>
+
+                <div style="background: #e3f2fd; padding: 8px; border-radius: 4px; margin-top: 10px;">
+                    <p style="margin: 0; color: #1565c0; font-size: 0.85em;">
+                        <strong>Résumé:</strong>
+                        <span id="summaryStartDate" style="font-weight: bold;">--</span> →
+                        <span id="summaryEndDate" style="font-weight: bold;">--</span>
+                        (<span id="summaryDuration" style="font-weight: bold;">--</span>)
+                    </p>
+                </div>
+            </div>
+
+            <!-- Budget -->
+            <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
+                <h3 style="margin: 0 0 12px 0; color: #28a745; border-bottom: 2px solid #28a745; padding-bottom: 6px; font-size: 1.1em;">
+                    💰 Budget de l'Arrêt
+                </h3>
+
+                <div style="margin-bottom: 12px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #555; font-size: 0.9em;">
+                        Budget total (CAD $)
+                    </label>
+                    <input type="number" id="settingsBudget"
+                           placeholder="Ex: 5000000"
+                           style="width: 100%; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.95em;">
+                </div>
+
+                <div style="background: #fff3cd; padding: 8px; border-radius: 4px; margin-top: 10px;">
+                    <p style="margin: 0; color: #856404; font-size: 0.85em;">
+                        <strong>⚠️ Info:</strong> Utilisé pour tous les calculs de l'application.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Jours Fériés du Québec -->
+        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
+            <h3 style="margin: 0 0 12px 0; color: #dc3545; border-bottom: 2px solid #dc3545; padding-bottom: 6px; font-size: 1.1em;">
+                🎉 Jours Fériés du Québec
+            </h3>
+
+            <div id="holidaysContainer" style="min-height: 40px;">
+                <p style="color: #666; font-style: italic; font-size: 0.9em; margin: 0;">
+                    Les jours fériés seront affichés une fois les dates configurées.
+                </p>
+            </div>
+        </div>
+
+        <!-- Dates Limites -->
+        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 style="margin: 0; color: #ff6b6b; border-bottom: 2px solid #ff6b6b; padding-bottom: 6px; font-size: 1.1em;">
+                    📆 Dates Limites
+                </h3>
+                <button onclick="window.settingsActions.addDateLimite()"
+                        class="btn"
+                        style="background: linear-gradient(145deg, #ff6b6b, #ee5a52); color: white; padding: 6px 12px; font-size: 0.9em;">
+                    ➕ Ajouter
+                </button>
+            </div>
+
+            <!-- Tableau des dates limites -->
+            <div style="overflow-x: auto;">
+                <table id="datesLimitesTable" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #f3f4f6;">
+                            <th style="padding: 8px; text-align: left; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb;">Description</th>
+                            <th style="padding: 8px; text-align: center; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb; width: 140px;">Valeur (jours)</th>
+                            <th style="padding: 8px; text-align: center; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb; width: 160px;">Date Limite</th>
+                            <th style="padding: 8px; text-align: center; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb; width: 100px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="datesLimitesTableBody">
+                        <tr>
+                            <td colspan="4" style="padding: 30px; text-align: center; color: #9ca3af;">
+                                Aucune date limite. Cliquez sur "Ajouter".
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="background: #e3f2fd; padding: 8px; border-radius: 4px; margin-top: 10px;">
+                <p style="margin: 0; color: #1565c0; font-size: 0.85em;">
+                    <strong>ℹ️ Info:</strong> Date Limite = <strong>Date début</strong> - <strong>Valeur (jours)</strong>
+                </p>
+            </div>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 15px;">
+            <button onclick="window.settingsActions.cancelSettings()"
+                    class="btn"
+                    style="background: #6c757d; color: white; padding: 8px 20px; font-size: 0.95em;">
+                ❌ Annuler
+            </button>
+            <button onclick="window.settingsActions.saveSettings()"
+                    class="btn"
+                    style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 8px 20px; font-size: 0.95em;">
+                ✅ Enregistrer
+            </button>
+        </div>
+    </div>
+</div>

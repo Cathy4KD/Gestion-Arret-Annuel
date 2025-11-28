@@ -1,0 +1,181 @@
+<div id="point-presse-form" class="page">
+                    <div class="summary-container" style="max-width: 1400px;">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <button onclick="window.switchToPage('point-presse-journaliers')" style="padding: 10px 20px; background: #f093fb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                            <h2 style="margin: 0; color: #333;" id="point-presse-form-title">📝 Ajouter un Point de Presse</h2>
+                        </div>
+
+                        <form id="pointPresseFormElement" style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+
+                            <!-- Section: Informations Générales -->
+                            <div style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                                <h3 style="margin: 0;">📅 Informations Générales</h3>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 25px;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">Jour</label>
+                                    <input type="text" id="pp-jour" placeholder="Ex: Jour 1" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">Date</label>
+                                    <input type="date" id="pp-date" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">Durée</label>
+                                    <input type="text" id="pp-duree" placeholder="Ex: 24h" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">Nb. Travailleurs</label>
+                                    <input type="number" id="pp-nb-travailleurs" placeholder="0" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                </div>
+                            </div>
+
+                            <!-- Section: Arrêt/Départ -->
+                            <div style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                                <h3 style="margin: 0;">🕐 Arrêt / Départ</h3>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 25px;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">Arrêt Prévu</label>
+                                    <input type="text" id="pp-arret-prevu" placeholder="Date/heure" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">Arrêt Réel</label>
+                                    <input type="text" id="pp-arret-reel" placeholder="Date/heure" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">Départ Prévu</label>
+                                    <input type="text" id="pp-depart-prevu" placeholder="Date/heure" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">Départ Réel</label>
+                                    <input type="text" id="pp-depart-reel" placeholder="Date/heure" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                </div>
+                            </div>
+
+                            <!-- Section: Indicateurs SSE -->
+                            <div style="background: linear-gradient(145deg, #f093fb, #f5576c); color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                                <h3 style="margin: 0;">🛡️ Indicateurs SSE</h3>
+                            </div>
+
+                            <div style="margin-bottom: 25px;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <thead>
+                                        <tr style="background: #f8f9fa;">
+                                            <th style="padding: 10px; text-align: left; border: 1px solid #dee2e6;">Description</th>
+                                            <th style="padding: 10px; text-align: center; border: 1px solid #dee2e6;">24H</th>
+                                            <th style="padding: 10px; text-align: center; border: 1px solid #dee2e6;">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="padding: 10px; border: 1px solid #dee2e6;">Arrêter demander d'aide</td>
+                                            <td style="padding: 10px; border: 1px solid #dee2e6;"><input type="number" id="pp-arreter-aide-24" value="0" style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; text-align: center;"></td>
+                                            <td style="padding: 10px; border: 1px solid #dee2e6;"><input type="number" id="pp-arreter-aide-total" value="0" style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; text-align: center;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 10px; border: 1px solid #dee2e6;">Incident SSE (Blessure)</td>
+                                            <td style="padding: 10px; border: 1px solid #dee2e6;"><input type="number" id="pp-incident-blessure-24" value="0" style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; text-align: center;"></td>
+                                            <td style="padding: 10px; border: 1px solid #dee2e6;"><input type="number" id="pp-incident-blessure-total" value="0" style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; text-align: center;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 10px; border: 1px solid #dee2e6;">Incident SSE (autre)</td>
+                                            <td style="padding: 10px; border: 1px solid #dee2e6;"><input type="number" id="pp-incident-autre-24" value="0" style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; text-align: center;"></td>
+                                            <td style="padding: 10px; border: 1px solid #dee2e6;"><input type="number" id="pp-incident-autre-total" value="0" style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; text-align: center;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 10px; border: 1px solid #dee2e6;">Problème qualité MIN</td>
+                                            <td style="padding: 10px; border: 1px solid #dee2e6;"><input type="number" id="pp-qualite-min-24" value="0" style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; text-align: center;"></td>
+                                            <td style="padding: 10px; border: 1px solid #dee2e6;"><input type="number" id="pp-qualite-min-total" value="0" style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; text-align: center;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 10px; border: 1px solid #dee2e6;">Problème qualité MAJ</td>
+                                            <td style="padding: 10px; border: 1px solid #dee2e6;"><input type="number" id="pp-qualite-maj-24" value="0" style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; text-align: center;"></td>
+                                            <td style="padding: 10px; border: 1px solid #dee2e6;"><input type="number" id="pp-qualite-maj-total" value="0" style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; text-align: center;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 10px; border: 1px solid #dee2e6;">Réel vs Cible en hrs</td>
+                                            <td style="padding: 10px; border: 1px solid #dee2e6;"><input type="number" id="pp-reel-vs-cible-24" value="0" style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; text-align: center;"></td>
+                                            <td style="padding: 10px; border: 1px solid #dee2e6;"><input type="number" id="pp-reel-vs-cible-total" value="0" style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; text-align: center;"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Section: SSE/PBO -->
+                            <div style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                                <h3 style="margin: 0;">🔐 SSE / PBO</h3>
+                            </div>
+
+                            <div style="margin-bottom: 25px;">
+                                <textarea id="pp-sse-pbo" rows="4" placeholder="Notes SSE/PBO..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                            </div>
+
+                            <!-- Section: Avancement des Travaux -->
+                            <div style="background: linear-gradient(145deg, #43e97b, #38f9d7); color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                                <h3 style="margin: 0;">🏗️ Avancement des Travaux</h3>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 25px;">
+                                <div>
+                                    <h4 style="color: #333; margin-bottom: 10px;">Travaux d'Entretien</h4>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555; font-size: 0.9em;">Avancement</label>
+                                    <textarea id="pp-entretien-avancement" rows="3" placeholder="Décrivez l'avancement..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; resize: vertical; margin-bottom: 10px;"></textarea>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555; font-size: 0.9em;">Travaux Complétés</label>
+                                    <textarea id="pp-entretien-completes" rows="3" placeholder="Liste des travaux complétés..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                                </div>
+                                <div>
+                                    <h4 style="color: #333; margin-bottom: 10px;">Travaux Correctifs</h4>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555; font-size: 0.9em;">Avancement</label>
+                                    <textarea id="pp-correctifs-avancement" rows="3" placeholder="Décrivez l'avancement..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; resize: vertical; margin-bottom: 10px;"></textarea>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555; font-size: 0.9em;">Travaux Complétés</label>
+                                    <textarea id="pp-correctifs-completes" rows="3" placeholder="Liste des travaux complétés..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                                </div>
+                                <div>
+                                    <h4 style="color: #333; margin-bottom: 10px;">Travaux PROJET</h4>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555; font-size: 0.9em;">Avancement</label>
+                                    <textarea id="pp-projets-avancement" rows="3" placeholder="Décrivez l'avancement..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; resize: vertical; margin-bottom: 10px;"></textarea>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555; font-size: 0.9em;">Travaux Complétés</label>
+                                    <textarea id="pp-projets-completes" rows="3" placeholder="Liste des travaux complétés..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Section: Sections Textuelles -->
+                            <div style="background: linear-gradient(145deg, #f093fb, #f5576c); color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                                <h3 style="margin: 0;">📝 Notes et Observations</h3>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">Enjeu Principal du Jour</label>
+                                    <textarea id="pp-enjeu-principal" rows="4" placeholder="Décrivez l'enjeu principal..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">Problèmes / Imprévus</label>
+                                    <textarea id="pp-problemes-imprevus" rows="4" placeholder="Décrivez les problèmes rencontrés..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">Bon Coup</label>
+                                    <textarea id="pp-bon-coup" rows="4" placeholder="Décrivez les bons coups..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">À Venir - Prochain 24 hrs</label>
+                                    <textarea id="pp-a-venir" rows="4" placeholder="Ce qui est prévu dans les prochaines 24h..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Boutons d'action -->
+                            <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 30px;">
+                                <button type="button" onclick="window.switchToPage('point-presse-journaliers')" style="padding: 12px 30px; background: #6c757d; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                                    Annuler
+                                </button>
+                                <button type="submit" style="padding: 12px 30px; background: linear-gradient(145deg, #28a745, #20c997); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                                    💾 Enregistrer
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>

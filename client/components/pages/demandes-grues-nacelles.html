@@ -1,0 +1,66 @@
+<div id="demandes-grues-nacelles" class="page">
+                    <div class="summary-container" style="max-width: 98%;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                            <div style="display: flex; align-items: center;">
+                                <button onclick="window.switchToPage('demandes-execution')" style="padding: 10px 20px; background: #4facfe; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                                <h2 style="margin: 0; color: #333;">🏗️ Demandes Grues/Nacelles</h2>
+                            </div>
+                            <button onclick="exportDemandesGruesNacellesToExcel()" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                                📥 Exporter vers Excel
+                            </button>
+                        </div>
+
+                        <!-- Statistiques -->
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                            <div style="background: #ecf0f3; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.5);">
+                                <div style="font-size: 2em; color: #4facfe; margin-bottom: 5px;">📊</div>
+                                <div style="font-size: 2em; font-weight: bold; color: #000000;" id="demandesGruesNacellesTotal">0</div>
+                                <div style="color: #666; font-size: 0.9em;">Total</div>
+                            </div>
+                            <div style="background: #ecf0f3; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.5);">
+                                <div style="font-size: 2em; color: #ffc107; margin-bottom: 5px;">⏳</div>
+                                <div style="font-size: 2em; font-weight: bold; color: #000000;" id="demandesGruesNacellesEnCours">0</div>
+                                <div style="color: #666; font-size: 0.9em;">En Cours</div>
+                            </div>
+                            <div style="background: #ecf0f3; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.5);">
+                                <div style="font-size: 2em; color: #28a745; margin-bottom: 5px;">✅</div>
+                                <div style="font-size: 2em; font-weight: bold; color: #000000;" id="demandesGruesNacellesCompletes">0</div>
+                                <div style="color: #666; font-size: 0.9em;">Complétées</div>
+                            </div>
+                            <div style="background: #ecf0f3; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.5);">
+                                <div style="font-size: 2em; color: #dc3545; margin-bottom: 5px;">🔴</div>
+                                <div style="font-size: 2em; font-weight: bold; color: #000000;" id="demandesGruesNacellesUrgentes">0</div>
+                                <div style="color: #666; font-size: 0.9em;">Urgentes</div>
+                            </div>
+                        </div>
+
+                        <!-- Bouton Ajouter -->
+                        <div style="margin-bottom: 20px;">
+                            <button onclick="addDemandeGrueNacelle()" style="padding: 12px 25px; background: linear-gradient(145deg, #4facfe, #00f2fe); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.3);">
+                                ➕ Ajouter une Demande Grue/Nacelle
+                            </button>
+                        </div>
+
+                        <!-- Tableau des demandes -->
+                        <div style="background: white; padding: 20px; border-radius: 15px; box-shadow: 9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.5);">
+                            <table class="summary-table" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 8%;">N° Demande</th>
+                                        <th style="width: 12%;">Date/Heure</th>
+                                        <th style="width: 15%;">Demandeur</th>
+                                        <th style="width: 12%;">Type Équipement</th>
+                                        <th style="width: 18%;">Description</th>
+                                        <th style="width: 10%;">Priorité</th>
+                                        <th style="width: 10%;">Statut</th>
+                                        <th style="width: 15%;">Assigné à</th>
+                                        <th style="width: 10%;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="demandesGruesNacellesTableBody">
+                                    <!-- Les demandes seront affichées ici -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>

@@ -1,0 +1,60 @@
+<div id="detail-t31" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                    ← Retour
+                </button>
+                <h2 style="margin: 0; color: #333;">🚚 SORTIR LISTE DES PIÈCES À LONG DÉLAI LIVRAISON</h2>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin-bottom: 25px; border-left: 4px solid #2196f3;">
+            <h3 style="margin: 0 0 10px 0; color: #1565c0;">
+                ℹ️ À propos
+            </h3>
+            <p style="margin: 0; color: #333; line-height: 1.6;">
+                Identifiez et suivez les pièces nécessitant un long délai de livraison pour l'arrêt annuel.
+            </p>
+        </div>
+
+        <!-- Content Area -->
+        <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <h3 style="margin: 0 0 20px 0; color: #667eea;">
+                📦 Liste des Pièces à Long Délai
+            </h3>
+
+            <div style="margin-bottom: 20px;">
+                <p style="color: #666; margin: 0;">
+                    Consultez la page <a href="#" onclick="window.switchToPage('pieces'); return false;" style="color: #667eea; text-decoration: underline;">Liste des Pièces</a> pour gérer toutes les pièces.
+                </p>
+            </div>
+
+            <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107; margin-bottom: 20px;">
+                <strong>⚠️ Important:</strong> Identifiez les pièces avec un délai de livraison supérieur à 90 jours.
+            </div>
+
+            <div style="display: grid; gap: 20px;">
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Critères de filtrage</label>
+                    <input type="number" id="delaiMin" placeholder="Délai minimum (jours)" value="90"
+                           style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px;">
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Notes</label>
+                    <textarea id="notes" rows="6" placeholder="Notes et observations sur les pièces à long délai..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 20px;">
+                <button onclick="window.switchToPage('pieces')"
+                        class="btn" style="background: #667eea; color: white; padding: 12px 30px;">
+                    📋 Voir Liste des Pièces
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

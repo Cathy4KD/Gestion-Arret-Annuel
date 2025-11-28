@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Check - Gestionnaire d'Arrêt</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/main.css?v=20251115-001">
+
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .health-container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-width: 800px;
+      width: 100%;
+      padding: 40px;
+    }
+
+    .health-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .health-header h1 {
+      font-size: 2.5rem;
+      margin: 0 0 10px 0;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .health-header p {
+      color: #666;
+      margin: 0;
+    }
+
+    .health-check {
+      margin-bottom: 20px;
+      padding: 20px;
+      border-radius: 12px;
+      background: #f8f9fa;
+      border-left: 4px solid #ccc;
+      transition: all 0.3s ease;
+    }
+
+    .health-check.checking {
+      border-left-color: #f39c12;
+      background: #fffbf0;
+    }
+
+    .health-check.success {
+      border-left-color: #27ae60;
+      background: #f0fff4;
+    }
+
+    .health-check.error {
+      border-left-color: #e74c3c;
+      background: #fff5f5;
+    }
+
+    .check-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .check-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .check-status {
+      font-size: 1.5rem;
+    }
+
+    .check-details {
+      color: #666;
+      font-size: 0.9rem;
+      margin-top: 8px;
+      font-family: 'Courier New', monospace;
+    }
+
+    .check-details div {
+      margin: 4px 0;
+    }
+
+    .global-status {
+      text-align: center;
+      padding: 30px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .global-status.checking {
+      background: #fffbf0;
+      color: #f39c12;
+    }
+
+    .global-status.healthy {
+      background: #f0fff4;
+      color: #27ae60;
+    }
+
+    .global-status.unhealthy {
+      background: #fff5f5;
+      color: #e74c3c;
+    }
+
+    .actions {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin: 0 5px;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-secondary {
+      background: #f8f9fa;
+      color: #333;
+      border: 2px solid #e0e0e0;
+    }
+
+    .btn-secondary:hover {
+      background: #e9ecef;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f39c12;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .timestamp {
+      text-align: center;
+      color: #999;
+      font-size: 0.875rem;
+      margin-top: 20px;
+    }
+  </style>
+
+  <!-- Socket.IO -->
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <div class="health-container">
+    <div class="health-header">
+      <h1>🏥 Health Check</h1>
+      <p>Vérification de l'état du système</p>
+    </div>
+
+    <div class="global-status checking" id="globalStatus">
+      <div class="spinner"></div> Vérification en cours...
+    </div>
+
+    <div class="health-check checking" id="checkServer">
+      <div class="check-header">
+        <div class="check-title">
+          <span>🖥️ Serveur HTTP</span>
+        </div>
+        <div class="check-status"><span class="spinner"></span></div>
+      </div>
+      <div class="check-details" id="serverDetails">Vérification...</div>
+    </div>
+
+    <div class="health-check checking" id="checkSocket">
+      <div class="check-header">
+        <div class="check-title">
+          <span>🔌 Socket.IO</span>
+        </div>
+        <div class="check-status"><span class="spinner"></span></div>
+      </div>
+      <div class="check-details" id="socketDetails">Vérification...</div>
+    </div>
+
+    <div class="health-check checking" id="checkData">
+      <div class="check-header">
+        <div class="check-title">
+          <span>💾 Service de données</span>
+        </div>
+        <div class="check-status"><span class="spinner"></span></div>
+      </div>
+      <div class="check-details" id="dataDetails">Vérification...</div>
+    </div>
+
+    <div class="health-check checking" id="checkModules">
+      <div class="check-header">
+        <div class="check-title">
+          <span>📦 Modules</span>
+        </div>
+        <div class="check-status"><span class="spinner"></span></div>
+      </div>
+      <div class="check-details" id="modulesDetails">Vérification...</div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" onclick="runHealthCheck()">
+        🔄 Relancer les tests
+      </button>
+      <button class="btn btn-secondary" onclick="window.location.href='index.html'">
+        ← Retour à l'accueil
+      </button>
+    </div>
+
+    <div class="timestamp" id="timestamp"></div>
+  </div>
+
+  <script>
+    let socket;
+    let checksResults = {
+      server: false,
+      socket: false,
+      data: false,
+      modules: false
+    };
+
+    async function runHealthCheck() {
+      // Reset
+      checksResults = { server: false, socket: false, data: false, modules: false };
+      updateGlobalStatus('checking');
+      resetChecks();
+
+      // 1. Vérifier serveur HTTP
+      await checkServer();
+
+      // 2. Vérifier Socket.IO
+      await checkSocket();
+
+      // 3. Vérifier service de données
+      await checkDataService();
+
+      // 4. Vérifier modules
+      await checkModules();
+
+      // Mettre à jour le statut global
+      const allHealthy = Object.values(checksResults).every(r => r === true);
+      updateGlobalStatus(allHealthy ? 'healthy' : 'unhealthy');
+
+      // Timestamp
+      document.getElementById('timestamp').textContent =
+        'Dernière vérification: ' + new Date().toLocaleString();
+    }
+
+    function resetChecks() {
+      const checks = ['Server', 'Socket', 'Data', 'Modules'];
+      checks.forEach(check => {
+        const el = document.getElementById('check' + check);
+        el.className = 'health-check checking';
+        el.querySelector('.check-status').innerHTML = '<span class="spinner"></span>';
+        document.getElementById(check.toLowerCase() + 'Details').textContent = 'Vérification...';
+      });
+    }
+
+    async function checkServer() {
+      try {
+        const response = await fetch('/health');
+        const data = await response.json();
+
+        if (data.status === 'ok') {
+          updateCheck('Server', 'success', {
+            'Statut': data.status,
+            'Uptime': Math.floor(data.uptime / 60) + ' minutes',
+            'Environnement': data.environment,
+            'Version': data.version
+          });
+          checksResults.server = true;
+        } else {
+          throw new Error('Statut non OK');
+        }
+      } catch (error) {
+        updateCheck('Server', 'error', { 'Erreur': error.message });
+        checksResults.server = false;
+      }
+    }
+
+    async function checkSocket() {
+      return new Promise((resolve) => {
+        try {
+          socket = io();
+
+          const timeout = setTimeout(() => {
+            updateCheck('Socket', 'error', { 'Erreur': 'Timeout de connexion (5s)' });
+            checksResults.socket = false;
+            resolve();
+          }, 5000);
+
+          socket.on('connect', () => {
+            clearTimeout(timeout);
+            updateCheck('Socket', 'success', {
+              'Statut': 'Connecté',
+              'Transport': socket.io.engine.transport.name,
+              'ID': socket.id
+            });
+            checksResults.socket = true;
+            resolve();
+          });
+
+          socket.on('connect_error', (error) => {
+            clearTimeout(timeout);
+            updateCheck('Socket', 'error', { 'Erreur': error.message });
+            checksResults.socket = false;
+            resolve();
+          });
+        } catch (error) {
+          updateCheck('Socket', 'error', { 'Erreur': error.message });
+          checksResults.socket = false;
+          resolve();
+        }
+      });
+    }
+
+    async function checkDataService() {
+      if (!socket || !socket.connected) {
+        updateCheck('Data', 'error', { 'Erreur': 'Socket.IO non connecté' });
+        checksResults.data = false;
+        return;
+      }
+
+      return new Promise((resolve) => {
+        const timeout = setTimeout(() => {
+          updateCheck('Data', 'error', { 'Erreur': 'Timeout (5s)' });
+          checksResults.data = false;
+          resolve();
+        }, 5000);
+
+        socket.emit('modules:stats');
+
+        socket.once('modules:stats', (stats) => {
+          clearTimeout(timeout);
+          updateCheck('Data', 'success', {
+            'Modules totaux': stats.totalModules,
+            'Modules actifs': stats.activeModules,
+            'Modules vides': stats.emptyModules,
+            'Taille totale': Math.round(stats.totalSizeBytes / 1024) + ' KB'
+          });
+          checksResults.data = true;
+          resolve();
+        });
+
+        socket.once('error', (error) => {
+          clearTimeout(timeout);
+          updateCheck('Data', 'error', { 'Erreur': error.message });
+          checksResults.data = false;
+          resolve();
+        });
+      });
+    }
+
+    async function checkModules() {
+      if (!socket || !socket.connected) {
+        updateCheck('Modules', 'error', { 'Erreur': 'Socket.IO non connecté' });
+        checksResults.modules = false;
+        return;
+      }
+
+      return new Promise((resolve) => {
+        const timeout = setTimeout(() => {
+          updateCheck('Modules', 'error', { 'Erreur': 'Timeout (5s)' });
+          checksResults.modules = false;
+          resolve();
+        }, 5000);
+
+        socket.emit('modules:list');
+
+        socket.once('modules:list', (modules) => {
+          clearTimeout(timeout);
+          const activeCount = modules.filter(m => !m.isEmpty).length;
+          updateCheck('Modules', 'success', {
+            'Modules chargés': modules.length,
+            'Modules actifs': activeCount,
+            'Modules vides': modules.length - activeCount
+          });
+          checksResults.modules = true;
+          resolve();
+        });
+
+        socket.once('error', (error) => {
+          clearTimeout(timeout);
+          updateCheck('Modules', 'error', { 'Erreur': error.message });
+          checksResults.modules = false;
+          resolve();
+        });
+      });
+    }
+
+    function updateCheck(name, status, details) {
+      const checkEl = document.getElementById('check' + name);
+      checkEl.className = 'health-check ' + status;
+
+      const statusIcon = {
+        success: '✓',
+        error: '✕',
+        checking: '<span class="spinner"></span>'
+      }[status];
+
+      checkEl.querySelector('.check-status').innerHTML = statusIcon;
+
+      const detailsHtml = Object.entries(details)
+        .map(([key, value]) => `<div><strong>${key}:</strong> ${value}</div>`)
+        .join('');
+      document.getElementById(name.toLowerCase() + 'Details').innerHTML = detailsHtml;
+    }
+
+    function updateGlobalStatus(status) {
+      const globalEl = document.getElementById('globalStatus');
+      globalEl.className = 'global-status ' + status;
+
+      const messages = {
+        checking: '<div class="spinner"></div> Vérification en cours...',
+        healthy: '✓ Tous les systèmes sont opérationnels',
+        unhealthy: '✕ Certains systèmes rencontrent des problèmes'
+      };
+
+      globalEl.innerHTML = messages[status];
+    }
+
+    // Lancer au chargement
+    window.addEventListener('load', runHealthCheck);
+  </script>
+</body>
+</html>

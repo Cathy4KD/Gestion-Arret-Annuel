@@ -1,0 +1,214 @@
+<div id="detail-t20-t21" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; gap: 15px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                    ← Retour
+                </button>
+                <h2 style="margin: 0; color: #333;">CONNAITRE LA LISTES DES TPAA ET PW</h2>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="window.tpaaActions.refreshFromIW37N()" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                    🔄 Extraire depuis IW37N
+                </button>
+                <button onclick="window.tpaaActions.loadTPAAPW()" class="btn" style="background: linear-gradient(145deg, #4299e1, #0066cc); color: white; padding: 10px 20px;">
+                    ↻ Recharger
+                </button>
+            </div>
+        </div>
+
+        <!-- Info: Dates configurées dans Paramètres -->
+        <div style="background: #e3f2fd; padding: 12px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #2196F3;">
+            <p style="margin: 0; color: #1565c0; font-size: 0.9em;">
+                <strong>ℹ️ Info:</strong> Les dates et le budget de l'arrêt sont configurés dans
+                <button onclick="window.switchToPage('parametres')"
+                        style="background: none; border: none; color: #1565c0; text-decoration: underline; cursor: pointer; font-weight: bold; font-size: 0.9em;">
+                    ⚙️ Paramètres
+                </button>
+            </p>
+        </div>
+
+        <!-- Tableau TPAA -->
+        <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 30px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: #333;">📋 TPAA (<span id="tpaa-count">0</span>)</h3>
+                <button onclick="window.tpaaActions.exportTPAAListToExcel()" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                    📊 Exporter Excel
+                </button>
+            </div>
+
+            <div style="background: #e3f2fd; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                <p style="margin: 0; color: #1565c0; font-weight: 600;">
+                    ℹ️ Ce tableau affiche les travaux dont <strong>Désign. opér.</strong> commence par <strong>"TPAA"</strong>
+                </p>
+            </div>
+
+            <!-- Zone de recherche et tri TPAA -->
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">🔍 Recherche Désignation:</label>
+                        <input type="text" id="tpaa-search-designation" placeholder="Ex: TPAA-2"
+                               oninput="window.tpaaActions.filterTPAA()"
+                               style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">🔍 Recherche Opération:</label>
+                        <input type="text" id="tpaa-search-operation" placeholder="Ex: Contrôle"
+                               oninput="window.tpaaActions.filterTPAA()"
+                               style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">🔍 Recherche Date:</label>
+                        <input type="text" id="tpaa-search-date" placeholder="Ex: 2025-01"
+                               oninput="window.tpaaActions.filterTPAA()"
+                               style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                    <strong style="color: #495057;">Trier par:</strong>
+                    <button onclick="window.tpaaActions.sortTPAABy('date', 'asc')" class="btn"
+                            style="background: #667eea; color: white; padding: 6px 12px; font-size: 0.9em;">
+                        📅 Date ↑
+                    </button>
+                    <button onclick="window.tpaaActions.sortTPAABy('date', 'desc')" class="btn"
+                            style="background: #667eea; color: white; padding: 6px 12px; font-size: 0.9em;">
+                        📅 Date ↓
+                    </button>
+                    <button onclick="window.tpaaActions.sortTPAABy('externe', 'asc')" class="btn"
+                            style="background: #28a745; color: white; padding: 6px 12px; font-size: 0.9em;">
+                        👷 Externe A→Z
+                    </button>
+                    <button onclick="window.tpaaActions.sortTPAABy('externe', 'desc')" class="btn"
+                            style="background: #28a745; color: white; padding: 6px 12px; font-size: 0.9em;">
+                        👷 Externe Z→A
+                    </button>
+                    <button onclick="window.tpaaActions.clearTPAAFilters()" class="btn"
+                            style="background: #6c757d; color: white; padding: 6px 12px; font-size: 0.9em;">
+                        🗑️ Effacer
+                    </button>
+                </div>
+            </div>
+
+            <div style="max-height: 400px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 8px;">
+                <table id="tpaa-table" class="summary-table" style="width: 100%; border-collapse: collapse;">
+                    <thead style="position: sticky; top: 0; background: white; z-index: 5;">
+                        <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Ordre</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Désignation</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Opération</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Post. Trav.</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Poste Technique</th>
+                        <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6;">Sem.</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Date</th>
+                        <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6;">+?</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Statut</th>
+                        <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6;">DATE SAP</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Commentaire</th>
+                    </tr>
+                </thead>
+                <tbody id="tpaa-tbody">
+                    <tr><td colspan="11" style="padding: 30px; text-align: center; color: #666;">Aucune donnée TPAA disponible.</td></tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+        <!-- Tableau PW -->
+        <div style="background: white; padding: 20px; border-radius: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: #333;">📋 PW (<span id="pw-count">0</span>)</h3>
+                <button onclick="window.tpaaActions.exportPWListToExcel()" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                    📊 Exporter Excel
+                </button>
+            </div>
+
+            <div style="background: #fff3cd; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                <p style="margin: 0; color: #856404; font-weight: 600;">
+                    ℹ️ Ce tableau affiche les travaux dont <strong>Désign. opér.</strong> commence par <strong>"PW"</strong>
+                </p>
+            </div>
+
+            <!-- Zone de recherche et tri PW -->
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">🔍 Recherche Désignation:</label>
+                        <input type="text" id="pw-search-designation" placeholder="Ex: PW-10"
+                               oninput="window.tpaaActions.filterPW()"
+                               style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">🔍 Recherche Opération:</label>
+                        <input type="text" id="pw-search-operation" placeholder="Ex: Contrôle"
+                               oninput="window.tpaaActions.filterPW()"
+                               style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">🔍 Recherche Date:</label>
+                        <input type="text" id="pw-search-date" placeholder="Ex: 2025-01"
+                               oninput="window.tpaaActions.filterPW()"
+                               style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                    <strong style="color: #495057;">Trier par:</strong>
+                    <button onclick="window.tpaaActions.sortPWBy('date', 'asc')" class="btn"
+                            style="background: #667eea; color: white; padding: 6px 12px; font-size: 0.9em;">
+                        📅 Date ↑
+                    </button>
+                    <button onclick="window.tpaaActions.sortPWBy('date', 'desc')" class="btn"
+                            style="background: #667eea; color: white; padding: 6px 12px; font-size: 0.9em;">
+                        📅 Date ↓
+                    </button>
+                    <button onclick="window.tpaaActions.sortPWBy('externe', 'asc')" class="btn"
+                            style="background: #28a745; color: white; padding: 6px 12px; font-size: 0.9em;">
+                        👷 Externe A→Z
+                    </button>
+                    <button onclick="window.tpaaActions.sortPWBy('externe', 'desc')" class="btn"
+                            style="background: #28a745; color: white; padding: 6px 12px; font-size: 0.9em;">
+                        👷 Externe Z→A
+                    </button>
+                    <button onclick="window.tpaaActions.clearPWFilters()" class="btn"
+                            style="background: #6c757d; color: white; padding: 6px 12px; font-size: 0.9em;">
+                        🗑️ Effacer
+                    </button>
+                </div>
+            </div>
+
+            <div style="max-height: 400px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 8px;">
+                <table id="pw-table" class="summary-table" style="width: 100%; border-collapse: collapse;">
+                    <thead style="position: sticky; top: 0; background: white; z-index: 5;">
+                        <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Ordre</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Désignation</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Opération</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Post. Trav.</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Poste Technique</th>
+                        <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6;">Sem.</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Date</th>
+                        <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6;">+?</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Statut</th>
+                        <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6;">DATE SAP</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Commentaire</th>
+                    </tr>
+                </thead>
+                <tbody id="pw-tbody">
+                    <tr><td colspan="11" style="padding: 30px; text-align: center; color: #666;">Aucune donnée PW disponible.</td></tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+        <!-- Calendrier mensuel TPAA/PW -->
+        <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 30px;">
+            <h3 style="margin: 0 0 20px 0; color: #333;">📅 Calendrier de répartition TPAA et PW</h3>
+            <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                <p style="margin: 0; color: #666; font-size: 0.9em;">
+                    Ce calendrier affiche la répartition des travaux TPAA et PW selon leur date calculée
+                </p>
+            </div>
+            <div id="tpaaPWCalendar"></div>
+        </div>
+    </div>
+</div>

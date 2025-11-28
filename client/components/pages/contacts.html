@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>contacts</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+<div id="contacts" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px;">
+            <h2 style="margin: 0; color: #333;">📞 Contacts</h2>
+            <button onclick="window.switchToPage('dashboard')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                ← Retour au Dashboard
+            </button>
+        </div>
+
+        <!-- Les deux tableaux côte à côte -->
+        <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 20px;">
+
+            <!-- TABLEAU 1 : Contacts Principaux -->
+            <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 style="color: #667eea; margin: 0;">👥 Contacts Principaux</h3>
+                    <button onclick="addContact()" style="padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                        ➕ Ajouter un contact
+                    </button>
+                </div>
+
+                <!-- Barre de recherche -->
+                <div style="margin-bottom: 15px;">
+                    <input type="text" id="contactsSearchInput" placeholder="🔍 Rechercher par Nom, Code ou Entreprise..."
+                        oninput="window.filterContactsTable()"
+                        style="width: 100%; padding: 10px; border: 2px solid #667eea; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; min-width: 150px;">Nom</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; min-width: 200px;">Adresse</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; min-width: 100px;">Code</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; min-width: 150px;">Entreprise</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; min-width: 120px;">Cas</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: center; width: 80px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contactsTableBody">
+                            <tr><td colspan="6" style="padding: 20px; text-align: center; color: #999;">Aucun contact. Cliquez sur "Ajouter un contact".</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TABLEAU 2 : Code Externe -->
+            <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 style="color: #667eea; margin: 0;">🏢 Code Externe</h3>
+                    <button onclick="addCodeExterne()" style="padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                        ➕ Ajouter
+                    </button>
+                </div>
+
+                <!-- Barre de recherche -->
+                <div style="margin-bottom: 15px;">
+                    <input type="text" id="codesExternesSearchInput" placeholder="🔍 Rechercher par Code ou Nom..."
+                        oninput="window.filterCodesExternesTable()"
+                        style="width: 100%; padding: 10px; border: 2px solid #28a745; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: linear-gradient(145deg, #28a745, #20c997); color: white;">
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left;">Code Externe</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left;">Nom</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: center; width: 60px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="codeExterneTableBody">
+                            <tr><td colspan="3" style="padding: 20px; text-align: center; color: #999;">Aucun code. Cliquez sur "Ajouter".</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<div id="detail-consommables" class="page">
+    <div class="summary-container" style="max-width: 98%; padding: 20px;">
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+            <h2 style="margin: 0; color: #333; flex: 1;">COMMANDE DES CONSOMMABLES D'ARRÊT</h2>
+        </div>
+
+        <!-- Année et Ordre -->
+        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                <div>
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px; color: #555;">Année Précédente</label>
+                    <input type="text" id="consommablesAnneePrecedente" value="2024"
+                           style="width: 100%; padding: 8px; border: 2px solid #ddd; border-radius: 6px; font-size: 0.95em;">
+                </div>
+                <div>
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px; color: #555;">Ordre (Commande)</label>
+                    <input type="text" id="consommablesOrdre" value="112297222"
+                           style="width: 100%; padding: 8px; border: 2px solid #ddd; border-radius: 6px; font-size: 0.95em;">
+                </div>
+                <div>
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px; color: #555;">Année Actuelle</label>
+                    <input type="text" id="consommablesAnneeActuelle" value="2025"
+                           style="width: 100%; padding: 8px; border: 2px; border: 2px solid #ddd; border-radius: 6px; font-size: 0.95em;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button onclick="window.consommablesActions.addArticle()"
+                        style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    ➕ Ajouter Article
+                </button>
+                <button onclick="window.consommablesActions.addMachine()"
+                        style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    ➕ Ajouter Machine/Équipement
+                </button>
+                <button onclick="window.consommablesActions.exportToExcel()"
+                        style="padding: 10px 20px; background: #17a2b8; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    📥 Exporter Excel
+                </button>
+                <button onclick="window.consommablesActions.sendToYannick()"
+                        style="padding: 10px 20px; background: #fd7e14; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    📧 Envoyer à Yannick Brodeur
+                </button>
+            </div>
+        </div>
+
+        <!-- Tableau principal -->
+        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <h3 style="color: #667eea; margin-bottom: 15px;">📋 Liste des Consommables</h3>
+            <div style="overflow-x: auto;">
+                <table id="consommablesMainTable" style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                    <thead>
+                        <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                            <th style="padding: 8px; border: 1px solid #dee2e6; min-width: 100px; position: sticky; left: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); z-index: 2;">Ordre</th>
+                            <th style="padding: 8px; border: 1px solid #dee2e6; min-width: 80px; position: sticky; left: 100px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); z-index: 2;">Article</th>
+                            <th style="padding: 8px; border: 1px solid #dee2e6; min-width: 300px; position: sticky; left: 180px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); z-index: 2;">Description</th>
+                            <th style="padding: 8px; border: 1px solid #dee2e6; min-width: 60px; text-align: center;">Qty</th>
+                            <th style="padding: 8px; border: 1px solid #dee2e6; min-width: 100px; text-align: center;">Nouvelle QTY</th>
+                            <!-- Les colonnes machines seront ajoutées dynamiquement ici -->
+                            <th style="padding: 8px; border: 1px solid #dee2e6; min-width: 80px; text-align: center;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="consommablesTableBody">
+                        <tr>
+                            <td colspan="20" style="padding: 30px; text-align: center; color: #666;">
+                                Aucun article. Cliquez sur "Ajouter Article" pour commencer.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

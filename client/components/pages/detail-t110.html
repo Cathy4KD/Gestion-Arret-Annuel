@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-t110</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+<div id="detail-t110" class="page">
+            <div class="summary-container" style="max-width: 98%;">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                    <h2 style="margin: 0; color: #333;">DÉTERMINER L'EMPLACEMENT DES POCHES</h2>
+                </div>
+
+                <!-- Upload du plan -->
+                <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                    <h3 style="color: #667eea; margin-top: 0;">📄 Étape 1 : Charger le Plan</h3>
+                    <p style="color: #000000; margin-bottom: 15px;">Uploadez le plan de l'usine/chantier pour placer les emplacements des poches.</p>
+
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <input type="file" id="pochesplanUpload" accept="image/*" onchange="uploadPochesPlan(event)"
+                               style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; flex: 1;">
+                        <button onclick="clearPochesPlan()" style="padding: 10px 20px; background: #c5554a; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                            🗑️ Effacer Plan
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Zone de placement des poches -->
+                <div id="pochesplanContainer" style="display: none;">
+                    <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h3 style="color: #667eea; margin: 0;">🗺️ Étape 2 : Placer les Poches sur le Plan</h3>
+                            <div style="display: flex; gap: 10px;">
+                                <button onclick="addPocheMode()" id="addPocheModeBtn" style="padding: 8px 15px; background: #4a7c59; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                    ➕ Mode Ajout
+                                </button>
+                                <button onclick="cancelPocheMode()" id="cancelPocheModeBtn" style="display: none; padding: 8px 15px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                    ❌ Annuler Mode Ajout
+                                </button>
+                            </div>
+                        </div>
+                        <p style="color: #000000; margin-bottom: 15px;">Cliquez sur le plan pour placer une poche. Vous pourrez ensuite ajouter des commentaires.</p>
+
+                        <div style="position: relative; border: 2px solid #ddd; border-radius: 8px; overflow: hidden; background: #f8f9fa; max-width: 100%;">
+                            <canvas id="pochesplanCanvas" style="display: block; max-width: 100%; cursor: crosshair;"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Liste des poches -->
+                    <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <h3 style="color: #667eea; margin-top: 0;">📋 Liste des Poches Placées</h3>
+                        <div id="pochesList">
+                            <p style="text-align: center; color: #999; padding: 20px;">Aucune poche placée</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

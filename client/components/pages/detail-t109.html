@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-t109</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+<div id="detail-t109" class="page">
+            <div class="summary-container" style="max-width: 98%;">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                    <h2 style="margin: 0; color: #333;">RÉDACTION DES TÂCHES COGNIBOX</h2>
+                </div>
+
+                <!-- Tableau des tâches Cognibox -->
+                <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="color: #667eea; margin: 0;">📋 Liste des Tâches Cognibox</h3>
+                        <button onclick="showAddTaskCognibox()" style="padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                            ➕ Ajouter une Tâche
+                        </button>
+                    </div>
+
+                    <!-- Formulaire d'ajout de tâche (caché par défaut) -->
+                    <div id="cognibox-taskForm" style="display: none; background: #e3f2fd; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <h4 style="margin-top: 0; color: #000000;">✏️ Nouvelle Tâche Cognibox</h4>
+
+                        <div style="display: grid; gap: 15px; margin-bottom: 15px;">
+                            <div style="display: grid; grid-template-columns: 1fr 2fr 1fr 1fr; gap: 15px;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Externe:</label>
+                                    <input type="text" id="cognibox-externe" placeholder="Ex: Entreprise ABC" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                    <div style="font-size: 11px; color: #666; margin-top: 5px;">💡 Nom de l'entreprise externe</div>
+                                </div>
+
+                                <div>
+                                    <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Numéro de la tâche:</label>
+                                    <input type="text" id="cognibox-numero" placeholder="Ex: TASK-001" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                    <div style="font-size: 11px; color: #666; margin-top: 5px;">💡 Identifiant unique de la tâche</div>
+                                </div>
+
+                                <div>
+                                    <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Date de début:</label>
+                                    <input type="date" id="cognibox-dateDebut" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                </div>
+
+                                <div>
+                                    <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Date de fin:</label>
+                                    <input type="date" id="cognibox-dateFin" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Commentaire:</label>
+                                <textarea id="cognibox-commentaire" rows="3" placeholder="Ex: Travaux de maintenance sur les équipements électriques..." style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-family: Arial, sans-serif; resize: vertical;"></textarea>
+                                <div style="font-size: 11px; color: #666; margin-top: 5px;">💡 Description détaillée de la tâche, notes importantes</div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                            <button onclick="cancelTaskCognibox()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                ❌ Annuler
+                            </button>
+                            <button onclick="saveTaskCognibox()" style="padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                💾 Sauvegarder
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tableau -->
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; background: white;">
+                            <thead>
+                                <tr style="background: #667eea; color: white;">
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd; width: 50px;">#</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd; width: 180px;">Externe</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd; width: 150px;">Numéro de la Tâche</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd; width: 130px;">Date de Début</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd; width: 130px;">Date de Fin</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Commentaire</th>
+                                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd; width: 100px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cognibox-tasksTableBody">
+                                <tr>
+                                    <td colspan="7" style="padding: 20px; text-align: center; color: #999;">Aucune tâche Cognibox enregistrée</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

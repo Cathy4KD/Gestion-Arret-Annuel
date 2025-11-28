@@ -1,0 +1,345 @@
+<div id="detail-t87" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; margin-bottom: 20px; gap: 15px;">
+            <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                ← Retour
+            </button>
+            <h2 style="margin: 0; color: #333;">SMED ARRÊT SUR CHEMIN CRITIQUES</h2>
+        </div>
+
+        <!-- Statistiques SMED Globales -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px;">
+            <div class="card" style="text-align: center; padding: 20px; background: linear-gradient(145deg, #667eea, #764ba2);">
+                <div style="font-size: 0.85em; color: white; margin-bottom: 10px; text-transform: uppercase;">Tâches Analysées</div>
+                <div style="font-size: 2.5em; font-weight: bold; color: white;" id="smedTotalTaches">0</div>
+            </div>
+            <div class="card" style="text-align: center; padding: 20px; background: linear-gradient(145deg, #28a745, #20c997);">
+                <div style="font-size: 0.85em; color: white; margin-bottom: 10px; text-transform: uppercase;">Tâches Externes</div>
+                <div style="font-size: 2.5em; font-weight: bold; color: white;" id="smedTachesExternes">0</div>
+            </div>
+            <div class="card" style="text-align: center; padding: 20px; background: linear-gradient(145deg, #ffc107, #e0a800);">
+                <div style="font-size: 0.85em; color: white; margin-bottom: 10px; text-transform: uppercase;">Tâches Internes</div>
+                <div style="font-size: 2.5em; font-weight: bold; color: white;" id="smedTachesInternes">0</div>
+            </div>
+            <div class="card" style="text-align: center; padding: 20px; background: linear-gradient(145deg, #17a2b8, #138496);">
+                <div style="font-size: 0.85em; color: white; margin-bottom: 10px; text-transform: uppercase;">Temps Total Actuel</div>
+                <div style="font-size: 2.5em; font-weight: bold; color: white;" id="smedTempsTotal">0h</div>
+            </div>
+            <div class="card" style="text-align: center; padding: 20px; background: linear-gradient(145deg, #dc3545, #c82333);">
+                <div style="font-size: 0.85em; color: white; margin-bottom: 10px; text-transform: uppercase;">Temps Cible</div>
+                <div style="font-size: 2.5em; font-weight: bold; color: white;" id="smedTempsCible">0h</div>
+            </div>
+            <div class="card" style="text-align: center; padding: 20px; background: linear-gradient(145deg, #4a7c59, #3d6b4a);">
+                <div style="font-size: 0.85em; color: white; margin-bottom: 10px; text-transform: uppercase;">Gain Potentiel</div>
+                <div style="font-size: 2.5em; font-weight: bold; color: white;" id="smedGainPotentiel">0h</div>
+            </div>
+        </div>
+
+        <!-- Légende SMED -->
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+            <h4 style="margin: 0 0 10px 0; color: #555;">📖 Principes SMED</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; font-size: 0.9em;">
+                <div>
+                    <strong style="color: #28a745;">🟢 Opérations Externes:</strong>
+                    <p style="margin: 5px 0 0 0; color: #666;">Peuvent être réalisées pendant que l'équipement fonctionne (préparation, approvisionnement, etc.)</p>
+                </div>
+                <div>
+                    <strong style="color: #ffc107;">🟡 Opérations Internes:</strong>
+                    <p style="margin: 5px 0 0 0; color: #666;">Doivent être réalisées pendant l'arrêt de l'équipement (démontage, remplacement, réglages, etc.)</p>
+                </div>
+                <div>
+                    <strong style="color: #17a2b8;">🎯 Objectif SMED:</strong>
+                    <p style="margin: 5px 0 0 0; color: #666;">Convertir un maximum d'opérations internes en externes pour réduire la durée de l'arrêt</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtre par Poste Technique -->
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <div style="margin-bottom: 15px;">
+                <button onclick="window.dataActions.togglePosteDropdown('t87')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px; width: 100%; text-align: left; display: flex; justify-content: space-between; align-items: center;">
+                    <span id="t87-selected-text">Filtrer par Poste Technique</span>
+                    <span>▼</span>
+                </button>
+            </div>
+
+            <!-- Menu déroulant -->
+            <div id="t87-dropdown-menu" style="display: none; background: white; border: 2px solid #ddd; border-radius: 8px; padding: 15px; margin-top: 10px; max-height: 300px; overflow-y: auto;">
+                <div style="display: flex; gap: 10px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 2px solid #eee;">
+                    <button onclick="window.dataActions.selectAllPostesTechniques('t87')" class="btn" style="background: #4a7c59; color: white; padding: 8px 16px; flex: 1;">
+                        Tout sélectionner
+                    </button>
+                    <button onclick="window.dataActions.deselectAllPostesTechniques('t87')" class="btn" style="background: #dc3545; color: white; padding: 8px 16px; flex: 1;">
+                        Tout désélectionner
+                    </button>
+                </div>
+
+                <div style="margin-bottom: 10px; padding: 10px; background: #e3f2fd; border-radius: 5px;">
+                    <span id="t87-filter-count" style="font-weight: 600; color: #1976d2;">0 / 0 sélectionnés</span>
+                </div>
+
+                <div id="t87-poste-filters"></div>
+            </div>
+        </div>
+
+        <!-- Section Sélection des Tâches du Chemin Critique -->
+        <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: #333;">📋 Sélection des Tâches du Chemin Critique</h3>
+                <button onclick="window.smedActions.showTaskSelection()" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                    ➕ Sélectionner Tâches
+                </button>
+            </div>
+            <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">
+                Sélectionnez les tâches du chemin critique à analyser avec la méthode SMED pour optimiser la durée de l'arrêt
+            </p>
+
+            <div style="overflow-x: auto; max-height: 400px; overflow-y: auto;">
+                <table class="summary-table" style="width: 100%; border-collapse: collapse;">
+                    <thead style="position: sticky; top: 0; z-index: 10;">
+                        <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 120px;">Ordre / Opération</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 200px;">Description</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 120px;">Type SMED</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 100px;">Temps Actuel</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 100px;">Temps Cible</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 100px;">Gain</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 150px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="smedSelectedTasksTableBody">
+                        <tr><td colspan="7" style="padding: 30px; text-align: center; color: #666;">Aucune tâche sélectionnée. Cliquez sur "Sélectionner Tâches" pour commencer.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section Actions d'Amélioration SMED -->
+        <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: #333;">⚡ Actions d'Amélioration SMED</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="window.smedActions.exportToExcel()" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                        📊 Exporter Excel
+                    </button>
+                    <button onclick="window.smedActions.exportToPDF()" class="btn" style="background: linear-gradient(145deg, #dc3545, #c82333); color: white; padding: 10px 20px;">
+                        📄 Exporter PDF
+                    </button>
+                </div>
+            </div>
+
+            <div style="overflow-x: auto; max-height: 500px; overflow-y: auto;">
+                <table class="summary-table" style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                    <thead style="position: sticky; top: 0; z-index: 10;">
+                        <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                            <th style="padding: 10px; text-align: left; border: 1px solid #dee2e6; min-width: 120px;">Tâche</th>
+                            <th style="padding: 10px; text-align: center; border: 1px solid #dee2e6; width: 100px;">Type Actuel</th>
+                            <th style="padding: 10px; text-align: left; border: 1px solid #dee2e6; min-width: 200px;">Action Proposée</th>
+                            <th style="padding: 10px; text-align: center; border: 1px solid #dee2e6; width: 100px;">Type Cible</th>
+                            <th style="padding: 10px; text-align: center; border: 1px solid #dee2e6; width: 80px;">Priorité</th>
+                            <th style="padding: 10px; text-align: center; border: 1px solid #dee2e6; width: 100px;">Gain Temps</th>
+                            <th style="padding: 10px; text-align: center; border: 1px solid #dee2e6; width: 120px;">Responsable</th>
+                            <th style="padding: 10px; text-align: center; border: 1px solid #dee2e6; width: 100px;">Statut</th>
+                            <th style="padding: 10px; text-align: center; border: 1px solid #dee2e6; width: 100px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="smedActionsTableBody">
+                        <tr><td colspan="9" style="padding: 30px; text-align: center; color: #666;">Aucune action d'amélioration. Sélectionnez des tâches et cliquez sur "Analyser" pour identifier les opportunités SMED.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Graphiques SMED -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; margin-bottom: 20px;">
+            <!-- Graphique Répartition Interne/Externe -->
+            <div style="background: white; padding: 20px; border-radius: 10px;">
+                <h4 style="margin: 0 0 15px 0; color: #555;">📊 Répartition des Tâches</h4>
+                <canvas id="smedTaskDistributionChart" width="400" height="300"></canvas>
+            </div>
+
+            <!-- Graphique Gains Potentiels -->
+            <div style="background: white; padding: 20px; border-radius: 10px;">
+                <h4 style="margin: 0 0 15px 0; color: #555;">⏱️ Gains de Temps Potentiels</h4>
+                <canvas id="smedTimeGainsChart" width="400" height="300"></canvas>
+            </div>
+        </div>
+
+        <!-- Guide SMED Détaillé -->
+        <div style="background: white; padding: 20px; border-radius: 10px;">
+            <h4 style="margin: 0 0 15px 0; color: #555;">📚 Guide de la Méthodologie SMED</h4>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                <!-- Étape 1 -->
+                <div style="border-left: 4px solid #667eea; padding-left: 15px;">
+                    <h5 style="margin: 0 0 10px 0; color: #667eea;">1️⃣ Identifier</h5>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 0.9em; color: #666;">
+                        <li>Lister toutes les opérations</li>
+                        <li>Mesurer les temps actuels</li>
+                        <li>Observer le processus</li>
+                    </ul>
+                </div>
+
+                <!-- Étape 2 -->
+                <div style="border-left: 4px solid #28a745; padding-left: 15px;">
+                    <h5 style="margin: 0 0 10px 0; color: #28a745;">2️⃣ Séparer</h5>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 0.9em; color: #666;">
+                        <li>Opérations internes vs externes</li>
+                        <li>Ce qui peut être anticipé</li>
+                        <li>Ce qui nécessite l'arrêt</li>
+                    </ul>
+                </div>
+
+                <!-- Étape 3 -->
+                <div style="border-left: 4px solid #ffc107; padding-left: 15px;">
+                    <h5 style="margin: 0 0 10px 0; color: #e0a800;">3️⃣ Convertir</h5>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 0.9em; color: #666;">
+                        <li>Transformer internes en externes</li>
+                        <li>Préparer en avance</li>
+                        <li>Améliorer l'organisation</li>
+                    </ul>
+                </div>
+
+                <!-- Étape 4 -->
+                <div style="border-left: 4px solid #dc3545; padding-left: 15px;">
+                    <h5 style="margin: 0 0 10px 0; color: #dc3545;">4️⃣ Optimiser</h5>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 0.9em; color: #666;">
+                        <li>Simplifier les opérations</li>
+                        <li>Paralléliser les tâches</li>
+                        <li>Standardiser les méthodes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de sélection des tâches IW37N -->
+<div id="smedTaskSelectionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+    <div style="background: white; padding: 30px; border-radius: 15px; max-width: 900px; width: 90%; max-height: 90vh; overflow-y: auto;">
+        <h3 style="margin: 0 0 20px 0; color: #333;">Sélectionner les Tâches du Chemin Critique</h3>
+
+        <div style="margin-bottom: 20px;">
+            <input type="text" id="smedTaskSearchInput" placeholder="🔍 Rechercher par ordre, opération ou description..." style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1em;">
+        </div>
+
+        <div style="overflow-x: auto; max-height: 400px; overflow-y: auto; margin-bottom: 20px;">
+            <table class="summary-table" style="width: 100%; border-collapse: collapse;">
+                <thead style="position: sticky; top: 0; z-index: 10;">
+                    <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                        <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 50px;">
+                            <input type="checkbox" id="smedSelectAllTasks" onchange="window.smedActions.toggleSelectAll(this.checked)" style="cursor: pointer; width: 18px; height: 18px;">
+                        </th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Ordre</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Opération</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Description</th>
+                        <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6;">Poste Technique</th>
+                    </tr>
+                </thead>
+                <tbody id="smedTaskSelectionTableBody">
+                    <tr><td colspan="5" style="padding: 30px; text-align: center; color: #666;">Chargement des tâches...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button onclick="window.smedActions.cancelTaskSelection()" class="btn" style="background: #6c757d; color: white; padding: 10px 20px;">
+                Annuler
+            </button>
+            <button onclick="window.smedActions.confirmTaskSelection()" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                Confirmer Sélection
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal d'analyse SMED -->
+<div id="smedAnalysisModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+    <div style="background: white; padding: 30px; border-radius: 15px; max-width: 900px; width: 90%; max-height: 90vh; overflow-y: auto;">
+        <h3 style="margin: 0 0 20px 0; color: #333;">Analyse SMED de la Tâche</h3>
+
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <div><strong>Ordre de Travail:</strong> <span id="smedModalWorkOrder"></span></div>
+            <div><strong>Opération:</strong> <span id="smedModalOperation"></span></div>
+            <div><strong>Description:</strong> <span id="smedModalDescription"></span></div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr; gap: 15px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div>
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px;">Type d'Opération Actuel *</label>
+                    <select id="smedTypeActuel" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        <option value="interne">🟡 Interne (pendant arrêt)</option>
+                        <option value="externe">🟢 Externe (avant/après arrêt)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px;">Type d'Opération Cible</label>
+                    <select id="smedTypeCible" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        <option value="">-- Identique --</option>
+                        <option value="interne">🟡 Interne</option>
+                        <option value="externe">🟢 Externe</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                <div>
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px;">Temps Actuel (heures) *</label>
+                    <input type="number" id="smedTempsActuel" min="0" step="0.5" value="1" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+
+                <div>
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px;">Temps Cible (heures) *</label>
+                    <input type="number" id="smedTempsCibleInput" min="0" step="0.5" value="1" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+
+                <div>
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px;">Gain de Temps</label>
+                    <input type="text" id="smedGainTemps" readonly style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background: #f8f9fa; font-weight: 600; color: #28a745;">
+                </div>
+            </div>
+
+            <div>
+                <label style="font-weight: 600; display: block; margin-bottom: 5px;">Action Proposée *</label>
+                <textarea id="smedActionProposee" placeholder="Décrivez l'action d'amélioration SMED..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; min-height: 100px; resize: vertical;"></textarea>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                <div>
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px;">Priorité</label>
+                    <select id="smedPriorite" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        <option value="haute">🔴 Haute</option>
+                        <option value="moyenne" selected>🟡 Moyenne</option>
+                        <option value="basse">🟢 Basse</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px;">Responsable</label>
+                    <input type="text" id="smedResponsable" placeholder="Nom du responsable" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+
+                <div>
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px;">Statut</label>
+                    <select id="smedStatut" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        <option value="planifie">📋 Planifié</option>
+                        <option value="en_cours">⚙️ En cours</option>
+                        <option value="complete">✅ Complété</option>
+                        <option value="en_attente">⏸️ En attente</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+            <button onclick="window.smedActions.cancelAnalysis()" class="btn" style="background: #6c757d; color: white; padding: 10px 20px;">
+                Annuler
+            </button>
+            <button onclick="window.smedActions.saveAnalysis()" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                Enregistrer Analyse
+            </button>
+        </div>
+    </div>
+</div>

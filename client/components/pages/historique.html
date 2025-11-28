@@ -1,0 +1,41 @@
+<div id="historique" class="page">
+    <div class="summary-container">
+        <h2 style="margin-bottom: 20px; color: #000000;">🗂️ Archives et Historique</h2>
+
+        <!-- Section Export PDF -->
+        <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(145deg, #ecf0f3, #ffffff); border-radius: 15px; box-shadow: 9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.5);">
+            <h3 style="margin: 0 0 15px 0; color: #333; display: flex; align-items: center;">
+                📄 Export Documentation Complète
+            </h3>
+            <p style="margin: 0 0 15px 0; color: #666; font-size: 0.95em;">
+                Générez un document PDF professionnel contenant l'intégralité des données de l'arrêt annuel : phases, tâches, réunions, ordres de travail, statistiques, etc.
+            </p>
+            <button onclick="window.exportCompletePDF()" style="padding: 12px 30px; background: linear-gradient(145deg, #e74c3c, #c0392b); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.3); transition: all 0.3s ease; font-size: 1.05em;">
+                📥 Générer PDF Complet
+            </button>
+        </div>
+
+        <!-- Boutons de gestion des sauvegardes -->
+        <div style="margin-bottom: 30px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+            <button onclick="createArchive()" style="padding: 10px 20px; background: linear-gradient(145deg, #d9a72e, #c9941a); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.3); transition: all 0.3s ease;">
+                📦 Créer une Archive
+            </button>
+            <button onclick="downloadBackup()" style="padding: 10px 20px; background: linear-gradient(145deg, #4a7c59, #3d6b4a); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.3); transition: all 0.3s ease;">
+                💾 Télécharger Sauvegarde
+            </button>
+            <button onclick="document.getElementById('restoreFileInput').click()" style="padding: 10px 20px; background: linear-gradient(145deg, #667eea, #5568d3); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.3); transition: all 0.3s ease;">
+                📂 Restaurer depuis Fichier
+            </button>
+            <input type="file" id="restoreFileInput" accept=".json" style="display: none;" onchange="restoreFromFile(event)">
+            <button onclick="showBackupsList()" style="padding: 10px 20px; background: linear-gradient(145deg, #c5554a, #b44a41); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.3); transition: all 0.3s ease;">
+                🔄 Voir Sauvegardes Locales
+            </button>
+        </div>
+
+        <!-- Section Historique -->
+        <div class="card" style="background: white; padding: 30px; border-radius: 15px; box-shadow: 9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.5);">
+            <h3>Historique des Arrêts</h3>
+            <p>L'historique des arrêts précédents sera affiché ici.</p>
+        </div>
+    </div>
+</div>

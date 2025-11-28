@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-t71</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+<div id="detail-t71" class="page">
+            <div class="summary-container">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                    <h2 style="margin: 0; color: #333;">ÉTABLIR CHEMIN CRITIQUE</h2>
+                </div>
+
+                <!-- Section Chemin Critique -->
+                <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <h3 style="color: #c5554a; margin-bottom: 15px;">🎯 Chemin Critique de l'Arrêt</h3>
+
+                    <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #c9941a;">
+                        <p style="margin: 0; color: #856404;">
+                            ⚠️ <strong>Important:</strong> Le chemin critique représente la séquence de tâches qui détermine la durée minimale de l'arrêt.
+                            Tout retard sur ces tâches affecte directement la date de fin de l'arrêt.
+                        </p>
+                    </div>
+
+                    <button onclick="addCheminCritiqueTask()" style="padding: 10px 20px; background: #c5554a; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-bottom: 15px;">
+                        ➕ Ajouter Tâche au Chemin Critique
+                    </button>
+
+                    <div style="max-height: 500px; overflow-y: auto;">
+                        <table class="summary-table" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%;">Ordre</th>
+                                    <th style="width: 25%;">Nom de la Tâche</th>
+                                    <th style="width: 15%;">Responsable</th>
+                                    <th style="width: 10%;">Durée (h)</th>
+                                    <th style="width: 12%;">Date Début</th>
+                                    <th style="width: 12%;">Date Fin</th>
+                                    <th style="width: 8%;">Marge</th>
+                                    <th style="width: 8%;">Statut</th>
+                                    <th style="width: 5%;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cheminCritiqueTableBody">
+                                <tr>
+                                    <td colspan="9" style="text-align: center; color: #999; padding: 20px;">Aucune tâche sur le chemin critique</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Statistiques du Chemin Critique -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
+                        <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2em; font-weight: bold; color: #000000;" id="cheminCritiqueDureeTotal">0h</div>
+                            <div style="color: #000000; margin-top: 5px;">Durée Totale</div>
+                        </div>
+                        <div style="background: #fff3cd; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2em; font-weight: bold; color: #856404;" id="cheminCritiqueTachesEnRetard">0</div>
+                            <div style="color: #000000; margin-top: 5px;">Tâches en Retard</div>
+                        </div>
+                        <div style="background: #d4edda; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2em; font-weight: bold; color: #155724;" id="cheminCritiqueTachesCompletes">0</div>
+                            <div style="color: #000000; margin-top: 5px;">Tâches Complétées</div>
+                        </div>
+                        <div style="background: #f8d7da; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2em; font-weight: bold; color: #721c24;" id="cheminCritiqueMargeMin">0h</div>
+                            <div style="color: #000000; margin-top: 5px;">Marge Minimale</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

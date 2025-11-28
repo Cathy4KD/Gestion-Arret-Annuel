@@ -1,0 +1,48 @@
+<div id="psv_caracteristiques" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button onclick="window.switchToPage('detail-t19')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                    ← Retour à la Liste PSV
+                </button>
+                <h2 id="psvCharsTitle" style="margin: 0; color: #333;">Caractéristiques des PSV</h2>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="importPSVCaracteristiques()" class="btn" style="background: linear-gradient(145deg, #17a2b8, #138496); color: white; padding: 10px 20px;">
+                    📥 Importer Caractéristiques
+                </button>
+                <button onclick="exportPSVCharsToExcel()" class="btn" style="background: linear-gradient(145deg, #007bff, #0056b3); color: white; padding: 10px 20px;">
+                    📊 Exporter Excel
+                </button>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <p style="margin: 0; color: #666;">
+                <strong>Tableau des caractéristiques PSV</strong> - Ce tableau affiche toutes les informations détaillées des PSV importées depuis le fichier Excel.
+            </p>
+            <p style="margin: 10px 0 0 0; color: #666; font-size: 0.9em;">
+                Les cellules des années (2009-2030) sont colorées en vert si elles contiennent des données.
+            </p>
+        </div>
+
+        <!-- Tableau des caractéristiques -->
+        <div style="background: white; padding: 20px; border-radius: 10px;">
+            <div style="overflow-x: auto; max-height: 600px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 8px;">
+                <table id="psvCharsTable" class="summary-table" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <!-- En-têtes générés dynamiquement -->
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="55" style="padding: 30px; text-align: center; color: #666;">
+                                Aucune donnée importée. Cliquez sur "Importer Caractéristiques" ci-dessus pour charger un fichier Excel.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

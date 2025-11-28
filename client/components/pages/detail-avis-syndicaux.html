@@ -1,0 +1,579 @@
+<div id="detail-avis-syndicaux" class="page">
+    <div class="summary-container" style="max-width: 98%;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    ← Retour
+                </button>
+                <h2 style="margin: 0; color: #333;">📢 AVIS SYNDICAUX</h2>
+            </div>
+            <button onclick="window.avisSyndicaux.nouveauAvis()" class="btn" style="background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                ➕ Nouvel Avis Syndical
+            </button>
+        </div>
+
+        <!-- Configuration Email -->
+        <div style="background: white; padding: 15px 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="flex: 1;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">📧 Adresse email pour l'envoi des avis syndicaux:</label>
+                    <input type="email" id="emailDestinataire" placeholder="exemple@domaine.com"
+                           oninput="window.avisSyndicaux.sauvegarderEmailConfig()"
+                           style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px;">
+                    <small style="color: #666; font-size: 12px;">Cette adresse sera utilisée pour tous les envois d'avis syndicaux par email.</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Container avec formulaire et historique côte à côte -->
+        <div style="display: flex; gap: 20px;">
+            <!-- Formulaire de création -->
+            <div id="formContainer" style="flex: 1; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: none;">
+                <h3 style="margin: 0 0 20px 0; color: #667eea;">
+                    📝 Créer un Avis Syndical
+                </h3>
+
+                <div id="avisForm" style="display: flex; flex-direction: column; gap: 15px;">
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Date de l'avis:</label>
+                        <input type="date" id="dateAvis"
+                               style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px;">
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Description des travaux:</label>
+                        <textarea id="descriptionTravaux" placeholder="Décrivez les travaux..."
+                                  style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px; min-height: 100px; resize: vertical;"></textarea>
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 10px; color: #555;">Type:</label>
+                        <div style="display: flex; gap: 20px;">
+                            <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                                <input type="checkbox" id="typeContrat" style="width: 18px; height: 18px; cursor: pointer;">
+                                <span>Contrat</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                                <input type="checkbox" id="typeMineur" style="width: 18px; height: 18px; cursor: pointer;">
+                                <span>Mineur</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                                <input type="checkbox" id="typeSousContrat" style="width: 18px; height: 18px; cursor: pointer;">
+                                <span>Sous-contrat</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Nom de l'entrepreneur:</label>
+                        <input type="text" id="nomEntrepreneur" placeholder="Nom de l'entrepreneur"
+                               style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px;">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Date début des travaux:</label>
+                            <input type="date" id="dateDebut"
+                                   style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Date fin des travaux:</label>
+                            <input type="date" id="dateFin"
+                                   style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px;">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                        <div>
+                            <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Nombre de techniciens:</label>
+                            <input type="number" id="nbTechniciens" min="0" value="0"
+                                   oninput="window.avisSyndicaux.calculerHeuresHomme()"
+                                   style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Nombre de jours:</label>
+                            <input type="number" id="nbJours" min="0" value="0"
+                                   oninput="window.avisSyndicaux.calculerHeuresHomme()"
+                                   style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Heures-homme (calculé):</label>
+                            <input type="text" id="heuresHomme" readonly value="0"
+                                   style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 14px; background: #f5f5f5; font-weight: bold; color: #667eea;">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Responsable du projet:</label>
+                        <input type="text" id="responsableProjet" placeholder="Nom du responsable du projet"
+                               style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px;">
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Surintendant ou Responsable du secteur:</label>
+                        <input type="text" id="surintendant" placeholder="Nom du surintendant ou responsable"
+                               style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px;">
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button onclick="window.avisSyndicaux.genererDocument()" class="btn" style="flex: 1; background: #667eea; color: white; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                            📄 Générer le Document
+                        </button>
+                        <button onclick="window.avisSyndicaux.annulerFormulaire()" class="btn" style="background: #dc3545; color: white; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                            ✖ Annuler
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Historique des avis -->
+            <div style="flex: 1; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <h3 style="margin: 0 0 15px 0; color: #667eea;">
+                    📋 Historique des Avis Syndicaux
+                </h3>
+
+                <div style="margin-bottom: 15px;">
+                    <input type="text" id="searchAvis" placeholder="🔍 Rechercher par entrepreneur, description, responsable..."
+                           oninput="window.avisSyndicaux.filtrerHistorique(this.value)"
+                           style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px;">
+                </div>
+
+                <div id="historiqueAvis" style="max-height: 700px; overflow-y: auto;">
+                    <p style="text-align: center; color: #666; padding: 40px 20px;">
+                        Aucun avis syndical créé. Cliquez sur "➕ Nouvel Avis Syndical" pour commencer.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message d'info pour installer les dépendances -->
+        <div id="infoDocxTemplater" style="background: #fff3cd; padding: 15px; border-radius: 10px; margin-top: 20px; border-left: 4px solid #ffc107;">
+            <p style="margin: 0; color: #856404; line-height: 1.6;">
+                💡 <strong>Note:</strong> Cette fonctionnalité utilise le template "Avis Template.docx".
+                Les champs en jaune du template seront automatiquement remplis avec vos données.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Namespace pour les avis syndicaux
+window.avisSyndicaux = {
+    historiqueData: [],
+    searchQuery: '',
+    emailDestinataire: '',
+
+    // Charger les données
+    async chargerDonnees() {
+        const socket = window.socket;
+        if (!socket) {
+            console.error('[AVIS-SYNDICAUX] ❌ Socket non disponible');
+            return;
+        }
+
+        console.log('[AVIS-SYNDICAUX] 📥 Chargement des données...');
+
+        socket.emit('data:getAll', (response) => {
+            if (response && response.success && response.data) {
+                if (response.data.avisSyndicauxData) {
+                    this.historiqueData = response.data.avisSyndicauxData.historique || [];
+                    this.emailDestinataire = response.data.avisSyndicauxData.emailDestinataire || '';
+
+                    // Pré-remplir le champ email
+                    const emailInput = document.getElementById('emailDestinataire');
+                    if (emailInput) {
+                        emailInput.value = this.emailDestinataire;
+                    }
+
+                    console.log('[AVIS-SYNDICAUX] ✅ Données chargées:', this.historiqueData.length, 'avis');
+                    this.afficherHistorique();
+                } else {
+                    console.log('[AVIS-SYNDICAUX] ⚠️ Aucune donnée avisSyndicauxData');
+                    this.historiqueData = [];
+                    this.afficherHistorique();
+                }
+            } else {
+                console.error('[AVIS-SYNDICAUX] ❌ Erreur chargement:', response ? response.error : 'Pas de réponse');
+            }
+        });
+    },
+
+    // Sauvegarder les données
+    async sauvegarderDonnees() {
+        const socket = window.socket;
+        if (!socket) {
+            console.error('[AVIS-SYNDICAUX] ❌ Socket non disponible');
+            alert('Erreur: Socket non disponible');
+            return;
+        }
+
+        console.log('[AVIS-SYNDICAUX] 💾 Sauvegarde des données...', this.historiqueData.length, 'avis');
+
+        socket.emit('data:updateModule', {
+            moduleName: 'avisSyndicauxData',
+            data: {
+                historique: this.historiqueData,
+                emailDestinataire: this.emailDestinataire
+            },
+            userName: 'User'
+        }, (response) => {
+            if (response && response.success) {
+                console.log('[AVIS-SYNDICAUX] ✅ Données sauvegardées avec succès');
+            } else {
+                console.error('[AVIS-SYNDICAUX] ❌ Erreur sauvegarde:', response ? response.error : 'Pas de réponse');
+                alert('❌ Erreur lors de la sauvegarde');
+            }
+        });
+    },
+
+    // Sauvegarder la configuration email
+    sauvegarderEmailConfig() {
+        const emailInput = document.getElementById('emailDestinataire');
+        if (emailInput) {
+            this.emailDestinataire = emailInput.value;
+            this.sauvegarderDonnees();
+        }
+    },
+
+    // Calculer les heures-homme
+    calculerHeuresHomme() {
+        const nbTechniciens = parseFloat(document.getElementById('nbTechniciens').value) || 0;
+        const nbJours = parseFloat(document.getElementById('nbJours').value) || 0;
+        const heuresHomme = nbTechniciens * nbJours * 8;
+        document.getElementById('heuresHomme').value = heuresHomme;
+    },
+
+    // Afficher le formulaire
+    nouveauAvis() {
+        const formContainer = document.getElementById('formContainer');
+        formContainer.style.display = 'block';
+
+        // Pré-remplir la date avec aujourd'hui
+        const dateInput = document.getElementById('dateAvis');
+        if (dateInput) {
+            dateInput.value = new Date().toISOString().split('T')[0];
+        }
+
+        // Réinitialiser le formulaire
+        document.getElementById('descriptionTravaux').value = '';
+        document.getElementById('typeContrat').checked = false;
+        document.getElementById('typeMineur').checked = false;
+        document.getElementById('typeSousContrat').checked = false;
+        document.getElementById('nomEntrepreneur').value = '';
+        document.getElementById('dateDebut').value = '';
+        document.getElementById('dateFin').value = '';
+        document.getElementById('nbTechniciens').value = '0';
+        document.getElementById('nbJours').value = '0';
+        document.getElementById('heuresHomme').value = '0';
+        document.getElementById('responsableProjet').value = '';
+        document.getElementById('surintendant').value = '';
+    },
+
+    // Annuler le formulaire
+    annulerFormulaire() {
+        document.getElementById('formContainer').style.display = 'none';
+    },
+
+    // Générer le document
+    async genererDocument() {
+        // Récupérer les données du formulaire
+        const types = [];
+        if (document.getElementById('typeContrat').checked) types.push('Contrat');
+        if (document.getElementById('typeMineur').checked) types.push('Mineur');
+        if (document.getElementById('typeSousContrat').checked) types.push('Sous-contrat');
+
+        const data = {
+            dateAvis: document.getElementById('dateAvis').value,
+            descriptionTravaux: document.getElementById('descriptionTravaux').value,
+            types: types,
+            typesString: types.join(', '),
+            nomEntrepreneur: document.getElementById('nomEntrepreneur').value,
+            dateDebut: document.getElementById('dateDebut').value,
+            dateFin: document.getElementById('dateFin').value,
+            nbTechniciens: document.getElementById('nbTechniciens').value,
+            nbJours: document.getElementById('nbJours').value,
+            heuresHomme: document.getElementById('heuresHomme').value,
+            responsableProjet: document.getElementById('responsableProjet').value,
+            surintendant: document.getElementById('surintendant').value,
+            dateCreation: new Date().toISOString()
+        };
+
+        // Validation
+        if (!data.descriptionTravaux || !data.nomEntrepreneur) {
+            alert('⚠️ Veuillez remplir au moins la description des travaux et le nom de l\'entrepreneur.');
+            return;
+        }
+
+        // Formater les dates pour l'affichage
+        if (data.dateAvis) {
+            const date = new Date(data.dateAvis);
+            data.dateAvisFormatted = date.toLocaleDateString('fr-FR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+        if (data.dateDebut) {
+            const date = new Date(data.dateDebut);
+            data.dateDebutFormatted = date.toLocaleDateString('fr-FR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+        if (data.dateFin) {
+            const date = new Date(data.dateFin);
+            data.dateFinFormatted = date.toLocaleDateString('fr-FR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Demander au serveur de générer le document ET sauvegarder l'historique
+        const socket = window.socket;
+        if (socket) {
+            socket.emit('generer-avis-syndical', data, {
+                historique: this.historiqueData
+            });
+
+            socket.once('avis-syndical-genere', (response) => {
+                if (response.success) {
+                    // Ajouter l'URL de téléchargement aux données
+                    data.downloadUrl = response.downloadUrl;
+                    data.fileName = response.fileName;
+
+                    // Ajouter à l'historique
+                    this.historiqueData.unshift(data);
+                    this.afficherHistorique();
+
+                    // Sauvegarder l'historique mis à jour
+                    this.sauvegarderDonnees();
+
+                    // Proposer le téléchargement
+                    const telecharger = confirm('✅ Document généré avec succès!\n\nVoulez-vous télécharger le document maintenant?');
+                    if (telecharger) {
+                        window.open(response.downloadUrl, '_blank');
+                    }
+                    this.annulerFormulaire();
+                } else {
+                    alert('❌ Erreur lors de la génération du document:\n' + response.error);
+                }
+            });
+        } else {
+            // Ajouter à l'historique même sans génération
+            this.historiqueData.unshift(data);
+            this.afficherHistorique();
+            alert('⚠️ Fonctionnalité de génération non disponible. Les données ont été sauvegardées dans l\'historique.');
+            this.annulerFormulaire();
+        }
+    },
+
+    // Afficher l'historique
+    afficherHistorique() {
+        const container = document.getElementById('historiqueAvis');
+
+        let dataToShow = this.historiqueData;
+
+        // Filtrer si nécessaire
+        if (this.searchQuery) {
+            const query = this.searchQuery.toLowerCase();
+            dataToShow = this.historiqueData.filter(avis =>
+                (avis.descriptionTravaux && avis.descriptionTravaux.toLowerCase().includes(query)) ||
+                (avis.nomEntrepreneur && avis.nomEntrepreneur.toLowerCase().includes(query)) ||
+                (avis.responsableProjet && avis.responsableProjet.toLowerCase().includes(query))
+            );
+        }
+
+        if (dataToShow.length === 0) {
+            container.innerHTML = `
+                <p style="text-align: center; color: #666; padding: 40px 20px;">
+                    ${this.searchQuery ? 'Aucun résultat trouvé.' : 'Aucun avis syndical créé. Cliquez sur "➕ Nouvel Avis Syndical" pour commencer.'}
+                </p>
+            `;
+            return;
+        }
+
+        container.innerHTML = dataToShow.map((avis, index) => {
+            const dateCreation = new Date(avis.dateCreation);
+            const dateAffichage = avis.dateAvisFormatted || avis.dateAvis || 'N/A';
+
+            // Formater la date d'approbation si elle existe
+            let dateApprobationHTML = '';
+            if (avis.approuve && avis.dateApprobation) {
+                const dateApprob = new Date(avis.dateApprobation);
+                dateApprobationHTML = `<span style="color: #28a745; font-size: 12px; margin-left: 8px;">
+                    (Approuvé le ${dateApprob.toLocaleDateString('fr-FR')} à ${dateApprob.toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})})
+                </span>`;
+            }
+
+            return `
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid ${avis.approuve ? '#28a745' : '#667eea'};">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                        <div style="flex: 1;">
+                            <div style="font-weight: bold; font-size: 16px; color: #333; margin-bottom: 5px;">
+                                📄 ${avis.nomEntrepreneur || 'Entrepreneur N/A'}
+                            </div>
+                            <div style="font-size: 14px; color: #666; margin-bottom: 3px;">
+                                <strong>Date:</strong> ${dateAffichage}
+                            </div>
+                            <div style="font-size: 14px; color: #666; margin-bottom: 3px;">
+                                <strong>Type:</strong> ${avis.typesString || 'N/A'}
+                            </div>
+                            <div style="font-size: 14px; color: #666; margin-bottom: 3px;">
+                                <strong>Heures-homme:</strong> ${avis.heuresHomme || '0'}
+                            </div>
+                            <div style="font-size: 12px; color: #999; margin-top: 5px;">
+                                Créé le ${dateCreation.toLocaleDateString('fr-FR')} à ${dateCreation.toLocaleTimeString('fr-FR')}
+                            </div>
+                            <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #dee2e6;">
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">
+                                    <input type="checkbox"
+                                           ${avis.approuve ? 'checked' : ''}
+                                           onchange="window.avisSyndicaux.toggleApprobation(${this.historiqueData.indexOf(avis)})"
+                                           style="width: 18px; height: 18px; cursor: pointer; accent-color: #28a745;">
+                                    <span style="color: ${avis.approuve ? '#28a745' : '#666'};">
+                                        ${avis.approuve ? '✓ Approuvé par la direction' : 'Approuver par la direction'}
+                                    </span>
+                                    ${dateApprobationHTML}
+                                </label>
+                            </div>
+                            ${avis.downloadUrl ? `
+                                <div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
+                                    <a href="${avis.downloadUrl}" target="_blank"
+                                       style="display: inline-block; background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                        📥 Télécharger
+                                    </a>
+                                    <button onclick="window.avisSyndicaux.envoyerParEmail(${this.historiqueData.indexOf(avis)})"
+                                            style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                        📧 Envoyer par email
+                                    </button>
+                                </div>
+                            ` : ''}
+                        </div>
+                        <button onclick="window.avisSyndicaux.supprimerAvis(${this.historiqueData.indexOf(avis)})"
+                                style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px;">
+                            🗑️ Supprimer
+                        </button>
+                    </div>
+
+                    <details style="margin-top: 10px;">
+                        <summary style="cursor: pointer; font-weight: bold; color: #667eea; user-select: none;">
+                            Voir les détails
+                        </summary>
+                        <div style="margin-top: 10px; padding: 10px; background: white; border-radius: 4px; font-size: 13px;">
+                            ${avis.descriptionTravaux ? `<p><strong>Description des travaux:</strong><br>${avis.descriptionTravaux.replace(/\n/g, '<br>')}</p>` : ''}
+                            <p><strong>Période:</strong> Du ${avis.dateDebutFormatted || avis.dateDebut || 'N/A'} au ${avis.dateFinFormatted || avis.dateFin || 'N/A'}</p>
+                            <p><strong>Nombre de techniciens:</strong> ${avis.nbTechniciens || '0'} | <strong>Nombre de jours:</strong> ${avis.nbJours || '0'}</p>
+                            ${avis.responsableProjet ? `<p><strong>Responsable du projet:</strong> ${avis.responsableProjet}</p>` : ''}
+                            ${avis.surintendant ? `<p><strong>Surintendant:</strong> ${avis.surintendant}</p>` : ''}
+                            ${avis.downloadUrl ? `<p style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #e0e0e0;"><strong>Fichier:</strong> ${avis.fileName || 'Document généré'}</p>` : ''}
+                        </div>
+                    </details>
+                </div>
+            `;
+        }).join('');
+    },
+
+    // Filtrer l'historique
+    filtrerHistorique(query) {
+        this.searchQuery = query.toLowerCase();
+        this.afficherHistorique();
+    },
+
+    // Supprimer un avis
+    async supprimerAvis(index) {
+        if (confirm('Êtes-vous sûr de vouloir supprimer cet avis de l\'historique ?')) {
+            this.historiqueData.splice(index, 1);
+            await this.sauvegarderDonnees();
+            this.afficherHistorique();
+        }
+    },
+
+    // Basculer l'approbation d'un avis
+    async toggleApprobation(index) {
+        const avis = this.historiqueData[index];
+
+        if (!avis.approuve) {
+            // Approuver
+            avis.approuve = true;
+            avis.dateApprobation = new Date().toISOString();
+        } else {
+            // Retirer l'approbation
+            avis.approuve = false;
+            avis.dateApprobation = null;
+        }
+
+        // Sauvegarder immédiatement
+        await this.sauvegarderDonnees();
+
+        // Rafraîchir l'affichage
+        this.afficherHistorique();
+
+        console.log('[AVIS-SYNDICAUX] Approbation mise à jour pour:', avis.nomEntrepreneur, '- Approuvé:', avis.approuve);
+    },
+
+    // Envoyer un avis par email
+    async envoyerParEmail(index) {
+        const avis = this.historiqueData[index];
+
+        // Vérifier que le document existe
+        if (!avis.downloadUrl || !avis.fileName) {
+            alert('⚠️ Aucun document généré pour cet avis. Veuillez d\'abord générer le document.');
+            return;
+        }
+
+        // Vérifier que l'adresse email est configurée
+        if (!this.emailDestinataire) {
+            alert('⚠️ Veuillez configurer une adresse email de destination dans le champ en haut de la page.');
+            return;
+        }
+
+        // Demander confirmation
+        const confirmer = confirm(`📧 Envoyer l'avis syndical pour "${avis.nomEntrepreneur}" à l'adresse:\n\n${this.emailDestinataire}\n\nConfirmer l'envoi?`);
+        if (!confirmer) {
+            return;
+        }
+
+        // Envoyer l'email via Socket.io
+        const socket = window.socket;
+        if (!socket) {
+            alert('❌ Erreur: Socket non disponible');
+            return;
+        }
+
+        console.log('[AVIS-SYNDICAUX] 📧 Envoi de l\'email...');
+
+        socket.emit('envoyer-avis-email', {
+            avisData: avis,
+            emailDestinataire: this.emailDestinataire
+        });
+
+        socket.once('avis-email-envoye', (response) => {
+            if (response.success) {
+                alert('✅ Email envoyé avec succès!');
+            } else {
+                alert('❌ Erreur lors de l\'envoi de l\'email:\n\n' + response.error);
+            }
+        });
+    }
+};
+
+// Charger les données quand la page est affichée
+document.addEventListener('DOMContentLoaded', () => {
+    const observer = new MutationObserver(() => {
+        const page = document.getElementById('detail-avis-syndicaux');
+        if (page && !page.classList.contains('hidden')) {
+            window.avisSyndicaux.chargerDonnees();
+        }
+    });
+
+    const page = document.getElementById('detail-avis-syndicaux');
+    if (page) {
+        observer.observe(page, { attributes: true, attributeFilter: ['class'] });
+        if (!page.classList.contains('hidden')) {
+            window.avisSyndicaux.chargerDonnees();
+        }
+    }
+});
+</script>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-t29</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+<div id="detail-t29" class="page">
+            <div class="summary-container" style="max-width: 98%; padding: 20px;">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                    <h2 style="margin: 0; color: #333;">DEMANDER LISTE OFFICIELS DES VPO À LA PRODUCTION</h2>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="margin: 0; color: #2d3748;">📋 Liste des VPO (Vérifications Préalables à l'Ouverture)</h3>
+                        <div>
+                            <button onclick="addVPO()" style="padding: 10px 20px; background: #48bb78; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 10px;">➕ Ajouter un VPO</button>
+                            <button onclick="exportVPOToExcel()" style="padding: 10px 20px; background: #4299e1; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">📥 Exporter Excel</button>
+                        </div>
+                    </div>
+
+                    <p style="color: #000000; margin-bottom: 15px;">Total de VPO: <strong><span id="vpoCount">0</span></strong></p>
+
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; background: white;">
+                            <thead>
+                                <tr style="background: #667eea; color: white;">
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 15%;">Nom du VPO</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 15%;">Équipement concerné</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 15%;">Poste technique</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 30%;">Description du VPO</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 20%;">Contraintes / Conditions</th>
+                                    <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 5%;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vpoTableBody">
+                                <tr>
+                                    <td colspan="6" style="padding: 30px; text-align: center; color: #666; border: 1px solid #dee2e6;">
+                                        Aucun VPO dans la liste. Cliquez sur "Ajouter un VPO" pour commencer.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

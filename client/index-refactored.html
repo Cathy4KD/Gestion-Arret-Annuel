@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Arrêt Annuel 2026 - Application Refactorisée</title>
+
+    <!-- CDN Libraries - Chargées en defer (non-bloquant, ordre préservé) -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <!-- jsPDF Library (pour export PDF) -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- PDF.js Library (pour conversion PDF vers image) -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script defer>
+        // Configuration de PDF.js (après chargement)
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof pdfjsLib !== 'undefined') {
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            }
+        });
+    </script>
+
+    <!-- Socket.io Client (pour synchronisation temps réel) -->
+    <script defer src="/socket.io/socket.io.js"></script>
+
+    <!-- Custom Stylesheet Modulaire -->
+    <link rel="stylesheet" href="css/main.css?v=20251103-002">
+
+    <!-- Compact Mode - Style Excel -->
+    <link rel="stylesheet" href="css/compact-mode.css?v=20251103-002">
+
+    <style>
+        /* Loader pendant l'initialisation */
+        #app-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ecf0f3;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        #app-loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loader-spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #ecf0f3;
+            border-top: 6px solid #4a7c59;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 0 20px rgba(74, 124, 89, 0.3);
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loader-text {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #4a7c59;
+            font-weight: 600;
+        }
+        .loader-step {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #6b8e7d;
+            font-weight: 500;
+            min-height: 20px;
+        }
+        .loader-percentage {
+            margin-top: 15px;
+            font-size: 32px;
+            color: #4a7c59;
+            font-weight: 700;
+        }
+        #app-container {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        #app-container.visible {
+            opacity: 1;
+        }
+
+        /* Animations pour les notifications temps réel */
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader de démarrage -->
+    <div id="app-loader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Chargement de l'application...</div>
+        <div class="loader-step" id="loader-step"></div>
+        <div class="loader-percentage" id="loader-percentage">0%</div>
+    </div>
+
+    <!-- Container principal de l'application -->
+    <div id="app-container">
+        <div class="container">
+            <div class="header">
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <div style="flex: 1; text-align: left;">
+                        <button onclick="window.switchToPage('iw37n')" style="padding: 10px 20px; background: #ffffff; color: #000000; border: none; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.9em; margin-right: 10px; box-shadow: 3px 3px 8px rgba(163, 177, 198, 0.4), -3px -3px 8px rgba(255, 255, 255, 0.9); transition: all 0.3s ease;">
+                            📊 IW37N
+                        </button>
+                        <button onclick="window.switchToPage('iw38')" style="padding: 10px 20px; background: #ffffff; color: #000000; border: none; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.9em; margin-right: 10px; box-shadow: 3px 3px 8px rgba(163, 177, 198, 0.4), -3px -3px 8px rgba(255, 255, 255, 0.9); transition: all 0.3s ease;">
+                            📊 IW38
+                        </button>
+                        <button onclick="window.switchToPage('pieces')" style="padding: 10px 20px; background: #ffffff; color: #000000; border: none; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.9em; margin-right: 10px; box-shadow: 3px 3px 8px rgba(163, 177, 198, 0.4), -3px -3px 8px rgba(255, 255, 255, 0.9); transition: all 0.3s ease;">
+                            🔧 PIECES
+                        </button>
+                        <button onclick="window.switchToPage('avis')" style="padding: 10px 20px; background: #ffffff; color: #000000; border: none; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.9em; margin-right: 10px; box-shadow: 3px 3px 8px rgba(163, 177, 198, 0.4), -3px -3px 8px rgba(255, 255, 255, 0.9); transition: all 0.3s ease;">
+                            📝 AVIS
+                        </button>
+                        <button onclick="window.open('https://prospect.riotinto.org/irj/servlet/prt/portal/prtroot/pcd!3aportal_content!2frt!2fent!2fgen!2fivu!2fStandard_Transaction?sap-config-mode=true', '_blank')" style="padding: 10px 20px; background: #ffffff; color: #000000; border: none; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.9em; box-shadow: 3px 3px 8px rgba(163, 177, 198, 0.4), -3px -3px 8px rgba(255, 255, 255, 0.9); transition: all 0.3s ease;">
+                            🔗 SAP
+                        </button>
+                    </div>
+                    <div style="flex: 1; text-align: center;">
+                        <h1>🏭 ARRÊT ANNUEL 2026</h1>
+                        <div class="subtitle" id="arretSubtitle">Du 1er avril au 15 avril 2026 (14 jours)</div>
+                    </div>
+                    <div style="flex: 1; text-align: right;">
+                        <button onclick="window.switchToPage('contacts')" style="padding: 10px 20px; background: #ffffff; color: #000000; border: none; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.9em; margin-right: 10px; box-shadow: 3px 3px 8px rgba(163, 177, 198, 0.4), -3px -3px 8px rgba(255, 255, 255, 0.9); transition: all 0.3s ease;">
+                             Contacts
+                        </button>
+                        <button onclick="window.switchToPage('parametres')" style="padding: 10px 20px; background: #ffffff; color: #000000; border: none; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.9em; box-shadow: 3px 3px 8px rgba(163, 177, 198, 0.4), -3px -3px 8px rgba(255, 255, 255, 0.9); transition: all 0.3s ease;">
+                             Paramètres
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation par onglets -->
+            <div class="nav-tabs">
+                <div class="nav-tab active" onclick="window.switchToPage('dashboard')">📊 Dashboard</div>
+                <div class="nav-tab" onclick="window.switchToPage('timeline')">📅 Timeline Kanban</div>
+                <div class="nav-tab" onclick="window.switchToPage('summary')">ℹ️ Préparation</div>
+                <div class="nav-tab" onclick="window.switchToPage('execution')">⚙️ Exécution</div>
+                <div class="nav-tab" onclick="window.switchToPage('post_mortem')">📝 Post-Mortem</div>
+                <div class="nav-tab" onclick="window.switchToPage('historique')">🗂️ Archives</div>
+            </div>
+
+            <!-- Conteneur pour les pages - sera chargé dynamiquement -->
+            <div id="pages-container">
+                <!-- Les pages sont chargées dynamiquement depuis /components/pages/ -->
+                <!-- Dashboard chargé par défaut au démarrage -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Script pour sauvegarder et restaurer les tailles des textarea -->
+    <script src="./js/textarea-resize-manager.js"></script>
+
+    <script type="module">
+        // Import du point d'entrée principal de l'application
+        import { initApp, switchPage, changeTheme } from './js/app.js?v=20251106-002';
+
+        // Exposer les fonctions globalement pour les onclick dans le HTML
+        window.switchPage = switchPage;
+        window.changeTheme = changeTheme;
+
+        window.appActions = {
+            switchPage,
+            changeTheme,
+            initApp
+        };
+
+        // Initialisation au chargement de la page
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                console.log('[START] Démarrage de l\'application refactorisée...');
+
+                // Initialiser l'application
+                await initApp();
+
+                // Cacher le loader et afficher l'app
+                setTimeout(() => {
+                    document.getElementById('app-loader').classList.add('hidden');
+                    document.getElementById('app-container').classList.add('visible');
+                    console.log('[OK] Application démarrée avec succès !');
+                }, 200);
+
+            } catch (error) {
+                console.error('[ERROR] Erreur lors de l\'initialisation:', error);
+
+                // Afficher l'erreur à l'utilisateur
+                const loaderText = document.querySelector('.loader-text');
+                loaderText.textContent = '❌ Erreur de chargement - Vérifiez la console';
+                loaderText.style.color = '#c5554a';
+
+                // Afficher quand même l'app après 1 seconde
+                setTimeout(() => {
+                    document.getElementById('app-loader').classList.add('hidden');
+                    document.getElementById('app-container').classList.add('visible');
+                }, 1000);
+            }
+        });
+
+        // Gestion des raccourcis clavier
+        document.addEventListener('keydown', (e) => {
+            // Ctrl + S : Sauvegarder
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                if (window.appActions && window.appActions.saveAllData) {
+                    window.appActions.saveAllData();
+                    console.log('[SAVE] Sauvegarde manuelle effectuée');
+                }
+            }
+
+            // Ctrl + E : Exporter
+            if (e.ctrlKey && e.key === 'e') {
+                e.preventDefault();
+                if (window.appActions && window.appActions.exportAllData) {
+                    window.appActions.exportAllData();
+                    console.log(' Export déclenché');
+                }
+            }
+        });
+
+        // Log de la version
+        console.log('%c[FACTORY] Gestion Arrêt Annuel 2026 %c v2.0.0 - Architecture Modulaire',
+                    'background: #4a7c59; color: white; padding: 5px 10px; border-radius: 3px;',
+                    'background: #ecf0f3; color: #000; padding: 5px 10px;');
+    </script>
+
+    <!-- Note de développement -->
+    <!--
+    ====================================
+    APPLICATION REFACTORISÉE v2.0.0
+    ====================================
+
+    Cette version utilise une architecture modulaire avec :
+    - 55+ modules ES6
+    - 548 fonctions extraites
+    - CSS organisé en 12 fichiers
+    - Socket.io pour synchronisation temps réel
+
+    Structure des modules :
+    - /js/modules/navigation.js
+    - /js/modules/theme.js
+    - /js/modules/utils.js
+    - /js/modules/init.js
+    - /js/modules/data/
+    - /js/modules/ui/
+    - /js/modules/charts/
+    - /js/modules/import-export/
+    - /js/modules/forms/
+    - /js/modules/modals/
+    - /js/modules/tables/
+    - /js/modules/plans/
+    - /js/modules/demandes/
+    - /js/modules/entities/
+    - /js/app.js (point d'entrée principal)
+
+    Pour plus de détails, voir :
+    - /js/modules/README-MODULES.md
+    - /client/RAPPORT-EXTRACTION.md
+    -->
+
+    <!-- Modal de sélection des responsables -->
+    <div id="responsibleModal" class="modal-overlay" onclick="window.closeModalOnOverlay(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3>👥 Sélectionner les Responsables</h3>
+                <button class="modal-close" onclick="window.closeResponsibleModal()">×</button>
+            </div>
+            <div class="checkbox-list" id="responsibleCheckboxList"></div>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-secondary" onclick="window.closeResponsibleModal()">Annuler</button>
+                <button class="modal-btn modal-btn-primary" onclick="window.saveResponsibles()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+
+
+        <!-- ============================================ -->
+        <!-- PAGES SUPPLÉMENTAIRES AJOUTÉES AUTOMATIQUEMENT -->
+        <!-- 40 pages extraites du vieux HTML -->
+        <!-- ============================================ -->
+
+
+        <!-- ============================================================ -->
+        <!-- PAGES EXTRAITES                                              -->
+        <!-- ============================================================ -->
+        <!-- Les pages suivantes ont été extraites dans des fichiers     -->
+        <!-- séparés dans client/components/pages/                        -->
+        <!--                                                              -->
+        <!-- Elles sont chargées dynamiquement par page-loader.js        -->
+        <!-- à partir de /components/pages/{pageId}.html                 -->
+        <!--                                                              -->
+        <!-- Pages extraites: 44 pages                                -->
+        <!-- - detail-t22, detail-t24, detail-t27, detail-t29, ...      -->
+        <!-- - contacts, etc.                                            -->
+        <!--                                                              -->
+        <!-- Voir: client/components/pages/ pour tous les fichiers       -->
+        <!-- Voir: client/js/modules/pages/ pour les contrôleurs         -->
+        <!-- ============================================================ -->
+        
+
+
+
+
+
+        <!-- ==================== PAGE T60: COMMANDES À LONG DÉLAI 60J ==================== -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <!-- PAGE CONTACTS -->
+
+        <!-- FIN DES PAGES SUPPLÉMENTAIRES -->
+
+    </body>
+</html>

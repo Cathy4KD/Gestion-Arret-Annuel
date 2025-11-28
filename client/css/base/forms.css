@@ -1,0 +1,91 @@
+/**
+ * Forms Component Styles
+ * Classes réutilisables pour les formulaires et inputs
+ */
+
+/* ============================================================ */
+/* INPUTS DE BASE                                               */
+/* ============================================================ */
+
+.input-text {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.input-text:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.input-text::placeholder {
+    color: #999;
+}
+
+/* INPUT DE RECHERCHE */
+.input-search {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #667eea;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.input-search:focus {
+    outline: none;
+    border-color: #5a6fd8;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+}
+
+/* TEXTAREA */
+.textarea {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    box-sizing: border-box;
+    resize: vertical;
+    min-height: 100px;
+}
+
+.textarea:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+/* SELECT */
+.select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+    background-color: white;
+}
+
+.select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+/* FORM GROUPS */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+}

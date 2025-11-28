@@ -1,0 +1,406 @@
+/* ==============================================
+   COMPACT MODE - Style Excel
+   Garde le design neumorphique mais réduit les espacements
+   ============================================== */
+
+/* Amélioration du contraste - Texte en noir */
+body {
+    color: #000000 !important;
+}
+
+p {
+    color: #000000 !important;
+}
+
+.summary-table td {
+    color: #000000 !important;
+}
+
+.summary-table th {
+    color: #000000 !important;
+}
+
+/* Tous les textes en noir pour meilleur contraste */
+div, span, td, th, label, input, select, textarea {
+    color: #000000;
+}
+
+/* Headers et titres */
+h1, h2, h3, h4, h5, h6 {
+    color: #000000 !important;
+}
+
+/* Réduction des espacements globaux */
+body {
+    padding: 10px;
+    line-height: 1.3;
+}
+
+.container {
+    max-width: 100%;
+}
+
+.page {
+    padding: 15px;
+}
+
+/* Titres plus compacts */
+h1 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+}
+
+h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+}
+
+/* Controls plus compacts */
+.controls {
+    padding: 10px;
+    gap: 8px;
+}
+
+.controls select,
+.controls button,
+.controls input {
+    padding: 6px 12px;
+    font-size: 11px;
+    border-radius: 8px;
+}
+
+/* Tables style Excel - très compact */
+.summary-container {
+    padding: 10px;
+    max-width: 100%;
+}
+
+.summary-table-wrapper {
+    border-radius: 12px;
+    padding: 3px;
+}
+
+.summary-table {
+    font-size: 9pt;
+}
+
+.summary-table th {
+    padding: 5px 8px;
+    font-size: 9pt;
+    font-weight: 600;
+}
+
+.summary-table td {
+    padding: 4px 8px;
+    font-size: 9pt;
+}
+
+.summary-phase-row td {
+    font-size: 10pt;
+    padding: 10px 8px !important;
+}
+
+.summary-task-title {
+    padding-left: 15px;
+    font-weight: 700;
+    color: #000000;
+}
+
+/* Colonne Tâche / Phase en gras */
+.summary-table .summary-task-title {
+    font-weight: 700;
+}
+
+.summary-table textarea {
+    font-size: 1em;
+    padding: 3px;
+    min-height: 30px;
+}
+
+/* IW37N Table compact */
+.iw37n-table th,
+.iw37n-table td {
+    padding: 3px 6px;
+    font-size: 9pt;
+}
+
+/* Status badges plus petits */
+.status-select,
+.status-badge {
+    padding: 4px 10px;
+    font-size: 10px;
+    border-radius: 8px;
+}
+
+/* Barre de progression compacte */
+.summary-progress-bar-mini {
+    height: 10px;
+    margin-top: 2px;
+}
+
+/* Modals et cards plus compacts */
+.modal-content {
+    padding: 15px;
+}
+
+.card {
+    padding: 12px;
+    margin-bottom: 10px;
+}
+
+/* Formulaires compacts */
+input[type="text"],
+input[type="date"],
+input[type="number"],
+input[type="email"],
+select,
+textarea {
+    padding: 5px 10px;
+    font-size: 11px;
+}
+
+/* Navigation plus compacte */
+.nav-tabs {
+    gap: 5px;
+}
+
+.nav-tab {
+    padding: 12px 20px;
+    font-size: 0.95em;
+}
+
+/* Stats cards compactes */
+.stats-grid {
+    gap: 10px;
+}
+
+.stat-card {
+    padding: 10px;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+}
+
+.stat-label {
+    font-size: 10px;
+}
+
+/* Charts plus compacts */
+.chart-container {
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+/* Kanban compact */
+.kanban-column {
+    padding: 10px;
+}
+
+.kanban-card {
+    padding: 8px;
+    margin-bottom: 8px;
+}
+
+/* Timeline compact */
+.timeline-item {
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+/* Scrollbar fine */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+/* Espacement des sections */
+section {
+    margin-bottom: 15px;
+}
+
+/* Boutons compacts */
+button,
+.btn {
+    padding: 6px 12px;
+    font-size: 11px;
+    border-radius: 8px;
+}
+
+button.btn-sm,
+.btn-sm {
+    padding: 4px 8px;
+    font-size: 10px;
+}
+
+/* Headers de tableaux sticky optimisés */
+thead {
+    font-size: 9pt;
+}
+
+/* Lignes de tableau plus serrées */
+tbody tr {
+    line-height: 1.2;
+}
+
+/* Inputs dans les tableaux */
+table input[type="text"],
+table input[type="number"],
+table textarea,
+table select {
+    padding: 2px 5px;
+    font-size: 9pt;
+    min-height: 24px;
+}
+
+/* Icônes et badges */
+.badge {
+    padding: 2px 6px;
+    font-size: 9px;
+}
+
+/* Amélioration de la densité d'information */
+.info-row {
+    margin-bottom: 5px;
+}
+
+/* Ajustement des grilles */
+.grid {
+    gap: 10px;
+}
+
+/* Optimisation pour les grands tableaux */
+.data-table-wrapper {
+    max-height: calc(100vh - 180px);
+    overflow: auto;
+}
+
+/* Headers de section compacts */
+.section-header {
+    padding: 8px 12px;
+    margin-bottom: 10px;
+}
+
+/* Tooltips plus petits */
+.tooltip {
+    font-size: 10px;
+    padding: 4px 8px;
+}
+
+/* Dropdown menus compacts */
+.dropdown-menu {
+    padding: 5px;
+}
+
+.dropdown-item {
+    padding: 5px 10px;
+    font-size: 11px;
+}
+
+/* Tabs compacts */
+.tab-content {
+    padding: 10px;
+}
+
+/* Labels de formulaire */
+label {
+    font-size: 11px;
+    margin-bottom: 3px;
+}
+
+/* Checkbox et radio plus petits */
+input[type="checkbox"],
+input[type="radio"] {
+    width: 14px;
+    height: 14px;
+}
+
+/* Pagination compacte */
+.pagination {
+    gap: 3px;
+}
+
+.pagination button {
+    padding: 4px 8px;
+    font-size: 10px;
+}
+
+/* Filtres compacts */
+.filter-bar {
+    padding: 8px;
+    gap: 8px;
+}
+
+/* Espacement des flex containers */
+.flex-container {
+    gap: 10px;
+}
+
+/* Actions buttons groupés */
+.action-buttons {
+    gap: 5px;
+}
+
+.action-buttons button {
+    padding: 4px 10px;
+    font-size: 10px;
+}
+
+/* Headers avec actions */
+.header-with-actions {
+    padding: 8px 0;
+    margin-bottom: 10px;
+}
+
+/* Alertes compactes */
+.alert {
+    padding: 8px 12px;
+    font-size: 11px;
+    margin-bottom: 10px;
+}
+
+/* Cards grid */
+.cards-grid {
+    gap: 10px;
+}
+
+/* Responsive compact */
+@media (max-width: 1200px) {
+    .summary-table {
+        font-size: 8.5pt;
+    }
+
+    .summary-table th,
+    .summary-table td {
+        padding: 3px 6px;
+    }
+}
+
+/* Mode ultra-compact pour très grands tableaux */
+.ultra-compact .summary-table th,
+.ultra-compact .summary-table td {
+    padding: 2px 5px;
+    font-size: 8pt;
+}
+
+.ultra-compact .controls {
+    padding: 5px;
+    gap: 5px;
+}
+
+.ultra-compact .controls select,
+.ultra-compact .controls button,
+.ultra-compact .controls input {
+    padding: 4px 8px;
+    font-size: 10px;
+}

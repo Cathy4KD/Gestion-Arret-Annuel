@@ -1,0 +1,325 @@
+<div id="plan-suivis-journaliers" class="page">
+                    <div class="summary-container" style="max-width: 98%;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                            <div style="display: flex; align-items: center;">
+                                <button onclick="window.switchToPage('execution')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                                <h2 style="margin: 0; color: #333;">📊 PLAN et Suivis Journaliers</h2>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button id="btnModeEdition" onclick="switchToModeEdition()" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">✏️ Mode Édition</button>
+                                <button id="btnModeLecture" onclick="switchToModeLecture()" style="padding: 10px 20px; background: #17a2b8; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">👁️ Mode Lecture</button>
+                            </div>
+                        </div>
+
+                        <!-- Section Upload MS Project pour Suivis Journaliers -->
+                        <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                            <h3 style="margin: 0 0 15px 0; color: #667eea;">📅 Importer MS Project - Suivis Journaliers</h3>
+
+                            <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                                <p style="margin: 0; color: #856404; font-size: 0.95em;">
+                                    💡 <strong>MS Project:</strong> Importez vos fichiers MS Project (.mpp, .xml, .mspdi) pour le suivi journalier avec dates et échéancier.
+                                </p>
+                            </div>
+
+                            <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px;">
+                                <select
+                                    id="msProjectFileSelect"
+                                    style="padding: 10px; border: 1px solid #ddd; border-radius: 6px; flex: 1; cursor: pointer;"
+                                >
+                                    <option value="">-- Sélectionner un fichier MS Project --</option>
+                                </select>
+                                <button
+                                    onclick="window.planActions.loadMSProjectFile()"
+                                    style="padding: 12px 30px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; white-space: nowrap;">
+                                    📤 Charger le Fichier
+                                </button>
+                            </div>
+
+                            <div id="msProjectUploadStatus" style="display: none; padding: 12px; border-radius: 6px; margin-top: 10px;">
+                                <!-- Status messages will appear here -->
+                            </div>
+
+                            <!-- Liste des fichiers MS Project -->
+                            <div id="msProjectFilesList" style="margin-top: 20px;">
+                                <!-- MS Project files will appear here -->
+                            </div>
+                        </div>
+
+                        <!-- Section Upload Plans d'Usine -->
+                        <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                            <h3 style="margin: 0 0 15px 0; color: #667eea;">🗺️ Importer des Plans d'Usine</h3>
+
+                            <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                                <p style="margin: 0; color: #1976d2; font-size: 0.95em;">
+                                    💡 <strong>Plans d'Usine:</strong> Importez un ou plusieurs plans (images JPG, PNG, PDF) pour placer les équipements et suivre leur évolution dans le temps.
+                                </p>
+                            </div>
+
+                            <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px;">
+                                <select
+                                    id="planImageSelect"
+                                    style="padding: 10px; border: 1px solid #ddd; border-radius: 6px; flex: 1; cursor: pointer;"
+                                >
+                                    <option value="">-- Sélectionner un fichier de plan --</option>
+                                </select>
+                                <button
+                                    onclick="window.planActions.loadPlanImage()"
+                                    style="padding: 12px 30px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; white-space: nowrap;">
+                                    📤 Charger le Plan
+                                </button>
+                            </div>
+
+                            <div id="planUploadStatus" style="display: none; padding: 12px; border-radius: 6px; margin-top: 10px;">
+                                <!-- Status messages will appear here -->
+                            </div>
+                        </div>
+
+                        <!-- Section Liste des Plans -->
+                        <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                <h3 style="margin: 0; color: #667eea;">📁 Plans Disponibles</h3>
+                                <button onclick="renderPlansList()" style="padding: 8px 16px; background: #17a2b8; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">🔄 Rafraîchir</button>
+                            </div>
+
+                            <div id="plansListContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;">
+                                <!-- Plans cards will appear here -->
+                            </div>
+                        </div>
+
+                        <!-- Zone MODE ÉDITION (cachée par défaut) -->
+                        <div id="modeEditionContainer" style="display: none;">
+                            <!-- Barre d'outils -->
+                            <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                                <h3 style="margin: 0 0 15px 0; color: #667eea;">🛠️ Outils d'Édition</h3>
+
+                                <!-- Sélection du Type de Placement -->
+                                <div style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px;">
+                                    <label style="display: block; margin-bottom: 10px; font-weight: bold; color: #667eea;">
+                                        🎯 Mode de Placement:
+                                    </label>
+                                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px 15px; background: white; border: 2px solid #667eea; border-radius: 6px;">
+                                            <input type="radio" name="placementMode" value="postes" checked onchange="window.planActions.changePlacementMode('postes')">
+                                            <span style="font-weight: bold;">📍 Postes Techniques</span>
+                                        </label>
+                                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px 15px; background: white; border: 2px solid #ffc107; border-radius: 6px;">
+                                            <input type="radio" name="placementMode" value="echafaudages" onchange="window.planActions.changePlacementMode('echafaudages')">
+                                            <span style="font-weight: bold;">📦 Zones Échafaudages</span>
+                                        </label>
+                                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px 15px; background: white; border: 2px solid #17a2b8; border-radius: 6px;">
+                                            <input type="radio" name="placementMode" value="grues" onchange="window.planActions.changePlacementMode('grues')">
+                                            <span style="font-weight: bold;">🚛 Grues</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Sélection du Poste Technique -->
+                                <div id="posteTechniquePanel" style="margin-bottom: 15px; padding: 15px; background: #f8f9fa; border-radius: 6px;">
+                                    <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #667eea;">
+                                        📍 Sélectionner un Poste Technique à placer:
+                                    </label>
+                                    <select id="posteTechniqueSelect" style="width: 100%; padding: 10px; border: 2px solid #667eea; border-radius: 6px; font-size: 14px; cursor: pointer;">
+                                        <option value="">-- Sélectionnez un poste technique --</option>
+                                    </select>
+                                    <div id="posteTechniqueInfo" style="margin-top: 10px; padding: 10px; background: #e3f2fd; border-radius: 4px; display: none;">
+                                        <small style="color: #1976d2;">
+                                            💡 Cliquez sur le plan pour placer le poste technique sélectionné
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <!-- Panel Échafaudages -->
+                                <div id="echafaudagesPanel" style="margin-bottom: 15px; padding: 15px; background: #fff8e1; border-radius: 6px; display: none;">
+                                    <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #f57c00;">
+                                        📦 Placer des Zones d'Échafaudages:
+                                    </label>
+                                    <div style="padding: 10px; background: #fff3cd; border-radius: 4px; margin-bottom: 10px;">
+                                        <small style="color: #856404;">
+                                            💡 Sélectionnez une opération MECEXT02, puis cliquez et glissez sur le plan pour dessiner sa zone d'échafaudage
+                                        </small>
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #555;">Opération MECEXT02:</label>
+                                        <select id="mecext02Select" style="width: 100%; padding: 8px; border: 2px solid #f57c00; border-radius: 4px; background: white;">
+                                            <option value="">-- Sélectionnez une opération MECEXT02 --</option>
+                                        </select>
+                                    </div>
+                                    <div style="margin-top: 10px;">
+                                        <small style="color: #666;">
+                                            Les zones sont associées aux opérations <strong>MECEXT02</strong> sélectionnées
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <!-- Panel Grues -->
+                                <div id="gruesPanel" style="margin-bottom: 15px; padding: 15px; background: #e0f7fa; border-radius: 6px; display: none;">
+                                    <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #00838f;">
+                                        🚛 Placer des Grues:
+                                    </label>
+                                    <div style="padding: 10px; background: #b2ebf2; border-radius: 4px; margin-bottom: 10px;">
+                                        <small style="color: #006064;">
+                                            💡 Cliquez sur le plan pour placer une grue (🚛)
+                                        </small>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #555;">Nom/ID de la grue:</label>
+                                        <input type="text" id="grueNameInput" placeholder="Ex: Grue-A, Grue-B..." style="width: 100%; padding: 8px; border: 2px solid #00838f; border-radius: 4px;">
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                                    <button onclick="deleteSelectedMarker()" style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">🗑️ Supprimer Sélection</button>
+                                    <button onclick="savePlanEdition()" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">💾 Sauvegarder Modifications</button>
+                                    <button onclick="closeModeEdition()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">✖️ Fermer</button>
+                                </div>
+                            </div>
+
+                            <!-- Canvas du Plan -->
+                            <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <div id="planEditionCanvas" style="position: relative; overflow: auto; max-height: 800px; border: 2px solid #ddd; border-radius: 6px;">
+                                    <img id="planEditionImage" style="display: block; max-width: 100%; cursor: crosshair;">
+                                    <div id="planMarkersContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+                                        <!-- Markers will be added here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Zone MODE LECTURE (cachée par défaut) -->
+                        <div id="modeLectureContainer" style="display: none;">
+                            <!-- Contrôles de Lecture -->
+                            <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                                <h3 style="margin: 0 0 15px 0; color: #667eea;">📅 Navigation Journalière</h3>
+
+                                <!-- Affichage de la date/heure courante -->
+                                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+                                    <div style="font-size: 0.9em; color: #666; margin-bottom: 5px;">Date et Heure Actuelles</div>
+                                    <div style="font-weight: bold; font-size: 1.5em; color: #667eea;" id="timelineDisplay">--:--</div>
+                                </div>
+
+                                <!-- Contrôles de navigation -->
+                                <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px;">
+                                    <button onclick="goPreviousDay()" style="padding: 12px 30px; background: #17a2b8; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.1em; display: flex; align-items: center; gap: 10px;">
+                                        ⬅️ Jour Précédent
+                                    </button>
+                                    <button onclick="goToday()" style="padding: 12px 30px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.1em; display: flex; align-items: center; gap: 10px;">
+                                        📍 Aujourd'hui (8h)
+                                    </button>
+                                    <button onclick="goNextDay()" style="padding: 12px 30px; background: #17a2b8; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.1em; display: flex; align-items: center; gap: 10px;">
+                                        Jour Suivant ➡️
+                                    </button>
+                                    <button onclick="window.planActions.toggleHeatmapMode()" style="padding: 12px 30px; background: #dc3545; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.1em; display: flex; align-items: center; gap: 10px;">
+                                        🔥 Carte Thermique
+                                    </button>
+                                </div>
+
+                                <!-- Sélection manuelle de date et heure -->
+                                <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end;">
+                                    <div>
+                                        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #555;">Date:</label>
+                                        <input type="date" id="currentDateInput" onchange="updateTimeDisplay()" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 1em;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #555;">Heure:</label>
+                                        <div style="display: flex; gap: 5px;">
+                                            <button onclick="goTimeMinus1Hour()" style="padding: 10px 15px; background: #ffc107; color: #000; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">-1h</button>
+                                            <input type="time" id="currentTimeInput" onchange="updateTimeDisplay()" value="08:00" style="flex: 1; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 1em;">
+                                            <button onclick="goTimePlus1Hour()" style="padding: 10px 15px; background: #ffc107; color: #000; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">+1h</button>
+                                        </div>
+                                    </div>
+                                    <button onclick="closeModeLecture()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">✖️ Fermer</button>
+                                </div>
+                            </div>
+
+                            <!-- Légende des Marqueurs -->
+                            <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                                <h3 style="margin: 0 0 15px 0; color: #667eea;">🎨 Légende des Marqueurs</h3>
+
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                                    <!-- Couleurs -->
+                                    <div>
+                                        <h4 style="margin: 0 0 10px 0; color: #555; font-size: 0.95em;">Couleurs (Type de travaux):</h4>
+                                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <div style="width: 25px; height: 25px; background: #007bff; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></div>
+                                                <span style="font-size: 0.9em;">Externes (A91CS, AEROVAC, E91CE, E91CS, ELEEXT02, EPHYD, MECEXT*, ORTEC)</span>
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <div style="width: 25px; height: 25px; background: #28a745; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></div>
+                                                <span style="font-size: 0.9em;">Mécaniques Internes (A01MU, A03MU, A06MU)</span>
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <div style="width: 25px; height: 25px; background: #e83e8c; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></div>
+                                                <span style="font-size: 0.9em;">Électriques Internes (A02EI, A04EI)</span>
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <div style="width: 25px; height: 25px; background: #6f42c1; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></div>
+                                                <span style="font-size: 0.9em;">Mixte (Plusieurs types de travaux)</span>
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <div style="width: 25px; height: 25px; background: #999; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); opacity: 0.3;"></div>
+                                                <span style="font-size: 0.9em;">Aucun travail actif</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tailles -->
+                                    <div>
+                                        <h4 style="margin: 0 0 10px 0; color: #555; font-size: 0.95em;">Tailles (Nombre d'opérations):</h4>
+                                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <div style="width: 10px; height: 10px; background: #28a745; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></div>
+                                                <span style="font-size: 0.9em;">1 opération</span>
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <div style="width: 14px; height: 14px; background: #28a745; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></div>
+                                                <span style="font-size: 0.9em;">2-3 opérations</span>
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <div style="width: 18px; height: 18px; background: #28a745; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></div>
+                                                <span style="font-size: 0.9em;">4-5 opérations</span>
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <div style="width: 22px; height: 22px; background: #28a745; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></div>
+                                                <span style="font-size: 0.9em;">6+ opérations</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Sources de données -->
+                                    <div>
+                                        <h4 style="margin: 0 0 10px 0; color: #555; font-size: 0.95em;">Sources de données:</h4>
+                                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <span style="font-size: 1.2em;">📋</span>
+                                                <span style="font-size: 0.9em;">Données IW37N</span>
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <span style="font-size: 1.2em;">📊</span>
+                                                <span style="font-size: 0.9em;">Tâches MS Project</span>
+                                            </div>
+                                        </div>
+                                        <div style="margin-top: 10px; padding: 10px; background: #e3f2fd; border-radius: 6px;">
+                                            <p style="margin: 0; font-size: 0.85em; color: #1976d2;">
+                                                💡 <strong>Astuce:</strong> Survolez les marqueurs pour voir le détail des travaux
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Canvas de Lecture -->
+                            <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; margin-bottom: 15px; text-align: center;">
+                                    <span style="font-weight: bold; font-size: 1.2em;" id="timelineDisplay">--:--</span>
+                                </div>
+                                <div id="planLectureCanvas" style="position: relative; overflow: auto; max-height: 800px; border: 2px solid #ddd; border-radius: 6px;">
+                                    <img id="planLectureImage" style="display: block; max-width: 100%;">
+                                    <div id="planLectureMarkersContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+                                        <!-- Timeline markers will be added here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>

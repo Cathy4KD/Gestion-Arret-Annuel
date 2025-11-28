@@ -1,0 +1,94 @@
+<div id="detail-t125" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                    ← Retour
+                </button>
+                <h2 style="margin: 0; color: #333;">✅ VÉRIFIER COGNIBOX ENTREPRENEURS</h2>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin-bottom: 25px; border-left: 4px solid #2196f3;">
+            <h3 style="margin: 0 0 10px 0; color: #1565c0;">
+                ℹ️ À propos
+            </h3>
+            <p style="margin: 0; color: #333; line-height: 1.6;">
+                Vérifiez la conformité Cognibox de tous les entrepreneurs avant le début de l'arrêt annuel.
+            </p>
+        </div>
+
+        <!-- Status Summary -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px;">
+            <div style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); padding: 20px; border-radius: 10px; color: white; text-align: center;">
+                <div style="font-size: 2em; margin-bottom: 5px;">✅</div>
+                <div style="font-weight: bold;">Conforme</div>
+                <div style="font-size: 1.8em; margin-top: 5px;">0</div>
+            </div>
+            <div style="background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%); padding: 20px; border-radius: 10px; color: white; text-align: center;">
+                <div style="font-size: 2em; margin-bottom: 5px;">⚠️</div>
+                <div style="font-weight: bold;">En attente</div>
+                <div style="font-size: 1.8em; margin-top: 5px;">0</div>
+            </div>
+            <div style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); padding: 20px; border-radius: 10px; color: white; text-align: center;">
+                <div style="font-size: 2em; margin-bottom: 5px;">❌</div>
+                <div style="font-weight: bold;">Non conforme</div>
+                <div style="font-size: 1.8em; margin-top: 5px;">0</div>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <h3 style="margin: 0 0 20px 0; color: #667eea;">
+                📋 Vérification Cognibox
+            </h3>
+
+            <div style="background: #ffebee; padding: 15px; border-radius: 8px; border-left: 4px solid #dc3545; margin-bottom: 20px;">
+                <strong>⚠️ Important:</strong> Tous les entrepreneurs doivent être conformes Cognibox avant l'entrée sur le site.
+            </div>
+
+            <div style="display: grid; gap: 20px;">
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Liste des entrepreneurs</label>
+                    <textarea id="contractorsList" rows="10" placeholder="Entrepreneur | Statut Cognibox | Date validité | Notes&#10;Ex: ABC Inc. | Conforme | 2026-12-31 | OK"
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical; font-family: monospace;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Documents manquants</label>
+                    <textarea id="missingDocs" rows="4" placeholder="Liste des documents manquants par entrepreneur..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Actions de suivi</label>
+                    <textarea id="followUpActions" rows="4" placeholder="Actions requises pour obtenir la conformité..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Date de vérification finale</label>
+                    <input type="date" id="finalCheckDate" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px;">
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Notes et observations</label>
+                    <textarea id="notes" rows="4" placeholder="Notes sur la vérification Cognibox..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 20px;">
+                <button onclick="alert('Sauvegarde des données...')"
+                        class="btn" style="background: #28a745; color: white; padding: 12px 30px;">
+                    💾 Sauvegarder
+                </button>
+                <button onclick="alert('Export vers Excel...')"
+                        class="btn" style="background: #667eea; color: white; padding: 12px 30px;">
+                    📥 Exporter Excel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

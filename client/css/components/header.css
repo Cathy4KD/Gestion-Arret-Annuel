@@ -1,0 +1,59 @@
+/* ==============================================
+   HEADER - Neumorphic Style Professionnel
+   ============================================== */
+
+.header {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 0.75rem;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    box-shadow: var(--shadow-neumorphic);
+    position: relative;
+    border-bottom: 3px solid transparent;
+    background-image: linear-gradient(var(--bg-primary), var(--bg-primary)),
+                      linear-gradient(90deg, #667eea, #764ba2);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+}
+
+.header h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.02em;
+}
+
+.header .subtitle {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-top: 0.25rem;
+    letter-spacing: 0.01em;
+}
+
+/* Header Buttons - Neumorphic */
+.header button {
+    background: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+    border: none !important;
+    padding: 6px 12px;
+    border-radius: var(--radius-lg);
+    font-weight: 700;
+    font-size: 0.75em;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-neumorphic) !important;
+    cursor: pointer;
+    margin-right: 8px;
+}
+
+.header button:hover {
+    box-shadow: var(--shadow-neumorphic-hover) !important;
+}
+
+.header button:active {
+    box-shadow: var(--shadow-neumorphic-inset) !important;
+}

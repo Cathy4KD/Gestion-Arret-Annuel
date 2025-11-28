@@ -1,0 +1,127 @@
+<div id="detail-t7" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                    ← Retour
+                </button>
+                <h2 style="margin: 0; color: #333;">📊 ÉTABLIR QUANTITÉ DE RESSOURCES PLANIFICATIONS REQUISE</h2>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin-bottom: 25px; border-left: 4px solid #2196f3;">
+            <h3 style="margin: 0 0 10px 0; color: #1565c0;">
+                ℹ️ À propos
+            </h3>
+            <p style="margin: 0; color: #333; line-height: 1.6;">
+                Définissez les ressources de planification nécessaires pour l'arrêt annuel.
+                Pour chaque rôle, indiquez le nombre de personnes requises et leur période d'affectation.
+            </p>
+        </div>
+
+        <!-- Summary Cards -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 25px;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 25px; border-radius: 12px; color: white; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                <div style="font-size: 0.9em; opacity: 0.9; margin-bottom: 8px;">Total Ressources</div>
+                <div style="font-size: 2.5em; font-weight: bold;" id="totalRessources">0</div>
+            </div>
+            <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 25px; border-radius: 12px; color: white; box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);">
+                <div style="font-size: 0.9em; opacity: 0.9; margin-bottom: 8px;">Rôles Différents</div>
+                <div style="font-size: 2.5em; font-weight: bold;" id="totalRoles">0</div>
+            </div>
+            <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 25px; border-radius: 12px; color: white; box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);">
+                <div style="font-size: 0.9em; opacity: 0.9; margin-bottom: 8px;">Total Personnes</div>
+                <div style="font-size: 2.5em; font-weight: bold;" id="totalPersonnes">0</div>
+            </div>
+        </div>
+
+        <!-- Add Resource Section -->
+        <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 25px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="margin: 0; color: #667eea;">
+                    ➕ Ajouter une Ressource
+                </h3>
+                <button id="toggleFormBtn" onclick="window.ressourcesActions.toggleForm()"
+                        class="btn" style="background: #28a745; color: white; padding: 10px 20px;">
+                    ➕ Nouvelle Ressource
+                </button>
+            </div>
+
+            <!-- Form (hidden by default) -->
+            <div id="ressourceForm" style="display: none; background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 15px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                    <div>
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">
+                            Nom <span style="color: red;">*</span>
+                        </label>
+                        <input type="text" id="inputNom" placeholder="Ex: Jean Dupont"
+                               style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; font-size: 1em;">
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">
+                            Rôle <span style="color: red;">*</span>
+                        </label>
+                        <input type="text" id="inputRole" placeholder="Ex: Planificateur, Superviseur..."
+                               style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; font-size: 1em;">
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">
+                        Responsabilités
+                    </label>
+                    <textarea id="inputResponsabilites" rows="3" placeholder="Décrivez les responsabilités de cette ressource..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; font-size: 1em; resize: vertical;"></textarea>
+                </div>
+
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button onclick="window.ressourcesActions.cancelForm()"
+                            class="btn" style="background: #6c757d; color: white; padding: 10px 20px;">
+                        ❌ Annuler
+                    </button>
+                    <button onclick="window.ressourcesActions.saveRessource()"
+                            class="btn" style="background: #28a745; color: white; padding: 10px 20px;">
+                        ✅ Enregistrer
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resources Table -->
+        <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <h3 style="margin: 0 0 20px 0; color: #667eea;">
+                📋 Liste des Ressources
+            </h3>
+
+            <div style="overflow-x: auto;">
+                <table class="summary-table" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 200px;">Nom</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 200px;">Rôle</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Responsabilités</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 150px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ressourcesTableBody">
+                        <tr>
+                            <td colspan="5" style="padding: 30px; text-align: center; color: #666;">
+                                Aucune ressource définie. Cliquez sur "➕ Nouvelle Ressource" pour commencer.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Export Section -->
+        <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 20px;">
+            <button onclick="window.ressourcesActions.exportToExcel()"
+                    class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 12px 30px;">
+                📥 Exporter vers Excel
+            </button>
+        </div>
+    </div>
+</div>

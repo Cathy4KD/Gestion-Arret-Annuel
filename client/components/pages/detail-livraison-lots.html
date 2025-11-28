@@ -1,0 +1,306 @@
+<div id="detail-livraison-lots" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; margin-bottom: 20px; gap: 15px;">
+            <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                ← Retour
+            </button>
+            <h2 style="margin: 0; color: #333;">LIVRAISON DES LOTS - 3 SEMAINES AVANT ARRÊT</h2>
+        </div>
+
+        <!-- Onglets de sélection -->
+        <div style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #ddd;">
+            <button onclick="window.livraisonLotsActions.switchTab('mecan')" id="tab-mecan" class="tab-button active-tab" style="padding: 12px 24px; border: none; background: linear-gradient(145deg, #667eea, #764ba2); color: white; cursor: pointer; border-radius: 8px 8px 0 0; font-weight: 600;">
+                MÉCAN.
+            </button>
+            <button onclick="window.livraisonLotsActions.switchTab('elect')" id="tab-elect" class="tab-button" style="padding: 12px 24px; border: none; background: #e9ecef; color: #495057; cursor: pointer; border-radius: 8px 8px 0 0; font-weight: 600;">
+                ÉLECT.
+            </button>
+            <button onclick="window.livraisonLotsActions.switchTab('tpaa')" id="tab-tpaa" class="tab-button" style="padding: 12px 24px; border: none; background: #e9ecef; color: #495057; cursor: pointer; border-radius: 8px 8px 0 0; font-weight: 600;">
+                TPAA
+            </button>
+        </div>
+
+        <!-- Section MÉCAN -->
+        <div id="section-mecan" class="tab-content" style="display: block;">
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                <h3 style="color: #333; margin-bottom: 15px;">📦 LIVRAISON DES LOTS MÉCAN. - 3 SEMAINES AVANT</h3>
+
+                <div style="background: white; padding: 20px; border-radius: 8px;">
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #555;">Commentaires / Notes :</label>
+                        <textarea id="commentaire-mecan" rows="6" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px; font-family: inherit; resize: vertical;" placeholder="Ajouter des notes sur la livraison des lots mécaniques..."></textarea>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #555;">Statut :</label>
+                        <select id="statut-mecan" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;">
+                            <option value="notstarted">Non démarré</option>
+                            <option value="inprogress">En cours</option>
+                            <option value="completed">Terminé</option>
+                            <option value="blocked">Bloqué</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #555;">Avancement (%) :</label>
+                        <input type="number" id="avancement-mecan" min="0" max="100" value="0" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;">
+                    </div>
+
+                    <button onclick="window.livraisonLotsActions.save('mecan')" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 12px 24px; width: 100%;">
+                        💾 Enregistrer
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section ÉLECT -->
+        <div id="section-elect" class="tab-content" style="display: none;">
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                <h3 style="color: #333; margin-bottom: 15px;">⚡ LIVRAISON DES LOTS ÉLECT. - 3 SEMAINES AVANT</h3>
+
+                <div style="background: white; padding: 20px; border-radius: 8px;">
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #555;">Commentaires / Notes :</label>
+                        <textarea id="commentaire-elect" rows="6" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px; font-family: inherit; resize: vertical;" placeholder="Ajouter des notes sur la livraison des lots électriques..."></textarea>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #555;">Statut :</label>
+                        <select id="statut-elect" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;">
+                            <option value="notstarted">Non démarré</option>
+                            <option value="inprogress">En cours</option>
+                            <option value="completed">Terminé</option>
+                            <option value="blocked">Bloqué</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #555;">Avancement (%) :</label>
+                        <input type="number" id="avancement-elect" min="0" max="100" value="0" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;">
+                    </div>
+
+                    <button onclick="window.livraisonLotsActions.save('elect')" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 12px 24px; width: 100%;">
+                        💾 Enregistrer
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section TPAA -->
+        <div id="section-tpaa" class="tab-content" style="display: none;">
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                <h3 style="color: #333; margin-bottom: 15px;">🏭 LIVRAISON DES LOTS TPAA - 3 SEMAINES AVANT</h3>
+
+                <div style="background: white; padding: 20px; border-radius: 8px;">
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #555;">Commentaires / Notes :</label>
+                        <textarea id="commentaire-tpaa" rows="6" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px; font-family: inherit; resize: vertical;" placeholder="Ajouter des notes sur la livraison des lots TPAA..."></textarea>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #555;">Statut :</label>
+                        <select id="statut-tpaa" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;">
+                            <option value="notstarted">Non démarré</option>
+                            <option value="inprogress">En cours</option>
+                            <option value="completed">Terminé</option>
+                            <option value="blocked">Bloqué</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #555;">Avancement (%) :</label>
+                        <input type="number" id="avancement-tpaa" min="0" max="100" value="0" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;">
+                    </div>
+
+                    <button onclick="window.livraisonLotsActions.save('tpaa')" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 12px 24px; width: 100%;">
+                        💾 Enregistrer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .tab-button {
+        transition: all 0.3s ease;
+    }
+
+    .tab-button:hover {
+        background: linear-gradient(145deg, #667eea, #764ba2) !important;
+        color: white !important;
+    }
+
+    .active-tab {
+        background: linear-gradient(145deg, #667eea, #764ba2) !important;
+        color: white !important;
+    }
+
+    .tab-content {
+        animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+</style>
+
+<script>
+    // Actions pour la page de livraison des lots
+    window.livraisonLotsActions = {
+        currentTab: 'mecan',
+
+        // Changer d'onglet
+        switchTab(tab) {
+            // Cacher tous les contenus
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+
+            // Désactiver tous les boutons d'onglets
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.style.background = '#e9ecef';
+                btn.style.color = '#495057';
+            });
+
+            // Afficher le contenu sélectionné
+            document.getElementById('section-' + tab).style.display = 'block';
+
+            // Activer le bouton d'onglet
+            const activeBtn = document.getElementById('tab-' + tab);
+            activeBtn.classList.add('active-tab');
+            activeBtn.style.background = 'linear-gradient(145deg, #667eea, #764ba2)';
+            activeBtn.style.color = 'white';
+
+            this.currentTab = tab;
+
+            // Charger les données pour cet onglet
+            this.load(tab);
+        },
+
+        // Charger les données d'une tâche
+        load(type) {
+            // Toutes les données sont stockées dans t105
+            const taskId = 't105';
+
+            // Récupérer la tâche depuis arretData
+            if (window.arretData && window.arretData.phases) {
+                for (const phase of window.arretData.phases) {
+                    const task = phase.taches.find(t => t.id === taskId);
+                    if (task) {
+                        // Les données sont stockées dans un objet JSON dans le commentaire
+                        let data = { mecan: {}, elect: {}, tpaa: {} };
+
+                        try {
+                            if (task.commentaire && task.commentaire.trim().startsWith('{')) {
+                                data = JSON.parse(task.commentaire);
+                            }
+                        } catch (e) {
+                            // Si le parsing échoue, garder les données par défaut
+                            console.warn('Erreur parsing JSON:', e);
+                        }
+
+                        // Charger les données de la section actuelle
+                        const sectionData = data[type] || {};
+                        document.getElementById('commentaire-' + type).value = sectionData.commentaire || '';
+                        document.getElementById('statut-' + type).value = sectionData.statut || 'notstarted';
+                        document.getElementById('avancement-' + type).value = sectionData.avancement || 0;
+                        break;
+                    }
+                }
+            }
+        },
+
+        // Sauvegarder les données d'une tâche
+        async save(type) {
+            // Toutes les données sont stockées dans t105
+            const taskId = 't105';
+
+            const commentaire = document.getElementById('commentaire-' + type).value;
+            const statut = document.getElementById('statut-' + type).value;
+            const avancement = parseInt(document.getElementById('avancement-' + type).value) || 0;
+
+            // Mettre à jour la tâche
+            if (window.arretData && window.arretData.phases) {
+                for (const phase of window.arretData.phases) {
+                    const task = phase.taches.find(t => t.id === taskId);
+                    if (task) {
+                        // Charger les données existantes
+                        let data = { mecan: {}, elect: {}, tpaa: {} };
+
+                        try {
+                            if (task.commentaire && task.commentaire.trim().startsWith('{')) {
+                                data = JSON.parse(task.commentaire);
+                            }
+                        } catch (e) {
+                            console.warn('Erreur parsing JSON:', e);
+                        }
+
+                        // Mettre à jour les données de la section actuelle
+                        data[type] = {
+                            commentaire: commentaire,
+                            statut: statut,
+                            avancement: avancement
+                        };
+
+                        // Sauvegarder tout dans le commentaire de t105
+                        task.commentaire = JSON.stringify(data);
+
+                        // Calculer l'avancement global (moyenne des trois sections)
+                        const avgAvancement = Math.round(
+                            ((data.mecan.avancement || 0) +
+                             (data.elect.avancement || 0) +
+                             (data.tpaa.avancement || 0)) / 3
+                        );
+                        task.avancement = avgAvancement;
+
+                        // Déterminer le statut global
+                        const statuts = [data.mecan.statut, data.elect.statut, data.tpaa.statut];
+                        if (statuts.includes('completed') && statuts.every(s => s === 'completed')) {
+                            task.statut = 'completed';
+                        } else if (statuts.includes('inprogress')) {
+                            task.statut = 'inprogress';
+                        } else if (statuts.includes('blocked')) {
+                            task.statut = 'blocked';
+                        } else {
+                            task.statut = 'notstarted';
+                        }
+
+                        break;
+                    }
+                }
+
+                // Sauvegarder sur le serveur
+                if (window.saveToStorage) {
+                    await window.saveToStorage('arretData', window.arretData);
+                    alert('Donnees sauvegardees avec succes !');
+                }
+            }
+        },
+
+        // Initialiser la page
+        init() {
+            this.load('mecan');
+        }
+    };
+
+    // Auto-initialisation quand la page devient visible
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class') {
+                const page = document.getElementById('detail-livraison-lots');
+                if (page && page.classList.contains('active')) {
+                    window.livraisonLotsActions.init();
+                }
+            }
+        });
+    });
+
+    // Observer le changement de classe sur la page
+    const pageElement = document.getElementById('detail-livraison-lots');
+    if (pageElement) {
+        observer.observe(pageElement, { attributes: true });
+    }
+</script>

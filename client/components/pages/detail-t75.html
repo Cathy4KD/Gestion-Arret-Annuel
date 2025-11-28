@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-t75</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+<div id="detail-t75" class="page">
+            <div class="summary-container" style="max-width: 95%;">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                    <h2 style="margin: 0; color: #333;">VALIDATION LIVRAISON DES OSCILLATEURS</h2>
+                </div>
+
+                <!-- Section Informations Générales -->
+                <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                    <h3 style="color: #667eea; margin-top: 0;">📦 Informations de Livraison</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Date de livraison prévue:</label>
+                            <input type="date" id="t75-dateLivraison" onchange="saveT75Data()" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Fournisseur:</label>
+                            <input type="text" id="t75-fournisseur" placeholder="Nom du fournisseur" onchange="saveT75Data()" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Nombre d'oscillateurs:</label>
+                            <input type="number" id="t75-quantite" placeholder="Ex: 4" onchange="saveT75Data()" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Statut:</label>
+                            <select id="t75-statut" onchange="saveT75Data()" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                <option value="">-- Sélectionner --</option>
+                                <option value="En attente">En attente</option>
+                                <option value="Confirmé">Confirmé</option>
+                                <option value="Livré">Livré</option>
+                                <option value="Validé">Validé</option>
+                                <option value="Problème">Problème</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section Comptes-Rendus de Réunion -->
+                <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="color: #667eea; margin: 0;">📝 Comptes-Rendus de Réunion</h3>
+                        <button onclick="showAddReunionT75()" style="padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                            ➕ Nouveau Compte-Rendu
+                        </button>
+                    </div>
+
+                    <!-- Formulaire d'ajout de compte-rendu (caché par défaut) -->
+                    <div id="t75-reunionForm" style="display: none; background: #e3f2fd; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <h4 style="margin-top: 0; color: #000000;">✏️ Nouveau Compte-Rendu</h4>
+
+                        <div style="display: grid; gap: 15px; margin-bottom: 15px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Date de la réunion:</label>
+                                <input type="date" id="t75-reunionDate" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                            </div>
+
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Sujet / Titre:</label>
+                                <input type="text" id="t75-reunionSujet" placeholder="Ex: Validation inspection oscillateurs" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                <div style="font-size: 11px; color: #666; margin-top: 5px;">💡 Titre court décrivant le sujet principal de la réunion</div>
+                            </div>
+
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Participants:</label>
+                                <input type="text" id="t75-reunionParticipants" placeholder="Ex: Jean Tremblay, Marie Dubois, Équipe Entretien" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                <div style="font-size: 11px; color: #666; margin-top: 5px;">💡 Liste des personnes présentes</div>
+                            </div>
+
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Commentaires / Notes:</label>
+                                <textarea id="t75-reunionCommentaires" rows="5" placeholder="Ex: Discussion sur les spécifications techniques, validation des dimensions, points à vérifier à la réception..." style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-family: Arial, sans-serif; resize: vertical;"></textarea>
+                                <div style="font-size: 11px; color: #666; margin-top: 5px;">💡 Points discutés, décisions prises, actions à suivre</div>
+                            </div>
+
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Actions à suivre:</label>
+                                <textarea id="t75-reunionActions" rows="3" placeholder="Ex: - Vérifier les certificats de conformité&#10;- Planifier l'inspection visuelle&#10;- Contacter le fournisseur pour confirmer" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-family: Arial, sans-serif; resize: vertical;"></textarea>
+                                <div style="font-size: 11px; color: #666; margin-top: 5px;">💡 Liste des actions à entreprendre suite à la réunion</div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                            <button onclick="cancelReunionT75()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                ❌ Annuler
+                            </button>
+                            <button onclick="saveReunionT75()" style="padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                💾 Sauvegarder
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Liste des comptes-rendus -->
+                    <div id="t75-reunionsList">
+                        <p style="text-align: center; color: #999; padding: 20px;">Aucun compte-rendu enregistré</p>
+                    </div>
+                </div>
+
+                <!-- Section Notes Générales -->
+                <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <h3 style="color: #667eea; margin-top: 0;">📋 Notes Générales</h3>
+                    <textarea id="t75-notes" rows="5" placeholder="Notes additionnelles sur la validation et la livraison des oscillateurs..." onchange="saveT75Data()" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-family: Arial, sans-serif; resize: vertical;"></textarea>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

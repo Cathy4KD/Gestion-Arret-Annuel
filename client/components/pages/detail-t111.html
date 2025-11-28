@@ -1,0 +1,79 @@
+<div id="detail-t111" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button onclick="window.switchToPage('bilan-reunions')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                    ê Retour
+                </button>
+                <h2 style="margin: 0; color: #333;">> RENCONTRE SYNDICALE POUR PR…SENTATION TRAVAUX SOUS-TRAITANCE</h2>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div style="background: #fff3e0; padding: 20px; border-radius: 10px; margin-bottom: 25px; border-left: 4px solid #ff9800;">
+            <h3 style="margin: 0 0 10px 0; color: #e65100;">
+                9 ¿ propos
+            </h3>
+            <p style="margin: 0; color: #333; line-height: 1.6;">
+                Rencontre avec les reprÈsentants syndicaux pour prÈsenter les travaux de sous-traitance prÈvus lors de l'arrÍt.
+            </p>
+        </div>
+
+        <!-- Content Area -->
+        <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <h3 style="margin: 0 0 20px 0; color: #667eea;">
+                =À DÈtails de la Rencontre Syndicale
+            </h3>
+
+            <div style="display: grid; gap: 20px;">
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Date de la rencontre</label>
+                    <input type="date" id="t111-meetingDate" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px;">
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">ReprÈsentants syndicaux prÈsents</label>
+                    <textarea id="t111-syndicatRepresentants" rows="3" placeholder="Noms des reprÈsentants syndicaux..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Autres participants</label>
+                    <textarea id="t111-participants" rows="3" placeholder="Gestionnaires, planificateurs, etc..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Travaux de sous-traitance prÈsentÈs</label>
+                    <textarea id="t111-travauxPresentes" rows="8" placeholder="Liste des travaux de sous-traitance:&#10;" Entrepreneur 1: Description des travaux&#10;" Entrepreneur 2: Description des travaux&#10;" etc."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">PrÈoccupations soulevÈes</label>
+                    <textarea id="t111-preoccupations" rows="4" placeholder="Questions et prÈoccupations des reprÈsentants syndicaux..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Engagements et suivis</label>
+                    <textarea id="t111-engagements" rows="4" placeholder="Engagements pris et suivis requis..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Notes de la rencontre</label>
+                    <textarea id="t111-notes" rows="6" placeholder="RÈsumÈ et notes importantes..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 20px;">
+                <button onclick="window.saveT111Data ? window.saveT111Data() : alert('Module de sauvegarde en cours de chargement...')"
+                        class="btn" style="background: #28a745; color: white; padding: 12px 30px;">
+                    =æ Sauvegarder
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

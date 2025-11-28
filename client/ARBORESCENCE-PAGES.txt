@@ -1,0 +1,235 @@
+================================================================================
+                    ARBORESCENCE DES PAGES - ACIERIE 2026
+================================================================================
+
+HEADER
+├── [Bouton] IW37N → iw37n
+├── [Bouton] IW38 → iw38
+├── [Select] Theme (Clair/Sombre)
+├── [Bouton] Contacts → contacts
+└── [Bouton] Parametres → parametres
+
+NAVIGATION PRINCIPALE (6 onglets)
+├── 1. [📊 Tableau de Bord] → dashboard
+├── 2. [📋 Kanban] → timeline
+├── 3. [📝 Preparation] → summary
+├── 4. [⚙️ Execution] → execution_suivi
+├── 5. [🔍 Post-Mortem] → post_mortem
+└── 6. [📚 Historique] → historique
+
+================================================================================
+                              PAGES DETAILLEES
+================================================================================
+
+1. DASHBOARD (page active par defaut)
+   ├── Stats Grid (6 cartes)
+   │   ├── Avancement Reel (cliquable)
+   │   ├── Avancement Planifie (cliquable)
+   │   ├── Jours Restants
+   │   ├── Taches Completees (cliquable)
+   │   ├── Statut Global
+   │   └── Taches en Retard (cliquable)
+   ├── Taches Importantes
+   │   ├── En Cours
+   │   ├── Prochaine Tache
+   │   └── En Retard
+   └── Graphiques (3)
+       ├── Avancement par Phase
+       ├── Distribution des Responsables
+       └── Statut des Taches
+
+2. TIMELINE (Kanban + Calendrier)
+   ├── Kanban (4 colonnes)
+   │   ├── Non Demarre
+   │   ├── En Cours
+   │   ├── Complete
+   │   └── Annule
+   └── Calendrier Mensuel
+       └── Navigation (Precedent, Aujourd'hui, Suivant)
+
+3. SUMMARY (Preparation)
+   ├── Boutons Actions
+   │   ├── Creer Archive
+   │   ├── Telecharger Sauvegarde
+   │   ├── Restaurer depuis Fichier
+   │   └── Voir Sauvegardes Locales
+   └── Tableau Recapitulatif
+
+4. EXECUTION_SUIVI
+   ├── KPI Globaux (8 cartes)
+   │   ├── Date Debut
+   │   ├── Date Fin
+   │   ├── Duree Totale
+   │   ├── Jour Actuel
+   │   ├── Jours Ecoules
+   │   ├── Jours Restants
+   │   ├── Avancement MS Project
+   │   └── Avancement General (avec barre)
+   └── SEMAINE 1 - Activites (3 cartes)
+       ├── PLAN et Suivis Journaliers → plan-suivis-journaliers
+       ├── Point de Presse Journalier → point-presse-journaliers
+       └── Demandes → demandes-execution
+
+5. EXECUTION (Hub)
+   ├── Point de Presse Journaliers → point-presse-journaliers
+   └── Demandes → demandes-execution
+
+6. POST_MORTEM
+   └── Tableau Analyse Retrospective
+
+7. HISTORIQUE
+   ├── Boutons
+   │   ├── Actualiser
+   │   └── Exporter Toutes Archives
+   └── Liste Archives
+
+================================================================================
+                         PAGES SUPPLEMENTAIRES (HEADER)
+================================================================================
+
+CONTACTS
+├── Tableau Contacts (5 colonnes)
+└── [Bouton] Ajouter Contact
+
+PARAMETRES
+├── Configuration Dates Arret
+└── Parametres Theme
+
+IW37N (SAP)
+├── Select Fichier Excel
+├── [Bouton] Charger Excel
+└── Tableau 39 colonnes
+
+IW38 (SAP)
+├── Select Fichier Excel
+├── [Bouton] Charger Excel
+└── Tableau colonnes SAP
+
+================================================================================
+                         PAGES D'EXECUTION (SOUS-PAGES)
+================================================================================
+
+PLAN-SUIVIS-JOURNALIERS
+├── Section Upload MS Project
+│   ├── Select Fichier (.mpp, .xml, .mspdi)
+│   └── [Bouton] Charger Fichier
+├── Section Upload Plans Usine
+│   ├── Select Fichier (JPG, PNG, PDF)
+│   └── [Bouton] Charger Plan
+├── Liste Plans Disponibles
+├── MODE EDITION (cachee par defaut)
+│   ├── Select Poste Technique
+│   ├── [Bouton] Supprimer Selection
+│   ├── [Bouton] Sauvegarder Modifications
+│   ├── [Bouton] Fermer
+│   └── Canvas Plan (cliquable pour placer equipements)
+└── MODE LECTURE (cachee par defaut)
+    ├── Affichage Date/Heure Actuelle
+    ├── Navigation
+    │   ├── [Bouton] Jour Precedent
+    │   ├── [Bouton] Aujourd'hui (8h)
+    │   └── [Bouton] Jour Suivant
+    ├── Input Date Manuelle
+    └── Canvas Lecture (affichage timeline)
+
+POINT-PRESSE-JOURNALIERS
+├── [Bouton] Ajouter Point Presse
+├── [Bouton] Exporter vers Excel
+└── Liste Points Presse (dynamique)
+
+DEMANDES-EXECUTION (Hub)
+├── Demandes Verrouillage → demandes-verrouillage
+├── Demandes Grues/Nacelles → demandes-grues-nacelles
+└── Demandes Echafaudages → demandes-echafaudages
+
+DEMANDES-VERROUILLAGE
+├── [Bouton] Ajouter Demande
+├── [Bouton] Exporter Excel
+└── Tableau Demandes
+
+DEMANDES-GRUES-NACELLES
+├── [Bouton] Ajouter Demande
+├── [Bouton] Exporter Excel
+└── Tableau Demandes
+
+DEMANDES-ECHAFAUDAGES
+├── [Bouton] Ajouter Demande
+├── [Bouton] Exporter Excel
+└── Tableau Demandes
+
+LISTE-ENTREPRENEURS
+├── [Bouton] Ajouter Entrepreneur
+└── Tableau Entrepreneurs
+
+================================================================================
+                    PAGES DE DETAIL DE TACHES (59 pages)
+================================================================================
+
+DETAIL-T* (Formulaires individuels)
+├── detail-t3      ├── detail-t26     ├── detail-t66
+├── detail-t4      ├── detail-t27     ├── detail-t67
+├── detail-t5      ├── detail-t29     ├── detail-t69
+├── detail-t8      ├── detail-t30     ├── detail-t70
+├── detail-t9      ├── detail-t32     ├── detail-t71
+├── detail-t10     ├── detail-t35     ├── detail-t72
+├── detail-t11     ├── detail-t43     ├── detail-t75
+├── detail-t12     ├── detail-t45     ├── detail-t79
+├── detail-t13     ├── detail-t50     ├── detail-t82
+├── detail-t14     ├── detail-t51     ├── detail-t87
+├── detail-t15     ├── detail-t55     ├── detail-t90
+├── detail-t16     ├── detail-t57     ├── detail-t91
+├── detail-t17     ├── detail-t58     ├── detail-t93
+├── detail-t18     ├── detail-t62     ├── detail-t94
+├── detail-t19     ├── detail-t63     ├── detail-t95
+├── detail-t21     ├── detail-t64     ├── detail-t99
+├── detail-t22     ├── detail-t65     ├── detail-t100 (doublon)
+└── detail-t24     └── (continuation)  ├── detail-t109
+                                       ├── detail-t110
+                                       ├── detail-t128
+                                       ├── detail-t131
+                                       ├── detail-t132
+                                       ├── detail-t136
+                                       └── detail-t139
+
+PSV-CARACTERISTIQUES
+└── Caracteristiques PSV (Pressure Safety Valves)
+
+================================================================================
+                                  MODAUX
+================================================================================
+
+TASKS-LIST-MODAL
+├── Titre dynamique
+├── Contenu dynamique (liste taches par statut)
+└── [Bouton] Fermer
+
+PHASE-DETAILS-MODAL
+├── Titre dynamique
+├── Contenu dynamique (details phase)
+└── [Bouton] Fermer
+
+================================================================================
+                            RESUME STATISTIQUES
+================================================================================
+
+Total Pages:              78
+├── Pages Principales:    11
+├── Pages Execution:       7
+├── Pages Detail Taches:  59
+└── Page Speciale:         1
+
+Modaux:                    2
+
+Elements Interactifs:    150+
+├── Boutons:            100+
+├── Selects:             10+
+├── Inputs:              20+
+└── Canvas:               2
+
+Fonctionnalites:
+├── Import/Export:        8 types
+├── Visualisations:      10 types
+├── Formulaires:         60+ pages
+└── Navigation:          78 pages
+
+================================================================================

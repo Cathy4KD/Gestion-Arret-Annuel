@@ -1,0 +1,54 @@
+<div id="detail-t21" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; margin-bottom: 20px; gap: 15px;">
+            <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                ← Retour
+            </button>
+            <h2 style="margin: 0; color: #333;">CONNAITRE L'IMPLICATION DU SERVICE INCENDIE</h2>
+        </div>
+
+        <!-- Information -->
+        <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 5px solid #2196f3;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="font-size: 2.5em;">🚒</div>
+                <div style="flex: 1;">
+                    <h3 style="margin: 0 0 8px 0; color: #1565c0; font-size: 1.1em;">Filtrage automatique Service Incendie</h3>
+                    <p style="margin: 0; color: #1976d2; font-weight: 500; line-height: 1.5;">
+                        Ce tableau affiche <strong>automatiquement</strong> tous les travaux dont le <strong>Post.trav.opér.</strong> commence par <strong>"INC"</strong> (Service Incendie).
+                    </p>
+                    <div style="margin-top: 10px; padding: 8px 12px; background: #bbdefb; border-radius: 5px; display: inline-block;">
+                        <strong id="t21-count-info" style="color: #0d47a1;">0 travaux trouvés</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tableau des opérations -->
+        <div style="background: white; padding: 20px; border-radius: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: #333;">Opérations (<span id="t21-count">0</span>)</h3>
+                <button onclick="window.dataActions.exportToExcel('t21', 'TRAVAUX NON ÉLECTRIQUES PENDANT L'ARRÊT ÉLECTRIQUE')" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                    📊 Exporter Excel
+                </button>
+            </div>
+
+            <table id="t21-table" class="summary-table" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">État</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Ordre</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Désign. opér.</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Opération</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Post. Trav.</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Poste Technique</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Photo</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Commentaire</th>
+                    </tr>
+                </thead>
+                <tbody id="t21-tbody">
+                    <tr><td colspan="8" style="padding: 30px; text-align: center; color: #666;">Aucune donnée IW37N disponible.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

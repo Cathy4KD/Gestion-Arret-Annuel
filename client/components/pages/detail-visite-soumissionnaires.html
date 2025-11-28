@@ -1,0 +1,64 @@
+<div id="detail-visite-soumissionnaires" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; margin-bottom: 20px; gap: 15px;">
+            <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                ← Retour
+            </button>
+            <h2 style="margin: 0; color: #333;">VISITE DES SOUMISSIONNAIRES</h2>
+        </div>
+
+        <!-- Filtre par Poste Technique -->
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <div style="margin-bottom: 15px;">
+                <button onclick="window.dataActions.togglePosteDropdown('visite-soumissionnaires')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px; width: 100%; text-align: left; display: flex; justify-content: space-between; align-items: center;">
+                    <span id="visite-soumissionnaires-selected-text">Filtrer par Poste Technique</span>
+                    <span>▼</span>
+                </button>
+            </div>
+
+            <!-- Menu déroulant -->
+            <div id="visite-soumissionnaires-dropdown-menu" style="display: none; background: white; border: 2px solid #ddd; border-radius: 8px; padding: 15px; margin-top: 10px; max-height: 300px; overflow-y: auto;">
+                <div style="display: flex; gap: 10px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 2px solid #eee;">
+                    <button onclick="window.dataActions.selectAllPostesTechniques('visite-soumissionnaires')" class="btn" style="background: #4a7c59; color: white; padding: 8px 16px; flex: 1;">
+                        Tout sélectionner
+                    </button>
+                    <button onclick="window.dataActions.deselectAllPostesTechniques('visite-soumissionnaires')" class="btn" style="background: #dc3545; color: white; padding: 8px 16px; flex: 1;">
+                        Tout désélectionner
+                    </button>
+                </div>
+
+                <div style="margin-bottom: 10px; padding: 10px; background: #e3f2fd; border-radius: 5px;">
+                    <span id="visite-soumissionnaires-filter-count" style="font-weight: 600; color: #1976d2;">0 / 0 sélectionnés</span>
+                </div>
+
+                <div id="visite-soumissionnaires-poste-filters"></div>
+            </div>
+        </div>
+
+        <!-- Tableau des opérations -->
+        <div style="background: white; padding: 20px; border-radius: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: #333;">Opérations (<span id="visite-soumissionnaires-count">0</span>)</h3>
+                <button onclick="window.dataActions.exportToExcel('visite-soumissionnaires', 'VISITE DES SOUMISSIONNAIRES')" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                    📊 Exporter Excel
+                </button>
+            </div>
+
+            <table id="visite-soumissionnaires-table" class="summary-table" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">État</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Ordre</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Désignation</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Opération</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Post. Trav.</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Poste Technique</th>
+                    </tr>
+                </thead>
+                <tbody id="visite-soumissionnaires-tbody">
+                    <tr><td colspan="6" style="padding: 30px; text-align: center; color: #666;">Aucune donnée IW37N disponible.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

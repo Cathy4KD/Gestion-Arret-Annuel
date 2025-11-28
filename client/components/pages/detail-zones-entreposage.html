@@ -1,0 +1,69 @@
+<div id="detail-zones-entreposage" class="page">
+            <!-- Charger jsPDF pour l'export PDF -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+            <div class="summary-container" style="max-width: 98%; padding: 20px;">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                    <h2 style="margin: 0; color: #333; flex: 1;">ZONES ENTREPOSAGES & PLAN DE LOCALISATION</h2>
+                </div>
+
+                <!-- Info card -->
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="font-size: 3em;">📦</div>
+                        <div style="flex: 1;">
+                            <h3 style="margin: 0 0 10px 0;">Zones d'Entreposage et Plans</h3>
+                            <p style="margin: 0; opacity: 0.9; font-size: 0.95em;">
+                                Gérez vos zones d'entreposage et attachez des plans/documents pour chaque zone
+                            </p>
+                        </div>
+                        <div style="text-align: center; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px;">
+                            <div style="font-size: 2em; font-weight: bold;"><span id="zonesCount">0</span></div>
+                            <div style="font-size: 0.85em; opacity: 0.9;">Zones</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions globales -->
+                <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <button onclick="window.zonesActions.addZone()"
+                            style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        ➕ Ajouter une Zone
+                    </button>
+                    <button onclick="window.zonesActions.exportToExcel()"
+                            style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        📊 Exporter Excel
+                    </button>
+                    <button onclick="window.zonesActions.exportToPDF()"
+                            style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        📄 Exporter PDF Complet
+                    </button>
+                    <span style="margin-left: auto; color: #666; font-size: 0.9em;">💡 Le PDF inclura tous les plans/documents attachés</span>
+                </div>
+
+                <!-- Table -->
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                            <thead style="position: sticky; top: 0; background: white; z-index: 10;">
+                                <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; width: 120px;">Ordre</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; min-width: 200px;">Désignation</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; min-width: 250px;">Commentaire</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; min-width: 300px;">Plans / Documents</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center; width: 100px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="zonesTableBody">
+                                <tr>
+                                    <td colspan="5" style="padding: 30px; text-align: center; color: #666;">
+                                        Aucune zone. Cliquez sur "➕ Ajouter une Zone" pour commencer.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>

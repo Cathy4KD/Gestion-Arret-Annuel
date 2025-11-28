@@ -1,0 +1,46 @@
+<div id="timeline" class="page">
+    <div class="timeline-container">
+        <div class="timeline-header">
+            <h2>📋 Tableau Kanban - Suivi des Tâches</h2>
+        </div>
+        <div class="kanban-container">
+            <div class="kanban-column">
+                <div class="kanban-header notstarted">
+                    ❌ Non Démarré <span class="kanban-count" id="count-notstarted">0</span>
+                </div>
+                <div class="kanban-cards" id="kanban-notstarted" data-status="notstarted"></div>
+            </div>
+            <div class="kanban-column">
+                <div class="kanban-header inprogress">
+                    ⚙️ En Cours <span class="kanban-count" id="count-inprogress">0</span>
+                </div>
+                <div class="kanban-cards" id="kanban-inprogress" data-status="inprogress"></div>
+            </div>
+            <div class="kanban-column">
+                <div class="kanban-header completed">
+                    ✅ Complété <span class="kanban-count" id="count-completed">0</span>
+                </div>
+                <div class="kanban-cards" id="kanban-completed" data-status="completed"></div>
+            </div>
+            <div class="kanban-column">
+                <div class="kanban-header cancelled">
+                    🚫 Annulé <span class="kanban-count" id="count-cancelled">0</span>
+                </div>
+                <div class="kanban-cards" id="kanban-cancelled" data-status="cancelled"></div>
+            </div>
+        </div>
+
+        <!-- Calendrier mensuel -->
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <h3>📅 Calendrier des Tâches</h3>
+                <div class="calendar-nav">
+                    <button onclick="changeCalendarMonth(-1)">◀ Mois Précédent</button>
+                    <button onclick="changeCalendarMonth(0)">Aujourd'hui</button>
+                    <button onclick="changeCalendarMonth(1)">Mois Suivant ▶</button>
+                </div>
+            </div>
+            <div id="calendarView"></div>
+        </div>
+    </div>
+</div>

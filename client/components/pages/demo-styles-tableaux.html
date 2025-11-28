@@ -1,0 +1,595 @@
+<div id="demo-styles-tableaux" class="page">
+    <h2>🎨 Démonstration des Styles de Tableaux</h2>
+
+    <!-- Introduction -->
+    <div class="card" style="background: #e3f2fd; padding: 20px; border-left: 4px solid #2196f3;">
+        <h3 style="margin: 0 0 10px 0; color: #1976d2;">📚 Style Compact IW37N - Appliqué par Défaut</h3>
+        <p style="margin: 0; color: #555;">
+            Tous les tableaux du projet utilisent maintenant le <strong>style compact IW37N</strong> automatiquement.
+            Cette page démontre les différentes variantes disponibles.
+        </p>
+    </div>
+
+    <!-- 1. Tableau par défaut (IW37N) -->
+    <div class="card">
+        <h3>1. Tableau par Défaut (Style IW37N - Vert Foncé)</h3>
+        <p>Aucune classe nécessaire - Style appliqué automatiquement</p>
+
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ordre</th>
+                        <th>Désignation</th>
+                        <th>Poste Technique</th>
+                        <th>Statut</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>4500123456</td>
+                        <td>Réparation pompe principale</td>
+                        <td>MECEXT01</td>
+                        <td>En cours</td>
+                        <td>2026-01-15</td>
+                    </tr>
+                    <tr>
+                        <td>4500123457</td>
+                        <td>Remplacement vanne sécurité</td>
+                        <td>MECEXT02</td>
+                        <td>Planifié</td>
+                        <td>2026-01-20</td>
+                    </tr>
+                    <tr>
+                        <td>4500123458</td>
+                        <td>Inspection PSV-001</td>
+                        <td>INC01</td>
+                        <td>Terminé</td>
+                        <td>2026-01-10</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 2. Variantes de couleurs -->
+    <div class="card">
+        <h3>2. Variantes de Couleurs d'En-tête</h3>
+
+        <h4 style="margin-top: 20px;">Violet (Primary)</h4>
+        <table class="header-primary">
+            <thead>
+                <tr>
+                    <th>Colonne 1</th>
+                    <th>Colonne 2</th>
+                    <th>Colonne 3</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Donnée A</td>
+                    <td>Donnée B</td>
+                    <td>Donnée C</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4 style="margin-top: 20px;">Vert (Success)</h4>
+        <table class="header-success">
+            <thead>
+                <tr>
+                    <th>Colonne 1</th>
+                    <th>Colonne 2</th>
+                    <th>Colonne 3</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Donnée A</td>
+                    <td>Donnée B</td>
+                    <td>Donnée C</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4 style="margin-top: 20px;">Bleu (Info)</h4>
+        <table class="header-info">
+            <thead>
+                <tr>
+                    <th>Colonne 1</th>
+                    <th>Colonne 2</th>
+                    <th>Colonne 3</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Donnée A</td>
+                    <td>Donnée B</td>
+                    <td>Donnée C</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4 style="margin-top: 20px;">Rouge (Danger)</h4>
+        <table class="header-danger">
+            <thead>
+                <tr>
+                    <th>Colonne 1</th>
+                    <th>Colonne 2</th>
+                    <th>Colonne 3</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Donnée A</td>
+                    <td>Donnée B</td>
+                    <td>Donnée C</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4 style="margin-top: 20px;">Orange (Warning)</h4>
+        <table class="header-warning">
+            <thead>
+                <tr>
+                    <th>Colonne 1</th>
+                    <th>Colonne 2</th>
+                    <th>Colonne 3</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Donnée A</td>
+                    <td>Donnée B</td>
+                    <td>Donnée C</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 3. Tableau avec inputs éditables -->
+    <div class="card">
+        <h3>3. Tableau avec Champs Éditables (Devis)</h3>
+        <p>Démonstration des inputs, textareas, selects et boutons dans un tableau</p>
+
+        <table class="header-primary">
+            <thead>
+                <tr>
+                    <th>Entrepreneur</th>
+                    <th>Montant ($)</th>
+                    <th>Date Limite</th>
+                    <th>Priorité</th>
+                    <th>Commentaire</th>
+                    <th class="col-action">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <input type="text" value="Entreprise ABC Inc." placeholder="Nom entrepreneur...">
+                    </td>
+                    <td>
+                        <input type="number" value="15000.00" step="0.01" placeholder="Montant...">
+                    </td>
+                    <td>
+                        <input type="date" value="2026-01-30">
+                    </td>
+                    <td>
+                        <select>
+                            <option value="haute">Haute</option>
+                            <option value="moyenne" selected>Moyenne</option>
+                            <option value="basse">Basse</option>
+                        </select>
+                    </td>
+                    <td>
+                        <textarea rows="2" placeholder="Ajouter un commentaire...">Devis reçu, en attente de validation</textarea>
+                    </td>
+                    <td class="text-center">
+                        <button style="background: #28a745; color: white; margin-right: 5px;">
+                            💾
+                        </button>
+                        <button style="background: #dc3545; color: white;">
+                            🗑️
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="text" value="Construction XYZ Ltée" placeholder="Nom entrepreneur...">
+                    </td>
+                    <td>
+                        <input type="number" value="22500.50" step="0.01" placeholder="Montant...">
+                    </td>
+                    <td>
+                        <input type="date" value="2026-02-05">
+                    </td>
+                    <td>
+                        <select>
+                            <option value="haute" selected>Haute</option>
+                            <option value="moyenne">Moyenne</option>
+                            <option value="basse">Basse</option>
+                        </select>
+                    </td>
+                    <td>
+                        <textarea rows="2" placeholder="Ajouter un commentaire...">Soumission acceptée, travaux à démarrer</textarea>
+                    </td>
+                    <td class="text-center">
+                        <button style="background: #28a745; color: white; margin-right: 5px;">
+                            💾
+                        </button>
+                        <button style="background: #dc3545; color: white;">
+                            🗑️
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 4. Lignes alternées (striped) -->
+    <div class="card">
+        <h3>4. Tableau avec Lignes Alternées</h3>
+        <p>Classe : <code>striped</code></p>
+
+        <table class="striped header-success">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Département</th>
+                    <th>Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>001</td>
+                    <td>Jean Tremblay</td>
+                    <td>Mécanique</td>
+                    <td>Actif</td>
+                </tr>
+                <tr>
+                    <td>002</td>
+                    <td>Marie Gagnon</td>
+                    <td>Électrique</td>
+                    <td>Actif</td>
+                </tr>
+                <tr>
+                    <td>003</td>
+                    <td>Pierre Lavoie</td>
+                    <td>Instrumentation</td>
+                    <td>Inactif</td>
+                </tr>
+                <tr>
+                    <td>004</td>
+                    <td>Sophie Bergeron</td>
+                    <td>Sécurité</td>
+                    <td>Actif</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 5. États de lignes -->
+    <div class="card">
+        <h3>5. États de Lignes (selected, success, error, warning)</h3>
+
+        <table class="header-info">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Classe CSS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="selected">
+                    <td>Sélectionnée</td>
+                    <td>Ligne actuellement sélectionnée par l'utilisateur</td>
+                    <td><code>class="selected"</code></td>
+                </tr>
+                <tr class="success">
+                    <td>Succès</td>
+                    <td>Opération réussie ou validation positive</td>
+                    <td><code>class="success"</code></td>
+                </tr>
+                <tr class="error">
+                    <td>Erreur</td>
+                    <td>Problème détecté ou validation échouée</td>
+                    <td><code>class="error"</code></td>
+                </tr>
+                <tr class="warning">
+                    <td>Avertissement</td>
+                    <td>Attention requise ou donnée manquante</td>
+                    <td><code>class="warning"</code></td>
+                </tr>
+                <tr class="disabled">
+                    <td>Désactivée</td>
+                    <td>Ligne inactive (opacité réduite)</td>
+                    <td><code>class="disabled"</code></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 6. Variantes de taille -->
+    <div class="card">
+        <h3>6. Variantes de Taille</h3>
+
+        <h4 style="margin-top: 20px;">Extra-Compact (padding: 6px, font: 0.8em)</h4>
+        <table class="extra-compact header-primary">
+            <thead>
+                <tr>
+                    <th>Col 1</th>
+                    <th>Col 2</th>
+                    <th>Col 3</th>
+                    <th>Col 4</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Donnée A</td>
+                    <td>Donnée B</td>
+                    <td>Donnée C</td>
+                    <td>Donnée D</td>
+                </tr>
+                <tr>
+                    <td>Donnée E</td>
+                    <td>Donnée F</td>
+                    <td>Donnée G</td>
+                    <td>Donnée H</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4 style="margin-top: 20px;">Standard (padding: 12px, font: 1em)</h4>
+        <table class="standard header-success">
+            <thead>
+                <tr>
+                    <th>Col 1</th>
+                    <th>Col 2</th>
+                    <th>Col 3</th>
+                    <th>Col 4</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Donnée A</td>
+                    <td>Donnée B</td>
+                    <td>Donnée C</td>
+                    <td>Donnée D</td>
+                </tr>
+                <tr>
+                    <td>Donnée E</td>
+                    <td>Donnée F</td>
+                    <td>Donnée G</td>
+                    <td>Donnée H</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4 style="margin-top: 20px;">Large (padding: 15px, font: 1.05em)</h4>
+        <table class="large header-info">
+            <thead>
+                <tr>
+                    <th>Col 1</th>
+                    <th>Col 2</th>
+                    <th>Col 3</th>
+                    <th>Col 4</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Donnée A</td>
+                    <td>Donnée B</td>
+                    <td>Donnée C</td>
+                    <td>Donnée D</td>
+                </tr>
+                <tr>
+                    <td>Donnée E</td>
+                    <td>Donnée F</td>
+                    <td>Donnée G</td>
+                    <td>Donnée H</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 7. Alignement des colonnes -->
+    <div class="card">
+        <h3>7. Alignement des Colonnes</h3>
+
+        <table class="header-warning">
+            <thead>
+                <tr>
+                    <th>Gauche (défaut)</th>
+                    <th class="text-center">Centré</th>
+                    <th class="text-right">Droite</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Texte à gauche</td>
+                    <td class="text-center">Texte centré</td>
+                    <td class="text-right">1 234,56 $</td>
+                </tr>
+                <tr>
+                    <td>Autre texte</td>
+                    <td class="text-center">✅ Validé</td>
+                    <td class="text-right">9 876,54 $</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 8. Tableau avec en-têtes fixes -->
+    <div class="card">
+        <h3>8. Tableau avec En-têtes Fixes (Sticky Header)</h3>
+        <p>Les en-têtes restent visibles lors du défilement vertical</p>
+
+        <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; border-radius: 8px;">
+            <table class="sticky-header header-danger">
+                <thead>
+                    <tr>
+                        <th>Ligne</th>
+                        <th>Ordre</th>
+                        <th>Description</th>
+                        <th>Valeur</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>4500000001</td>
+                        <td>Description ligne 1</td>
+                        <td>100,00 $</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>4500000002</td>
+                        <td>Description ligne 2</td>
+                        <td>200,00 $</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>4500000003</td>
+                        <td>Description ligne 3</td>
+                        <td>300,00 $</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>4500000004</td>
+                        <td>Description ligne 4</td>
+                        <td>400,00 $</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>4500000005</td>
+                        <td>Description ligne 5</td>
+                        <td>500,00 $</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>4500000006</td>
+                        <td>Description ligne 6</td>
+                        <td>600,00 $</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>4500000007</td>
+                        <td>Description ligne 7</td>
+                        <td>700,00 $</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>4500000008</td>
+                        <td>Description ligne 8</td>
+                        <td>800,00 $</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>4500000009</td>
+                        <td>Description ligne 9</td>
+                        <td>900,00 $</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>4500000010</td>
+                        <td>Description ligne 10</td>
+                        <td>1000,00 $</td>
+                    </tr>
+                    <tr>
+                        <td>11</td>
+                        <td>4500000011</td>
+                        <td>Description ligne 11</td>
+                        <td>1100,00 $</td>
+                    </tr>
+                    <tr>
+                        <td>12</td>
+                        <td>4500000012</td>
+                        <td>Description ligne 12</td>
+                        <td>1200,00 $</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 9. Comparaison espace gagné -->
+    <div class="card" style="background: #f0f4f8;">
+        <h3>9. Comparaison : Espace Gagné avec Style Compact</h3>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+                <h4 style="color: #dc3545;">❌ Ancien Style (padding: 12px, font: 1em)</h4>
+                <table class="standard header-danger">
+                    <thead>
+                        <tr>
+                            <th>Ordre</th>
+                            <th>Desc.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>001</td><td>Ligne 1</td></tr>
+                        <tr><td>002</td><td>Ligne 2</td></tr>
+                        <tr><td>003</td><td>Ligne 3</td></tr>
+                        <tr><td>004</td><td>Ligne 4</td></tr>
+                        <tr><td>005</td><td>Ligne 5</td></tr>
+                    </tbody>
+                </table>
+                <p style="color: #666; font-size: 0.9em; margin-top: 10px;">
+                    5 lignes = ~200px de hauteur
+                </p>
+            </div>
+
+            <div>
+                <h4 style="color: #28a745;">✅ Nouveau Style Compact (padding: 8px, font: 0.85em)</h4>
+                <table class="header-success">
+                    <thead>
+                        <tr>
+                            <th>Ordre</th>
+                            <th>Desc.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>001</td><td>Ligne 1</td></tr>
+                        <tr><td>002</td><td>Ligne 2</td></tr>
+                        <tr><td>003</td><td>Ligne 3</td></tr>
+                        <tr><td>004</td><td>Ligne 4</td></tr>
+                        <tr><td>005</td><td>Ligne 5</td></tr>
+                        <tr><td>006</td><td>Ligne 6</td></tr>
+                        <tr><td>007</td><td>Ligne 7</td></tr>
+                    </tbody>
+                </table>
+                <p style="color: #666; font-size: 0.9em; margin-top: 10px;">
+                    7 lignes = ~200px de hauteur<br>
+                    <strong style="color: #28a745;">+40% de données visibles !</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Résumé -->
+    <div class="card" style="background: #d4edda; padding: 20px; border-left: 4px solid #28a745;">
+        <h3 style="margin: 0 0 10px 0; color: #155724;">✅ Résumé des Avantages</h3>
+        <ul style="margin: 0; padding-left: 20px; color: #155724;">
+            <li><strong>+30% de données visibles</strong> grâce au style compact</li>
+            <li><strong>Cohérence visuelle</strong> sur tous les tableaux du projet</li>
+            <li><strong>Inputs fonctionnels</strong> avec style unifié</li>
+            <li><strong>Responsive mobile</strong> automatique</li>
+            <li><strong>6 variantes de couleurs</strong> pour différencier les types</li>
+            <li><strong>Accessibilité</strong> (navigation clavier, impression)</li>
+        </ul>
+    </div>
+
+    <!-- Documentation -->
+    <div class="card" style="background: #fff3cd; padding: 20px; border-left: 4px solid #ffc107;">
+        <h3 style="margin: 0 0 10px 0; color: #856404;">📖 Documentation Complète</h3>
+        <p style="margin: 0; color: #856404;">
+            Pour plus de détails, consultez le guide complet :<br>
+            <code style="background: white; padding: 4px 8px; border-radius: 4px; display: inline-block; margin-top: 8px;">
+                docs/guides/GUIDE-STYLES-TABLEAUX.md
+            </code>
+        </p>
+    </div>
+</div>

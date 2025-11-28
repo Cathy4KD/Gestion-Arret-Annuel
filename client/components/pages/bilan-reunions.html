@@ -1,0 +1,67 @@
+<div id="bilan-reunions" class="page">
+    <div class="summary-container">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center;">
+                <button onclick="window.switchToPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                <h2 style="margin: 0; color: #333;">📅 Bilan des Réunions de Préparation</h2>
+            </div>
+            <div style="position: relative;">
+                <button id="btnExportReunionsPDF" onclick="window.pdfExportActions.toggleReunionsMenu()" style="padding: 10px 20px; background: linear-gradient(145deg, #e53935, #d32f2f); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.3); transition: all 0.3s ease;">
+                    📄 Export PDF ▼
+                </button>
+                <div id="reunionsPDFMenu" style="display: none; position: absolute; top: 50px; right: 0; background: white; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 1000; min-width: 250px;">
+                    <button onclick="window.pdfExportActions.exportReunionsSummaryPDF()" style="width: 100%; padding: 15px 20px; background: transparent; color: #333; border: none; border-bottom: 1px solid #eee; cursor: pointer; font-weight: 600; text-align: left; transition: background 0.2s;">
+                        📋 Résumé (Nom + Dates)
+                    </button>
+                    <button onclick="window.pdfExportActions.exportReunionsCompletePDF()" style="width: 100%; padding: 15px 20px; background: transparent; color: #333; border: none; cursor: pointer; font-weight: 600; text-align: left; transition: background 0.2s;">
+                        📄 Complet (Avec Comptes Rendus)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistiques -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
+            <div style="background: linear-gradient(145deg, #667eea, #764ba2); padding: 20px; border-radius: 15px; text-align: center; color: white; box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.5);">
+                <div style="font-size: 2em; margin-bottom: 5px;">📊</div>
+                <div style="font-size: 2em; font-weight: bold;" id="totalReunions">0</div>
+                <div style="font-size: 0.9em;">Total Réunions</div>
+            </div>
+            <div style="background: linear-gradient(145deg, #4a7c59, #3d6b4a); padding: 20px; border-radius: 15px; text-align: center; color: white; box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.5);">
+                <div style="font-size: 2em; margin-bottom: 5px;">✅</div>
+                <div style="font-size: 2em; font-weight: bold;" id="reunionsCompleted">0</div>
+                <div style="font-size: 0.9em;">Complétées</div>
+            </div>
+            <div style="background: linear-gradient(145deg, #ffc107, #ff9800); padding: 20px; border-radius: 15px; text-align: center; color: white; box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.5);">
+                <div style="font-size: 2em; margin-bottom: 5px;">⏳</div>
+                <div style="font-size: 2em; font-weight: bold;" id="reunionsEnCours">0</div>
+                <div style="font-size: 0.9em;">En Cours</div>
+            </div>
+            <div style="background: linear-gradient(145deg, #f06292, #ec407a); padding: 20px; border-radius: 15px; text-align: center; color: white; box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.5);">
+                <div style="font-size: 2em; margin-bottom: 5px;">🔴</div>
+                <div style="font-size: 2em; font-weight: bold;" id="reunionsNonCommencees">0</div>
+                <div style="font-size: 0.9em;">Non Commencées</div>
+            </div>
+        </div>
+
+        <!-- Tableau des réunions -->
+        <div style="background: white; padding: 20px; border-radius: 15px; box-shadow: 9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.5);">
+            <table class="summary-table" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">Phase</th>
+                        <th style="width: 40%;">Titre de la Réunion</th>
+                        <th style="width: 12%; text-align: center;">Semaines avant Arrêt</th>
+                        <th style="width: 12%; text-align: center;">Date Prévue</th>
+                        <th style="width: 10%; text-align: center;">Responsable</th>
+                        <th style="width: 10%; text-align: center;">Avancement</th>
+                        <th style="width: 11%; text-align: center;">Statut</th>
+                    </tr>
+                </thead>
+                <tbody id="reunionsTableBody">
+                    <!-- Rempli dynamiquement par JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

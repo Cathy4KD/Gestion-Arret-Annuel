@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-t51</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+<div id="detail-t51" class="page">
+            <div class="summary-container" style="max-width: 98%; padding: 20px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center;">
+                        <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                        <h2 style="margin: 0; color: #333;">DÉPÔT DES SOUMISSIONS DES ENTREPRENEURS</h2>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="syncT51Entrepreneurs()" style="padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                            🔄 Synchroniser IW37N
+                        </button>
+                        <button onclick="addT51Soumission()" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                            ➕ Nouvelle Soumission
+                        </button>
+                        <button onclick="exportT51ToExcel()" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                            📤 Exporter Excel
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Statistiques -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                    <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 2em; font-weight: bold; color: #1976d2;" id="t51TotalSoumissions">0</div>
+                        <div style="color: #000; margin-top: 5px;">Total Soumissions</div>
+                    </div>
+                    <div style="background: #fff3cd; padding: 20px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 2em; font-weight: bold; color: #856404;" id="t51EnAttente">0</div>
+                        <div style="color: #000; margin-top: 5px;">En Attente</div>
+                    </div>
+                    <div style="background: #d4edda; padding: 20px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 2em; font-weight: bold; color: #155724;" id="t51Reçues">0</div>
+                        <div style="color: #000; margin-top: 5px;">Reçues</div>
+                    </div>
+                    <div style="background: #f8d7da; padding: 20px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 2em; font-weight: bold; color: #721c24;" id="t51Relances">0</div>
+                        <div style="color: #000; margin-top: 5px;">Relances Requises</div>
+                    </div>
+                </div>
+
+                <!-- Tableau des Soumissions -->
+                <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <h3 style="margin-top: 0; color: #667eea;">📋 Liste des Soumissions</h3>
+
+                    <div class="summary-table-wrapper" style="max-height: 600px; overflow-y: auto;">
+                        <table class="summary-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 12%;">Entrepreneur</th>
+                                    <th style="width: 8%;">Code SAP</th>
+                                    <th style="width: 15%;">Commentaires</th>
+                                    <th style="width: 9%;">Date Demande</th>
+                                    <th style="width: 7%;">Relance 1</th>
+                                    <th style="width: 7%;">Relance 2</th>
+                                    <th style="width: 7%;">Relance 3</th>
+                                    <th style="width: 9%;">Date Réception</th>
+                                    <th style="width: 10%;">N° Soumission</th>
+                                    <th style="width: 10%;">Documents</th>
+                                    <th style="width: 6%;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="t51SoumissionsTableBody">
+                                <tr><td colspan="11" style="text-align: center; padding: 40px; color: #999;">
+                                    Aucune soumission enregistrée.<br>
+                                    Cliquez sur "➕ Nouvelle Soumission" ou "🔄 Synchroniser IW37N" pour commencer.
+                                </td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

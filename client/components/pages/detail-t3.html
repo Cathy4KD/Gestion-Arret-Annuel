@@ -1,0 +1,119 @@
+<div id="detail-t3" class="page">
+                    <div class="summary-container" style="max-width: 95%;">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <button onclick="switchPage('summary')"
+                                    style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">
+                                ← Retour
+                            </button>
+                            <h2 style="margin: 0; color: #333;">VALIDATION DES PLANS D'ENTRETIEN À LONG DÉLAI</h2>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 20px;">
+                            <!-- Section principale -->
+                            <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <!-- Bouton upload et filtre année -->
+                                <div style="display: flex; gap: 15px; margin-bottom: 20px; align-items: center;">
+                                    <button onclick="document.getElementById('uploadPlansExcel').click()"
+                                            style="padding: 10px 20px; background: #c5554a; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                                        MAJ de la liste des plans d'entretiens →
+                                    </button>
+                                    <input type="file" id="uploadPlansExcel" accept=".xlsx,.xls,.csv" style="display: none;" onchange="handlePlansUpload(event)">
+
+                                    <label style="font-weight: bold; margin-left: auto;">Année:</label>
+                                    <input type="number" id="filterAnnee" value="2026" min="2024" max="2030"
+                                           style="padding: 8px; border: 2px solid #667eea; border-radius: 5px; width: 100px; text-align: center; font-weight: bold;"
+                                           onchange="renderPlansTable()">
+                                </div>
+
+                                <!-- Tableau des plans d'entretien -->
+                                <div style="overflow-x: auto; max-height: 600px; overflow-y: auto;">
+                                    <table style="width: 100%; border-collapse: collapse; font-size: 0.85em;">
+                                        <thead style="position: sticky; top: 0; background: white; z-index: 10;">
+                                            <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                                                <th style="padding: 8px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap;">Plan d'ent</th>
+                                                <th style="padding: 8px; border: 1px solid #dee2e6; text-align: left;">Texte PlanEntr.</th>
+                                                <th style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">Interval</th>
+                                                <th style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">Un.interv.</th>
+                                                <th style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">Secteur</th>
+                                                <th style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">AA</th>
+                                                <th style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">Début</th>
+                                                <th style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">Fréq.</th>
+                                                <th style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">S1</th>
+                                                <th style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">S2</th>
+                                                <th style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">S3</th>
+                                                <th style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">S4</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="plansTableBody">
+                                            <tr>
+                                                <td colspan="12" style="padding: 30px; text-align: center; color: #666;">
+                                                    Aucun plan d'entretien chargé. Veuillez importer un fichier Excel ou CSV.
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Historique d'appels -->
+                            <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <h3 style="margin: 0 0 15px 0; color: #333; font-size: 1.1em;">Historique d'appels</h3>
+                                <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                                    <p style="margin: 0 0 5px 0; font-size: 0.9em; color: #666;">
+                                        Pour voir les plans de maintenance qui doivent sortir cette année, cliquer sur le bouton "APPEL"
+                                    </p>
+                                </div>
+                                <div id="historiqueRevisions" style="max-height: 500px; overflow-y: auto;">
+                                    <table class="summary-table" style="width: 100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>Année</th>
+                                                <th>Plan d'ent</th>
+                                                <th>Ordre début</th>
+                                                <th>Ordre fin</th>
+                                                <th>Texte PlanEntr. révisioné</th>
+                                                <th>Date d'appel</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="historiqueTableBody">
+                                            <!-- Data will be populated here by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section Modifications Apportées -->
+                        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-top: 20px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                                <h3 style="margin: 0; color: #333; border-bottom: 2px solid #c9941a; padding-bottom: 10px; flex-grow: 1;">📝 Modifications Apportées</h3>
+                                <button onclick="window.plansActions.addModificationRow()"
+                                        style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.95em;">
+                                    ➕ Ajouter une modification
+                                </button>
+                            </div>
+
+                            <div style="overflow-x: auto;">
+                                <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                                    <thead>
+                                        <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; width: 15%;">Plan d'entretien</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; width: 15%;">Gamme</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; width: 15%;">Poste d'entretien</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; width: 30%;">Modification</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; width: 15%;">Nouvelles fréquences</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center; width: 10%;">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="modificationsTableBody">
+                                        <tr>
+                                            <td colspan="6" style="padding: 30px; text-align: center; color: #666;">
+                                                Aucune modification enregistrée. Cliquez sur "Ajouter une modification" pour commencer.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>

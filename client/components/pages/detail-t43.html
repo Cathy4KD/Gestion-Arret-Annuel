@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-t43</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+<div id="detail-t43" class="page">
+            <div class="summary-container">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                    <h2 style="margin: 0; color: #333;">ÉTABLIR LA DATE DE L'ARRÊT ÉLECTRIQUE (MEMOS OFFICIELS)</h2>
+                </div>
+                <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="margin-bottom: 30px;">
+                        <h3 style="color: #667eea; margin-bottom: 20px;">📅 Informations sur l'Arrêt Électrique</h3>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 20px;">
+                            <!-- Date de début -->
+                            <div>
+                                <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">
+                                    📅 Date de Début de l'Arrêt Électrique:
+                                </label>
+                                <input
+                                    type="date"
+                                    id="t43-dateDebut"
+                                    style="width: 100%; padding: 12px; border: 2px solid #667eea; border-radius: 8px; font-size: 1em;"
+                                    onchange="saveT43Data()"
+                                >
+                            </div>
+
+                            <!-- Durée -->
+                            <div>
+                                <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">
+                                    ⏱️ Durée (en jours):
+                                </label>
+                                <input
+                                    type="number"
+                                    id="t43-duree"
+                                    min="1"
+                                    max="30"
+                                    placeholder="Ex: 3"
+                                    style="width: 100%; padding: 12px; border: 2px solid #667eea; border-radius: 8px; font-size: 1em;"
+                                    onchange="saveT43Data()"
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Zone de texte pour notes/mémo -->
+                        <div>
+                            <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">
+                                📝 Notes / Contenu du Mémo:
+                            </label>
+                            <textarea
+                                id="t43-notes"
+                                rows="8"
+                                placeholder="Entrez ici les détails du mémo officiel concernant l'arrêt électrique..."
+                                style="width: 100%; padding: 12px; border: 2px solid #667eea; border-radius: 8px; font-size: 1em; resize: vertical; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;"
+                                onchange="saveT43Data()"
+                            ></textarea>
+                        </div>
+
+                        <div style="margin-top: 20px; padding: 15px; background: #f0f4ff; border-left: 4px solid #667eea; border-radius: 8px;">
+                            <strong style="color: #667eea;">💡 Rappel:</strong>
+                            <p style="margin: 5px 0 0 0; color: #666;">
+                                Assurez-vous de communiquer ces informations à tous les employés d'entretien et d'opération via les mémos officiels.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

@@ -1,0 +1,431 @@
+<div id="detail-t26" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; gap: 15px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                    ← Retour
+                </button>
+                <h2 style="margin: 0; color: #333;">PRÉPARER PLANIFICATIONS DES TPAA</h2>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="window.tpaaActions.refreshFromIW37N()" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                    🔄 Extraire depuis IW37N
+                </button>
+                <button onclick="window.tpaaActions.loadTPAAPW()" class="btn" style="background: linear-gradient(145deg, #4299e1, #0066cc); color: white; padding: 10px 20px;">
+                    ↻ Recharger
+                </button>
+            </div>
+        </div>
+
+        <!-- Info: Dates configurées dans Paramètres -->
+        <div style="background: #e3f2fd; padding: 12px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #2196F3;">
+            <p style="margin: 0; color: #1565c0; font-size: 0.9em;">
+                <strong>ℹ️ Info:</strong> Les dates et le budget de l'arrêt sont configurés dans
+                <button onclick="window.switchToPage('parametres')"
+                        style="background: none; border: none; color: #1565c0; text-decoration: underline; cursor: pointer; font-weight: bold; font-size: 0.9em;">
+                    ⚙️ Paramètres
+                </button>
+            </p>
+        </div>
+
+        <!-- Tableau TPAA -->
+        <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 30px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: #333;">📋 TPAA (<span id="tpaa-count">0</span>)</h3>
+                <button onclick="window.tpaaActions.exportTPAAListToExcel()" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                    📊 Exporter Excel
+                </button>
+            </div>
+
+            <div style="background: #e3f2fd; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                <p style="margin: 0; color: #1565c0; font-weight: 600;">
+                    ℹ️ Ce tableau affiche les travaux dont <strong>Désign. opér.</strong> commence par <strong>"TPAA"</strong>
+                </p>
+            </div>
+
+            <!-- Zone de recherche et tri TPAA -->
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">🔍 Recherche Désignation:</label>
+                        <input type="text" id="tpaa-search-designation" placeholder="Ex: TPAA-2"
+                               oninput="window.tpaaActions.filterTPAA()"
+                               style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">🔍 Recherche Opération:</label>
+                        <input type="text" id="tpaa-search-operation" placeholder="Ex: Contrôle"
+                               oninput="window.tpaaActions.filterTPAA()"
+                               style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">🔍 Recherche Poste Technique:</label>
+                        <input type="text" id="tpaa-search-poste" placeholder="Ex: C01-MEC"
+                               oninput="window.tpaaActions.filterTPAA()"
+                               style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">🔍 Recherche Date:</label>
+                        <input type="text" id="tpaa-search-date" placeholder="Ex: 2025-01"
+                               oninput="window.tpaaActions.filterTPAA()"
+                               style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                    <strong style="color: #495057;">Trier par:</strong>
+                    <button onclick="window.tpaaActions.sortTPAABy('date', 'asc')" class="btn"
+                            style="background: #667eea; color: white; padding: 6px 12px; font-size: 0.9em;">
+                        📅 Date ↑
+                    </button>
+                    <button onclick="window.tpaaActions.sortTPAABy('date', 'desc')" class="btn"
+                            style="background: #667eea; color: white; padding: 6px 12px; font-size: 0.9em;">
+                        📅 Date ↓
+                    </button>
+                    <button onclick="window.tpaaActions.sortTPAABy('externe', 'asc')" class="btn"
+                            style="background: #28a745; color: white; padding: 6px 12px; font-size: 0.9em;">
+                        👷 Externe A→Z
+                    </button>
+                    <button onclick="window.tpaaActions.sortTPAABy('externe', 'desc')" class="btn"
+                            style="background: #28a745; color: white; padding: 6px 12px; font-size: 0.9em;">
+                        👷 Externe Z→A
+                    </button>
+                    <button onclick="window.tpaaActions.clearTPAAFilters()" class="btn"
+                            style="background: #6c757d; color: white; padding: 6px 12px; font-size: 0.9em;">
+                        🗑️ Effacer
+                    </button>
+                </div>
+            </div>
+
+            <div style="max-height: 400px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 8px;">
+                <table id="tpaa-table" class="summary-table" style="width: 100%; border-collapse: collapse;">
+                    <thead style="position: sticky; top: 0; background: white; z-index: 5;">
+                        <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                        <th style="padding: 4px 6px; text-align: left; border: 1px solid #dee2e6; font-size: 11px; width: 80px;">Ordre</th>
+                        <th style="padding: 4px 6px; text-align: left; border: 1px solid #dee2e6; font-size: 11px; width: 300px;">Désignation</th>
+                        <th style="padding: 4px 6px; text-align: left; border: 1px solid #dee2e6; font-size: 11px; width: 60px;">Opér.</th>
+                        <th style="padding: 4px 6px; text-align: left; border: 1px solid #dee2e6; font-size: 11px; width: 70px;">Post.Tr.</th>
+                        <th style="padding: 4px 6px; text-align: left; border: 1px solid #dee2e6; font-size: 11px; width: 80px;">P.Tech.</th>
+                        <th style="padding: 4px 6px; text-align: center; border: 1px solid #dee2e6; font-size: 11px; width: 50px;">Sem.</th>
+                        <th style="padding: 4px 6px; text-align: left; border: 1px solid #dee2e6; font-size: 11px; width: 90px;">Date</th>
+                        <th style="padding: 4px 6px; text-align: center; border: 1px solid #dee2e6; font-size: 11px; width: 100px;">+?</th>
+                        <th style="padding: 4px 6px; text-align: left; border: 1px solid #dee2e6; font-size: 11px; width: 100px;">Statut</th>
+                        <th style="padding: 4px 6px; text-align: center; border: 1px solid #dee2e6; font-size: 11px; width: 50px;">SAP</th>
+                        <th style="padding: 4px 6px; text-align: left; border: 1px solid #dee2e6; font-size: 11px;">Commentaire</th>
+                    </tr>
+                </thead>
+                <tbody id="tpaa-tbody">
+                    <tr><td colspan="11" style="padding: 30px; text-align: center; color: #666;">Aucune donnée TPAA disponible.</td></tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+        <!-- Tableau PW -->
+        <div style="background: white; padding: 20px; border-radius: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: #333;">📋 PW (<span id="pw-count">0</span>)</h3>
+                <button onclick="window.tpaaActions.exportPWListToExcel()" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                    📊 Exporter Excel
+                </button>
+            </div>
+
+            <div style="background: #fff3cd; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                <p style="margin: 0; color: #856404; font-weight: 600;">
+                    ℹ️ Ce tableau affiche les travaux dont <strong>Désign. opér.</strong> commence par <strong>"PW"</strong>
+                </p>
+            </div>
+
+            <!-- Zone de recherche et tri PW -->
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">🔍 Recherche Désignation:</label>
+                        <input type="text" id="pw-search-designation" placeholder="Ex: PW-10"
+                               oninput="window.tpaaActions.filterPW()"
+                               style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">🔍 Recherche Opération:</label>
+                        <input type="text" id="pw-search-operation" placeholder="Ex: Contrôle"
+                               oninput="window.tpaaActions.filterPW()"
+                               style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">🔍 Recherche Poste Technique:</label>
+                        <input type="text" id="pw-search-poste" placeholder="Ex: C01-MEC"
+                               oninput="window.tpaaActions.filterPW()"
+                               style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">🔍 Recherche Date:</label>
+                        <input type="text" id="pw-search-date" placeholder="Ex: 2025-01"
+                               oninput="window.tpaaActions.filterPW()"
+                               style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                    <strong style="color: #495057;">Trier par:</strong>
+                    <button onclick="window.tpaaActions.sortPWBy('date', 'asc')" class="btn"
+                            style="background: #667eea; color: white; padding: 6px 12px; font-size: 0.9em;">
+                        📅 Date ↑
+                    </button>
+                    <button onclick="window.tpaaActions.sortPWBy('date', 'desc')" class="btn"
+                            style="background: #667eea; color: white; padding: 6px 12px; font-size: 0.9em;">
+                        📅 Date ↓
+                    </button>
+                    <button onclick="window.tpaaActions.sortPWBy('externe', 'asc')" class="btn"
+                            style="background: #28a745; color: white; padding: 6px 12px; font-size: 0.9em;">
+                        👷 Externe A→Z
+                    </button>
+                    <button onclick="window.tpaaActions.sortPWBy('externe', 'desc')" class="btn"
+                            style="background: #28a745; color: white; padding: 6px 12px; font-size: 0.9em;">
+                        👷 Externe Z→A
+                    </button>
+                    <button onclick="window.tpaaActions.clearPWFilters()" class="btn"
+                            style="background: #6c757d; color: white; padding: 6px 12px; font-size: 0.9em;">
+                        🗑️ Effacer
+                    </button>
+                </div>
+            </div>
+
+            <div style="max-height: 400px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 8px;">
+                <table id="pw-table" class="summary-table" style="width: 100%; border-collapse: collapse;">
+                    <thead style="position: sticky; top: 0; background: white; z-index: 5;">
+                        <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                        <th style="padding: 4px 6px; text-align: left; border: 1px solid #dee2e6; font-size: 11px; width: 80px;">Ordre</th>
+                        <th style="padding: 4px 6px; text-align: left; border: 1px solid #dee2e6; font-size: 11px; width: 300px;">Désignation</th>
+                        <th style="padding: 4px 6px; text-align: left; border: 1px solid #dee2e6; font-size: 11px; width: 60px;">Opér.</th>
+                        <th style="padding: 4px 6px; text-align: left; border: 1px solid #dee2e6; font-size: 11px; width: 70px;">Post.Tr.</th>
+                        <th style="padding: 4px 6px; text-align: left; border: 1px solid #dee2e6; font-size: 11px; width: 80px;">P.Tech.</th>
+                        <th style="padding: 4px 6px; text-align: center; border: 1px solid #dee2e6; font-size: 11px; width: 50px;">Sem.</th>
+                        <th style="padding: 4px 6px; text-align: left; border: 1px solid #dee2e6; font-size: 11px; width: 90px;">Date</th>
+                        <th style="padding: 4px 6px; text-align: center; border: 1px solid #dee2e6; font-size: 11px; width: 100px;">+?</th>
+                        <th style="padding: 4px 6px; text-align: left; border: 1px solid #dee2e6; font-size: 11px; width: 100px;">Statut</th>
+                        <th style="padding: 4px 6px; text-align: center; border: 1px solid #dee2e6; font-size: 11px; width: 50px;">SAP</th>
+                        <th style="padding: 4px 6px; text-align: left; border: 1px solid #dee2e6; font-size: 11px;">Commentaire</th>
+                    </tr>
+                </thead>
+                <tbody id="pw-tbody">
+                    <tr><td colspan="11" style="padding: 30px; text-align: center; color: #666;">Aucune donnée PW disponible.</td></tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+        <!-- Calendrier mensuel TPAA/PW -->
+        <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 30px;">
+            <h3 style="margin: 0 0 20px 0; color: #333;">📅 Calendrier de répartition TPAA et PW</h3>
+            <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                <p style="margin: 0; color: #666; font-size: 0.9em;">
+                    Ce calendrier affiche la répartition des travaux TPAA et PW selon leur date calculée
+                </p>
+            </div>
+            <div id="tpaaPWCalendar"></div>
+
+            <!-- Boutons de sélection des sections -->
+            <div style="display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap;">
+                <button onclick="toggleSection('hydraulique')" class="btn" style="background: linear-gradient(145deg, #3b82f6, #1d4ed8); color: white; padding: 12px 24px; font-weight: bold;">
+                    💧 Système hydraulique
+                </button>
+                <button onclick="toggleSection('nettoyage')" class="btn" style="background: linear-gradient(145deg, #10b981, #059669); color: white; padding: 12px 24px; font-weight: bold;">
+                    🧹 Nettoyage
+                </button>
+                <button onclick="toggleSection('ndt')" class="btn" style="background: linear-gradient(145deg, #f59e0b, #d97706); color: white; padding: 12px 24px; font-weight: bold;">
+                    🔍 NDT
+                </button>
+            </div>
+        </div>
+
+        <!-- Section Système hydraulique -->
+        <div id="section-hydraulique" class="section-toggle" style="display: none; background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
+            <h3 style="margin: 0 0 20px 0; color: #3b82f6;">💧 Système hydraulique</h3>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <!-- Plan -->
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px dashed #3b82f6;">
+                    <h4 style="margin: 0 0 15px 0; color: #333;">📐 Plan</h4>
+                    <div style="background: white; min-height: 550px; border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 1px solid #dee2e6;">
+                        <div style="text-align: center; color: #666;">
+                            <p style="font-size: 3em; margin: 0;">🖼️</p>
+                            <p style="margin: 10px 0 0 0;">Insérer le plan ici</p>
+                            <button onclick="window.uploadPlan('hydraulique')" style="margin-top: 10px; padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                📤 Télécharger un plan
+                            </button>
+                            <input type="file" id="hydraulique-plan-upload" accept="image/*" style="display: none;" onchange="window.handlePlanUpload(event, 'hydraulique')">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tableau -->
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h4 style="margin: 0; color: #333;">📋 Liste des éléments</h4>
+                        <button onclick="addHydrauliqueRow()" style="padding: 8px 16px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                            ➕ Ajouter
+                        </button>
+                    </div>
+                    <div style="overflow-x: auto; max-height: 550px; overflow-y: auto;">
+                        <table id="hydraulique-table" style="width: 100%; border-collapse: collapse;">
+                            <thead style="position: sticky; top: 0; background: white; z-index: 10;">
+                                <tr style="background: #4a90e2; color: white;">
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 120px; font-size: 11px; font-weight: 600;">Code</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 200px; font-size: 11px; font-weight: 600;">Nom</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 80px; font-size: 11px; font-weight: 600;">Priorité</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 90px; font-size: 11px; font-weight: 600;">Date TPAA</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 50px; font-size: 11px; font-weight: 600;">Jeudi</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 150px; font-size: 11px; font-weight: 600;">Feuille verrouillage</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 90px; font-size: 11px; font-weight: 600;">Statut</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 50px; font-size: 11px; font-weight: 600;">Photo</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 50px; font-size: 11px; font-weight: 600;">🗑️</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hydraulique-tbody">
+                                <tr>
+                                    <td colspan="9" style="padding: 20px; text-align: center; color: #666;">
+                                        Aucune donnée. Cliquez sur "➕ Ajouter" pour commencer.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+                        <button onclick="saveHydrauliqueData()" style="padding: 10px 20px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                            💾 Sauvegarder
+                        </button>
+                        <button onclick="window.exportSectionToPDF('hydraulique')" style="padding: 10px 20px; background: #dc2626; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                            📄 Exporter PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Nettoyage -->
+        <div id="section-nettoyage" class="section-toggle" style="display: none; background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
+            <h3 style="margin: 0 0 20px 0; color: #10b981;">🧹 Nettoyage</h3>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <!-- Plan -->
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px dashed #10b981;">
+                    <h4 style="margin: 0 0 15px 0; color: #333;">📐 Plan</h4>
+                    <div style="background: white; min-height: 550px; border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 1px solid #dee2e6;">
+                        <div style="text-align: center; color: #666;">
+                            <p style="font-size: 3em; margin: 0;">🖼️</p>
+                            <p style="margin: 10px 0 0 0;">Insérer le plan ici</p>
+                            <button onclick="window.uploadPlan('nettoyage')" style="margin-top: 10px; padding: 8px 16px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                📤 Télécharger un plan
+                            </button>
+                            <input type="file" id="nettoyage-plan-upload" accept="image/*" style="display: none;" onchange="window.handlePlanUpload(event, 'nettoyage')">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tableau -->
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h4 style="margin: 0; color: #333;">📋 Liste des éléments</h4>
+                        <button onclick="addNettoyageRow()" style="padding: 8px 16px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                            ➕ Ajouter
+                        </button>
+                    </div>
+                    <div style="overflow-x: auto; max-height: 550px; overflow-y: auto;">
+                        <table id="nettoyage-table" style="width: 100%; border-collapse: collapse;">
+                            <thead style="position: sticky; top: 0; background: white; z-index: 10;">
+                                <tr style="background: #10b981; color: white;">
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 120px; font-size: 11px; font-weight: 600;">Code</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 200px; font-size: 11px; font-weight: 600;">Nom</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 80px; font-size: 11px; font-weight: 600;">Priorité</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 90px; font-size: 11px; font-weight: 600;">Date TPAA</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 50px; font-size: 11px; font-weight: 600;">Jeudi</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 150px; font-size: 11px; font-weight: 600;">Feuille verrouillage</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 90px; font-size: 11px; font-weight: 600;">Statut</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 50px; font-size: 11px; font-weight: 600;">Photo</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 50px; font-size: 11px; font-weight: 600;">🗑️</th>
+                                </tr>
+                            </thead>
+                            <tbody id="nettoyage-tbody">
+                                <tr>
+                                    <td colspan="9" style="padding: 20px; text-align: center; color: #666;">
+                                        Aucune donnée. Cliquez sur "➕ Ajouter" pour commencer.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+                        <button onclick="saveNettoyageData()" style="padding: 10px 20px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                            💾 Sauvegarder
+                        </button>
+                        <button onclick="window.exportSectionToPDF('nettoyage')" style="padding: 10px 20px; background: #dc2626; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                            📄 Exporter PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section NDT -->
+        <div id="section-ndt" class="section-toggle" style="display: none; background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
+            <h3 style="margin: 0 0 20px 0; color: #f59e0b;">🔍 NDT (Contrôle Non Destructif)</h3>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <!-- Plan -->
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px dashed #f59e0b;">
+                    <h4 style="margin: 0 0 15px 0; color: #333;">📐 Plan</h4>
+                    <div style="background: white; min-height: 550px; border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 1px solid #dee2e6;">
+                        <div style="text-align: center; color: #666;">
+                            <p style="font-size: 3em; margin: 0;">🖼️</p>
+                            <p style="margin: 10px 0 0 0;">Insérer le plan ici</p>
+                            <button onclick="window.uploadPlan('ndt')" style="margin-top: 10px; padding: 8px 16px; background: #f59e0b; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                📤 Télécharger un plan
+                            </button>
+                            <input type="file" id="ndt-plan-upload" accept="image/*" style="display: none;" onchange="window.handlePlanUpload(event, 'ndt')">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tableau -->
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h4 style="margin: 0; color: #333;">📋 Liste des éléments</h4>
+                        <button onclick="addNdtRow()" style="padding: 8px 16px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                            ➕ Ajouter
+                        </button>
+                    </div>
+                    <div style="overflow-x: auto; max-height: 550px; overflow-y: auto;">
+                        <table id="ndt-table" style="width: 100%; border-collapse: collapse;">
+                            <thead style="position: sticky; top: 0; background: white; z-index: 10;">
+                                <tr style="background: #f59e0b; color: white;">
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 120px; font-size: 11px; font-weight: 600;">Code</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 200px; font-size: 11px; font-weight: 600;">Nom</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 80px; font-size: 11px; font-weight: 600;">Priorité</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 90px; font-size: 11px; font-weight: 600;">Date TPAA</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 50px; font-size: 11px; font-weight: 600;">Jeudi</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 150px; font-size: 11px; font-weight: 600;">Feuille verrouillage</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 90px; font-size: 11px; font-weight: 600;">Statut</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 50px; font-size: 11px; font-weight: 600;">Photo</th>
+                                    <th style="padding: 4px; border: 1px solid #d0d0d0; width: 50px; font-size: 11px; font-weight: 600;">🗑️</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ndt-tbody">
+                                <tr>
+                                    <td colspan="9" style="padding: 20px; text-align: center; color: #666;">
+                                        Aucune donnée. Cliquez sur "➕ Ajouter" pour commencer.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+                        <button onclick="saveNdtData()" style="padding: 10px 20px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                            💾 Sauvegarder
+                        </button>
+                        <button onclick="window.exportSectionToPDF('ndt')" style="padding: 10px 20px; background: #dc2626; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                            📄 Exporter PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

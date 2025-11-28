@@ -1,0 +1,679 @@
+<div id="detail-t14" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; margin-bottom: 20px; gap: 15px;">
+            <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">← Retour</button>
+            <h2 style="margin: 0; color: #333;">SCOPE PAR SECTEURS DES TRAVAUX - PONT ROULANT</h2>
+        </div>
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                <label style="font-weight: bold; font-size: 1.1em;">Filtrer par Poste Technique:</label>
+                <div style="position: relative; flex: 1; min-width: 300px;">
+                    <button id="t14-dropdown-btn" onclick="window.scopeActions.togglePosteDropdown('t14')" style="width: 100%; padding: 10px 15px; background: white; border: 2px solid #4299e1; border-radius: 8px; cursor: pointer; text-align: left; font-size: 1em; display: flex; justify-content: space-between; align-items: center;">
+                        <span id="t14-selected-text">Tous les postes techniques sélectionnés</span>
+                        <span style="font-size: 1.2em;">▼</span>
+                    </button>
+                    <div id="t14-dropdown-menu" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 2px solid #4299e1; border-radius: 8px; margin-top: 5px; max-height: 400px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                        <div style="padding: 10px; border-bottom: 2px solid #4299e1; background: #e3f2fd;">
+                            <p style="margin: 0; font-size: 0.9em; color: #333; font-weight: 500;">
+                                ℹ️ <strong>Sélection multiple :</strong> Cochez/décochez les cases pour choisir les postes techniques à afficher
+                            </p>
+                        </div>
+                        <div style="padding: 10px; border-bottom: 1px solid #e9ecef; background: #f8f9fa; display: flex; gap: 10px;">
+                            <button onclick="window.scopeActions.selectAllPostesTechniques('t14')" style="flex: 1; padding: 8px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.9em; font-weight: bold;">✓ Tout sélectionner</button>
+                            <button onclick="window.scopeActions.deselectAllPostesTechniques('t14')" style="flex: 1; padding: 8px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.9em; font-weight: bold;">✗ Tout désélectionner</button>
+                        </div>
+                        <div id="t14-poste-filters" style="padding: 12px; background: #fafafa; min-height: 50px;"></div>
+                    </div>
+                </div>
+                <span id="t14-filter-count" style="background: #4299e1; color: white; padding: 8px 15px; border-radius: 20px; font-weight: bold; white-space: nowrap;">0 / 0 sélectionnés</span>
+            </div>
+        </div>
+        <div style="background: white; padding: 20px; border-radius: 10px;">
+            <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0;">Opérations (<span id="t14-count">0</span>)</h3>
+                <button onclick="window.scopeActions.exportScopeToExcel('t14', 'PONT_ROULANT')" class="btn" style="background: #4299e1; color: white;">📥 Exporter Excel</button>
+            </div>
+            <div style="overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 8px;">
+                <table id="t14-table" class="summary-table" style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                    <thead style="position: sticky; top: 0; background: white; z-index: 5;">
+                        <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Statut</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Opération</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Désign. opér.</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Post.trav.opér.</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Ordre</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Poste technique</th>
+                        </tr>
+                    </thead>
+                    <tbody id="t14-tbody">
+                        <tr><td colspan="6" style="padding: 30px; text-align: center; color: #666;">Aucune donnée IW37N disponible.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <!-- Section Plan avec Marqueurs -->
+        <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
+            <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0;">📍 Plan et Localisation des Travaux</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="document.getElementById('t14-plan-upload').click()" class="btn" style="background: #4a7c59; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        📤 Charger Plan (Image/PDF)
+                    </button>
+                    <button onclick="window.scopeMarkersActions.clearScopePlan('t14')" class="btn" style="background: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        🗑️ Supprimer Plan
+                    </button>
+                </div>
+                <input type="file" id="t14-plan-upload" accept="image/*,.pdf" style="display: none;" onchange="window.scopeMarkersActions.handleScopePlanUpload(event, 't14')">
+            </div>
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #4299e1;">
+                <p style="margin: 0; color: #666; font-size: 0.9em;">
+                    <strong>Instructions:</strong> Importez un ou plusieurs plans (images/PDF). Sélectionnez un travail dans la liste, puis cliquez sur le plan pour placer un marqueur.
+                </p>
+            </div>
+
+            <!-- Sélecteur de plans -->
+            <div id="t14-plan-selector" style="background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #dee2e6;">
+                <p style="color: #999; font-size: 0.9em;">Aucun plan chargé</p>
+            </div>
+
+            <!-- Sélecteur de travaux pour marqueurs -->
+            <div id="t14-work-selector-container" style="background: #fffbf0; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ffc107;">
+                <p style="color: #999; font-size: 0.9em;">Chargez d'abord les données IW37N et un plan</p>
+            </div>
+
+            <div id="t14-plan-container" style="border: 2px dashed #dee2e6; border-radius: 8px; padding: 20px; min-height: 300px; background: #fafafa; text-align: center; overflow: auto;">
+                <p style="color: #666; padding: 40px;">Aucun plan chargé. Utilisez le bouton "Charger Plan" ci-dessus.</p>
+            </div>
+        </div>
+
+        <!-- Section GANTT PONT ROULANT -->
+        <div style="background: white; padding: 15px; border-radius: 10px; margin-top: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3 style="margin: 0; color: #333; font-size: 18px;">📊 Planning Pont Roulant - Gantt</h3>
+                <div style="display: flex; gap: 8px;">
+                    <button onclick="window.ganttPontRoulant.addSection()" class="btn" style="background: #667eea; color: white; padding: 6px 12px; font-size: 13px;">
+                        ➕ Section
+                    </button>
+                    <button onclick="window.ganttPontRoulant.save()" class="btn" style="background: #4299e1; color: white; padding: 6px 12px; font-size: 13px;">
+                        💾 Sauvegarder
+                    </button>
+                    <button onclick="window.ganttPontRoulant.exportToExcel()" class="btn" style="background: #28a745; color: white; padding: 6px 12px; font-size: 13px;">
+                        📥 Excel
+                    </button>
+                </div>
+            </div>
+
+            <!-- Info bulle compacte -->
+            <div style="background: #e3f2fd; padding: 6px 10px; border-radius: 6px; margin-bottom: 10px; border-left: 3px solid #2196f3;">
+                <p style="margin: 0; font-size: 12px; color: #1565c0;">
+                    💡 <strong>Clic</strong> = Colorier | <strong>Double-clic</strong> = Texte/Commentaire
+                </p>
+            </div>
+
+            <!-- Palette de couleurs compacte -->
+            <div style="background: #f8f9fa; padding: 8px 12px; border-radius: 6px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                <label style="font-weight: 600; font-size: 12px;">Couleur :</label>
+                <div onclick="window.ganttPontRoulant.setColor('#4299e1')" style="width: 28px; height: 28px; background: #4299e1; border: 2px solid #333; cursor: pointer; border-radius: 4px;" title="Bleu"></div>
+                <div onclick="window.ganttPontRoulant.setColor('#dc3545')" style="width: 28px; height: 28px; background: #dc3545; border: 2px solid #ddd; cursor: pointer; border-radius: 4px;" title="Rouge"></div>
+                <div onclick="window.ganttPontRoulant.setColor('#ffc107')" style="width: 28px; height: 28px; background: #ffc107; border: 2px solid #ddd; cursor: pointer; border-radius: 4px;" title="Orange"></div>
+                <div onclick="window.ganttPontRoulant.setColor('#28a745')" style="width: 28px; height: 28px; background: #28a745; border: 2px solid #ddd; cursor: pointer; border-radius: 4px;" title="Vert"></div>
+                <div onclick="window.ganttPontRoulant.setColor('#9c27b0')" style="width: 28px; height: 28px; background: #9c27b0; border: 2px solid #ddd; cursor: pointer; border-radius: 4px;" title="Violet"></div>
+                <div onclick="window.ganttPontRoulant.setColor('#6c757d')" style="width: 28px; height: 28px; background: #6c757d; border: 2px solid #ddd; cursor: pointer; border-radius: 4px;" title="Gris"></div>
+                <div onclick="window.ganttPontRoulant.setColor('#ffffff')" style="width: 28px; height: 28px; background: #ffffff; border: 2px solid #333; cursor: pointer; border-radius: 4px;" title="Blanc"></div>
+                <input type="color" id="gantt-color-picker" onchange="window.ganttPontRoulant.setColor(this.value)" style="width: 32px; height: 32px; border: none; cursor: pointer;" title="Personnalisée">
+                <span id="gantt-current-color" style="margin-left: 5px; font-weight: 600; color: #4299e1; font-size: 12px;">Bleu</span>
+            </div>
+
+            <!-- Table Gantt -->
+            <div style="overflow-x: auto; overflow-y: auto; max-height: 70vh; border: 2px solid #dee2e6; border-radius: 8px;">
+                <table id="gantt-table" style="border-collapse: collapse; width: max-content; min-width: 100%; font-size: 12px;">
+                    <thead style="position: sticky; top: 0; background: white; z-index: 10;">
+                        <tr>
+                            <th style="padding: 6px; border: 1px solid #dee2e6; background: #667eea; color: white; min-width: 90px; position: sticky; left: 0; z-index: 11; font-size: 11px;">Groupe</th>
+                            <th style="padding: 6px; border: 1px solid #dee2e6; background: #667eea; color: white; min-width: 110px; position: sticky; left: 90px; z-index: 11; font-size: 11px;">Externe</th>
+                            <th style="padding: 6px; border: 1px solid #dee2e6; background: #764ba2; color: white; min-width: 70px; font-size: 11px;">Actions</th>
+                            <!-- Les colonnes de dates seront générées dynamiquement -->
+                        </tr>
+                    </thead>
+                    <tbody id="gantt-tbody">
+                        <tr>
+                            <td colspan="50" style="padding: 30px; text-align: center; color: #666;">
+                                Initialisation des sections PR1, PR2, 22T, 55T...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Modal d'édition de cellule -->
+            <div id="gantt-cell-modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 25px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); z-index: 10000; min-width: 400px; border: 3px solid #667eea;">
+                <h3 style="margin: 0 0 10px 0; color: #333; border-bottom: 2px solid #667eea; padding-bottom: 10px;">
+                    ✏️ Éditer la cellule
+                </h3>
+
+                <div style="background: #f8f9fa; padding: 8px; border-radius: 6px; margin-bottom: 15px; font-size: 12px; color: #666;">
+                    💡 Raccourci : <strong>Entrée</strong> pour valider rapidement
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #555;">Texte / Numéro :</label>
+                    <input type="text" id="gantt-modal-text" placeholder="Ex: 2, 4, A, B..." style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;" onkeypress="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); window.ganttPontRoulant.saveModal(); }">
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #555;">Commentaire :</label>
+                    <textarea id="gantt-modal-comment" rows="3" placeholder="Ajouter un commentaire..." style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px; font-family: inherit; resize: vertical;" onkeypress="if(event.key === 'Enter' && event.ctrlKey) { event.preventDefault(); window.ganttPontRoulant.saveModal(); }"></textarea>
+                </div>
+
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button onclick="window.ganttPontRoulant.closeModal()" class="btn" style="background: #6c757d; color: white; padding: 10px 20px;">
+                        ❌ Annuler
+                    </button>
+                    <button onclick="window.ganttPontRoulant.clearCell()" class="btn" style="background: #dc3545; color: white; padding: 10px 20px;">
+                        🗑️ Effacer
+                    </button>
+                    <button onclick="window.ganttPontRoulant.saveModal()" class="btn" style="background: #28a745; color: white; padding: 10px 20px;">
+                        ✅ Valider
+                    </button>
+                </div>
+            </div>
+
+            <!-- Overlay pour le modal -->
+            <div id="gantt-modal-overlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 9999;" onclick="window.ganttPontRoulant.closeModal()"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .gantt-cell {
+        min-width: 45px;
+        width: 45px;
+        height: 35px;
+        border: 1px solid #dee2e6;
+        cursor: pointer;
+        position: relative;
+        text-align: center;
+        vertical-align: middle;
+        transition: all 0.15s;
+        padding: 2px;
+    }
+
+    .gantt-cell:hover {
+        border: 2px solid #333;
+        box-shadow: 0 0 5px rgba(0,0,0,0.3);
+        transform: scale(1.05);
+    }
+
+    .gantt-cell-content {
+        font-weight: 700;
+        font-size: 13px;
+        line-height: 1;
+    }
+
+    .gantt-cell-comment {
+        position: absolute;
+        top: 1px;
+        right: 1px;
+        width: 10px;
+        height: 10px;
+        background: #ff6b6b;
+        border-radius: 50%;
+        font-size: 7px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .group-header-cell {
+        background: #f8f9fa;
+        font-weight: 700;
+        position: sticky;
+        left: 0;
+        z-index: 5;
+        padding: 6px !important;
+    }
+
+    .external-name-cell {
+        background: #f8f9fa;
+        font-weight: 600;
+        position: sticky;
+        left: 90px;
+        z-index: 5;
+        padding: 6px !important;
+    }
+</style>
+
+<script>
+    // Gestionnaire du Gantt Pont Roulant
+    window.ganttPontRoulant = {
+        currentColor: '#4299e1',
+        currentColorName: 'Bleu',
+        ganttData: {
+            dates: [],
+            sections: []  // Changé de rows à sections
+        },
+
+        // Définir la couleur actuelle
+        setColor(color) {
+            this.currentColor = color;
+
+            // Mettre à jour l'interface
+            document.querySelectorAll('[onclick*="setColor"]').forEach(el => {
+                el.style.border = '2px solid #ddd';
+            });
+            event.target.style.border = '3px solid #333';
+
+            // Mettre à jour le texte
+            const colorNames = {
+                '#4299e1': 'Bleu',
+                '#dc3545': 'Rouge',
+                '#ffc107': 'Orange',
+                '#28a745': 'Vert',
+                '#9c27b0': 'Violet',
+                '#6c757d': 'Gris',
+                '#ffffff': 'Blanc'
+            };
+
+            const colorName = colorNames[color] || 'Personnalisé';
+            document.getElementById('gantt-current-color').textContent = colorName;
+            document.getElementById('gantt-current-color').style.color = color === '#ffffff' ? '#333' : color;
+        },
+
+        // Initialiser les dates depuis les paramètres de l'arrêt
+        initDates() {
+            if (this.ganttData.dates.length === 0) {
+                // Récupérer les dates depuis arretData
+                let startDate, endDate;
+
+                if (window.arretData && window.arretData.dateDebut && window.arretData.dateFin) {
+                    startDate = new Date(window.arretData.dateDebut);
+                    endDate = new Date(window.arretData.dateFin);
+                } else {
+                    // Dates par défaut si non définies
+                    startDate = new Date('2026-04-01');
+                    endDate = new Date('2026-04-15');
+                }
+
+                const dayNames = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+                const monthNames = ['jan', 'fév', 'mar', 'avr', 'mai', 'juin', 'juil', 'août', 'sep', 'oct', 'nov', 'déc'];
+
+                // Générer toutes les dates entre dateDebut et dateFin
+                const currentDate = new Date(startDate);
+                while (currentDate <= endDate) {
+                    this.ganttData.dates.push({
+                        date: currentDate.toISOString().split('T')[0],
+                        display: `${dayNames[currentDate.getDay()]}\n${currentDate.getDate().toString().padStart(2, '0')}-${monthNames[currentDate.getMonth()]}`
+                    });
+
+                    // Passer au jour suivant
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+
+                console.log(`[GANTT] ${this.ganttData.dates.length} jours générés du ${startDate.toLocaleDateString()} au ${endDate.toLocaleDateString()}`);
+            }
+        },
+
+        // Initialiser les sections par défaut
+        initDefaultSections() {
+            if (this.ganttData.sections.length === 0) {
+                const defaultSections = ['PR1', 'PR2', '22T', '55T'];
+                defaultSections.forEach(sectionName => {
+                    this.ganttData.sections.push({
+                        name: sectionName,
+                        subcontractors: []
+                    });
+                });
+            }
+        },
+
+        // Ajouter une nouvelle section
+        addSection() {
+            const sectionName = prompt('Nom de la nouvelle section (ex: 5ST, DUAL, etc.):');
+            if (!sectionName) return;
+
+            this.initDates();
+
+            this.ganttData.sections.push({
+                name: sectionName.toUpperCase(),
+                subcontractors: []
+            });
+
+            this.render();
+        },
+
+        // Ajouter un sous-traitant à une section
+        addSubcontractor(sectionIndex) {
+            const externe = prompt('Nom du sous-traitant (ex: TPAA, COH, Socomec, LS, Mistras, etc.):');
+            if (!externe) return;
+
+            this.initDates();
+
+            const subcontractor = {
+                name: externe,
+                cells: {}
+            };
+
+            // Initialiser les cellules vides
+            this.ganttData.dates.forEach(dateObj => {
+                subcontractor.cells[dateObj.date] = {
+                    color: '#ffffff',
+                    text: '',
+                    comment: ''
+                };
+            });
+
+            this.ganttData.sections[sectionIndex].subcontractors.push(subcontractor);
+            this.render();
+        },
+
+        // Supprimer une section
+        deleteSection(sectionIndex) {
+            const section = this.ganttData.sections[sectionIndex];
+            if (confirm(`Voulez-vous vraiment supprimer la section "${section.name}" et tous ses sous-traitants ?`)) {
+                this.ganttData.sections.splice(sectionIndex, 1);
+                this.render();
+            }
+        },
+
+        // Supprimer un sous-traitant
+        deleteSubcontractor(sectionIndex, subIndex) {
+            const section = this.ganttData.sections[sectionIndex];
+            const sub = section.subcontractors[subIndex];
+            if (confirm(`Voulez-vous vraiment supprimer "${sub.name}" de la section "${section.name}" ?`)) {
+                section.subcontractors.splice(subIndex, 1);
+                this.render();
+            }
+        },
+
+        // Variables pour gérer le modal
+        currentEditCell: null,
+
+        // Simple clic sur une cellule - Appliquer la couleur
+        onCellClick(sectionIndex, subIndex, dateKey) {
+            const section = this.ganttData.sections[sectionIndex];
+            const subcontractor = section.subcontractors[subIndex];
+            const cell = subcontractor.cells[dateKey];
+
+            // Appliquer seulement la couleur
+            cell.color = this.currentColor;
+
+            this.render();
+        },
+
+        // Double-clic sur une cellule - Éditer texte et commentaire
+        onCellDoubleClick(sectionIndex, subIndex, dateKey) {
+            const section = this.ganttData.sections[sectionIndex];
+            const subcontractor = section.subcontractors[subIndex];
+            const cell = subcontractor.cells[dateKey];
+
+            // Sauvegarder la référence de la cellule en cours d'édition
+            this.currentEditCell = {
+                sectionIndex: sectionIndex,
+                subIndex: subIndex,
+                dateKey: dateKey
+            };
+
+            // Remplir le modal avec les valeurs actuelles
+            document.getElementById('gantt-modal-text').value = cell.text || '';
+            document.getElementById('gantt-modal-comment').value = cell.comment || '';
+
+            // Afficher le modal
+            document.getElementById('gantt-cell-modal').style.display = 'block';
+            document.getElementById('gantt-modal-overlay').style.display = 'block';
+
+            // Focus sur le champ texte
+            setTimeout(() => {
+                document.getElementById('gantt-modal-text').focus();
+            }, 100);
+        },
+
+        // Fermer le modal
+        closeModal() {
+            document.getElementById('gantt-cell-modal').style.display = 'none';
+            document.getElementById('gantt-modal-overlay').style.display = 'none';
+            this.currentEditCell = null;
+        },
+
+        // Sauvegarder les modifications du modal
+        saveModal() {
+            if (!this.currentEditCell) return;
+
+            const { sectionIndex, subIndex, dateKey } = this.currentEditCell;
+            const section = this.ganttData.sections[sectionIndex];
+            const subcontractor = section.subcontractors[subIndex];
+            const cell = subcontractor.cells[dateKey];
+
+            // Récupérer les valeurs du modal
+            cell.text = document.getElementById('gantt-modal-text').value.trim();
+            cell.comment = document.getElementById('gantt-modal-comment').value.trim();
+
+            this.closeModal();
+            this.render();
+        },
+
+        // Effacer la cellule
+        clearCell() {
+            if (!this.currentEditCell) return;
+
+            const { sectionIndex, subIndex, dateKey } = this.currentEditCell;
+            const section = this.ganttData.sections[sectionIndex];
+            const subcontractor = section.subcontractors[subIndex];
+            const cell = subcontractor.cells[dateKey];
+
+            // Réinitialiser la cellule
+            cell.color = '#ffffff';
+            cell.text = '';
+            cell.comment = '';
+
+            this.closeModal();
+            this.render();
+        },
+
+        // Afficher le Gantt
+        render() {
+            this.initDates();
+            this.initDefaultSections();
+
+            const thead = document.querySelector('#gantt-table thead tr');
+            const tbody = document.getElementById('gantt-tbody');
+
+            // Nettoyer et reconstruire les en-têtes de dates
+            while (thead.children.length > 3) {
+                thead.removeChild(thead.lastChild);
+            }
+
+            this.ganttData.dates.forEach(dateObj => {
+                const th = document.createElement('th');
+                th.style.cssText = 'padding: 4px 2px; border: 1px solid #dee2e6; background: #764ba2; color: white; min-width: 45px; max-width: 45px; font-size: 10px; white-space: pre-line; line-height: 1.2;';
+                th.textContent = dateObj.display;
+                thead.appendChild(th);
+            });
+
+            // Nettoyer et reconstruire le tbody
+            tbody.innerHTML = '';
+
+            // Parcourir chaque section
+            this.ganttData.sections.forEach((section, sectionIndex) => {
+                // Ligne d'en-tête de section
+                const trHeader = document.createElement('tr');
+                trHeader.style.background = '#e3f2fd';
+
+                // Colonne Groupe (nom de section) - span sur toutes les colonnes sauf Actions
+                const tdSection = document.createElement('td');
+                tdSection.colSpan = 2;
+                tdSection.className = 'group-header-cell';
+                tdSection.style.cssText = 'padding: 6px; border: 2px solid #4299e1; font-weight: 800; font-size: 13px; background: linear-gradient(145deg, #667eea, #764ba2); color: white; position: sticky; left: 0; z-index: 6;';
+                tdSection.textContent = section.name;
+                trHeader.appendChild(tdSection);
+
+                // Colonne Actions de la section
+                const tdSectionActions = document.createElement('td');
+                tdSectionActions.style.cssText = 'padding: 4px; border: 2px solid #4299e1; text-align: center; background: #e3f2fd;';
+
+                const addSubBtn = document.createElement('button');
+                addSubBtn.textContent = '➕';
+                addSubBtn.className = 'btn';
+                addSubBtn.title = 'Ajouter un sous-traitant';
+                addSubBtn.style.cssText = 'background: #28a745; color: white; padding: 3px 6px; font-size: 12px; margin-right: 3px;';
+                addSubBtn.onclick = () => this.addSubcontractor(sectionIndex);
+                tdSectionActions.appendChild(addSubBtn);
+
+                const deleteSectionBtn = document.createElement('button');
+                deleteSectionBtn.textContent = '🗑️';
+                deleteSectionBtn.className = 'btn';
+                deleteSectionBtn.title = 'Supprimer la section';
+                deleteSectionBtn.style.cssText = 'background: #dc3545; color: white; padding: 3px 6px; font-size: 12px;';
+                deleteSectionBtn.onclick = () => this.deleteSection(sectionIndex);
+                tdSectionActions.appendChild(deleteSectionBtn);
+
+                trHeader.appendChild(tdSectionActions);
+
+                // Colonnes de dates vides pour l'en-tête de section
+                this.ganttData.dates.forEach(() => {
+                    const td = document.createElement('td');
+                    td.style.cssText = 'border: 2px solid #4299e1; background: #e3f2fd;';
+                    trHeader.appendChild(td);
+                });
+
+                tbody.appendChild(trHeader);
+
+                // Lignes des sous-traitants
+                section.subcontractors.forEach((subcontractor, subIndex) => {
+                    const tr = document.createElement('tr');
+
+                    // Colonne Groupe (vide, juste pour l'alignement)
+                    const tdEmpty = document.createElement('td');
+                    tdEmpty.className = 'group-header-cell';
+                    tdEmpty.style.cssText = 'padding: 5px; border: 1px solid #dee2e6; background: #fafafa; font-size: 11px;';
+                    tr.appendChild(tdEmpty);
+
+                    // Colonne Externe (nom du sous-traitant)
+                    const tdExterne = document.createElement('td');
+                    tdExterne.className = 'external-name-cell';
+                    tdExterne.style.cssText = 'padding: 5px; border: 1px solid #dee2e6; font-weight: 600; background: #fafafa; font-size: 11px;';
+                    tdExterne.textContent = subcontractor.name;
+                    tr.appendChild(tdExterne);
+
+                    // Colonne Actions
+                    const tdActions = document.createElement('td');
+                    tdActions.style.cssText = 'padding: 4px; border: 1px solid #dee2e6; text-align: center;';
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.textContent = '🗑️';
+                    deleteBtn.className = 'btn';
+                    deleteBtn.title = 'Supprimer le sous-traitant';
+                    deleteBtn.style.cssText = 'background: #dc3545; color: white; padding: 3px 6px; font-size: 11px;';
+                    deleteBtn.onclick = () => this.deleteSubcontractor(sectionIndex, subIndex);
+                    tdActions.appendChild(deleteBtn);
+                    tr.appendChild(tdActions);
+
+                    // Colonnes de dates
+                    this.ganttData.dates.forEach(dateObj => {
+                        const cell = subcontractor.cells[dateObj.date];
+                        const td = document.createElement('td');
+                        td.className = 'gantt-cell';
+                        td.style.background = cell.color;
+
+                        // Simple clic = Colorier
+                        td.onclick = () => this.onCellClick(sectionIndex, subIndex, dateObj.date);
+
+                        // Double-clic = Éditer texte/commentaire
+                        td.ondblclick = () => this.onCellDoubleClick(sectionIndex, subIndex, dateObj.date);
+
+                        if (cell.text) {
+                            const content = document.createElement('div');
+                            content.className = 'gantt-cell-content';
+                            content.textContent = cell.text;
+                            td.appendChild(content);
+                        }
+
+                        if (cell.comment) {
+                            const commentIndicator = document.createElement('div');
+                            commentIndicator.className = 'gantt-cell-comment';
+                            commentIndicator.textContent = '💬';
+                            commentIndicator.title = cell.comment;
+                            td.appendChild(commentIndicator);
+                        }
+
+                        tr.appendChild(td);
+                    });
+
+                    tbody.appendChild(tr);
+                });
+            });
+        },
+
+        // Sauvegarder les données
+        async save() {
+            if (!window.arretData || !window.arretData.phases) {
+                alert('Erreur : Données non chargées');
+                return;
+            }
+
+            // Trouver la tâche t14
+            for (const phase of window.arretData.phases) {
+                const task = phase.taches.find(t => t.id === 't14');
+                if (task) {
+                    // Créer un objet pour stocker les données du gantt
+                    if (!task.ganttData) {
+                        task.ganttData = {};
+                    }
+                    task.ganttData.pontRoulant = this.ganttData;
+                    break;
+                }
+            }
+
+            // Sauvegarder sur le serveur
+            if (window.saveToStorage) {
+                await window.saveToStorage('arretData', window.arretData);
+                alert('Planning Gantt sauvegarde avec succes !');
+            }
+        },
+
+        // Charger les données
+        load() {
+            if (!window.arretData || !window.arretData.phases) return;
+
+            for (const phase of window.arretData.phases) {
+                const task = phase.taches.find(t => t.id === 't14');
+                if (task && task.ganttData && task.ganttData.pontRoulant) {
+                    this.ganttData = task.ganttData.pontRoulant;
+                    this.render();
+                    return;
+                }
+            }
+
+            // Si pas de données, initialiser
+            this.render();
+        },
+
+        // Exporter vers Excel
+        exportToExcel() {
+            alert('Fonction d\'export Excel en cours de developpement');
+        },
+
+        // Initialiser au chargement de la page
+        init() {
+            this.load();
+        }
+    };
+
+    // Observer le changement de visibilité de la page
+    const ganttObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class') {
+                const page = document.getElementById('detail-t14');
+                if (page && page.classList.contains('active')) {
+                    window.ganttPontRoulant.init();
+                }
+            }
+        });
+    });
+
+    const ganttPageElement = document.getElementById('detail-t14');
+    if (ganttPageElement) {
+        ganttObserver.observe(ganttPageElement, { attributes: true });
+    }
+</script>

@@ -1,0 +1,56 @@
+<div id="detail-equipe" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                    ← Retour
+                </button>
+                <h2 style="margin: 0; color: #333;">ÉQUIPE DE GESTION D'ARRÊTS</h2>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="window.teamActions.addMember()" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                    ➕ Ajouter un membre
+                </button>
+                <button onclick="window.teamActions.exportToExcel()" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                    📊 Exporter Excel
+                </button>
+            </div>
+        </div>
+
+        <!-- Organigramme -->
+        <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <h3 style="margin: 0 0 15px 0; color: #333;">Organigramme</h3>
+            <div id="organigramme" style="min-height: 200px;">
+                <div style="text-align: center; padding: 50px; color: #666;">
+                    <p>Aucun membre dans l'équipe. Ajoutez des membres pour afficher l'organigramme.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tableau des membres -->
+        <div style="background: white; padding: 20px; border-radius: 10px;">
+            <h3 style="margin: 0 0 15px 0; color: #333;">Liste des Membres (<span id="teamCount">0</span>)</h3>
+
+            <div style="overflow-x: auto;">
+                <table id="team-table" class="summary-table" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 200px;">Nom</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 200px;">Rôle</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 150px;">Téléphone</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 250px;">Adresse Mail</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 100px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teamTableBody">
+                        <tr>
+                            <td colspan="5" style="padding: 30px; text-align: center; color: #666;">
+                                Aucun membre dans l'équipe. Cliquez sur "Ajouter un membre" pour commencer.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

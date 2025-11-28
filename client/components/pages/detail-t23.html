@@ -1,0 +1,62 @@
+<div id="detail-t23" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                    ← Retour
+                </button>
+                <h2 style="margin: 0; color: #333;">🤝 RENCONTRE DE DÉFINITION D'ARRÊT</h2>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin-bottom: 25px; border-left: 4px solid #2196f3;">
+            <h3 style="margin: 0 0 10px 0; color: #1565c0;">
+                ℹ️ À propos
+            </h3>
+            <p style="margin: 0; color: #333; line-height: 1.6;">
+                Cette page permet de planifier et documenter la rencontre de définition de l'arrêt annuel.
+                Définissez les objectifs, participants et points à l'ordre du jour.
+            </p>
+        </div>
+
+        <!-- Content Area -->
+        <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <h3 style="margin: 0 0 20px 0; color: #667eea;">
+                📋 Informations de la Rencontre
+            </h3>
+
+            <div style="display: grid; gap: 20px;">
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Date de la rencontre</label>
+                    <input type="date" id="meetingDate" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px;">
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Participants</label>
+                    <textarea id="participants" rows="4" placeholder="Liste des participants..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Ordre du jour</label>
+                    <textarea id="agenda" rows="6" placeholder="Points à discuter..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Notes et décisions</label>
+                    <textarea id="notes" rows="6" placeholder="Résumé de la rencontre et décisions prises..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 20px;">
+                <button onclick="alert('Sauvegarde des données...')"
+                        class="btn" style="background: #28a745; color: white; padding: 12px 30px;">
+                    💾 Sauvegarder
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+<div id="detail-travaux-entrepreneur" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; margin-bottom: 20px; gap: 15px;">
+            <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                ← Retour
+            </button>
+            <h2 style="margin: 0; color: #333;">👷 Déterminer les Travaux à Faire par l'Entrepreneur</h2>
+        </div>
+
+        <!-- Description -->
+        <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <p style="margin: 0 0 20px 0; color: #666;">
+                Cette page affiche tous les travaux depuis IW37N et permet de les filtrer par <strong>Post.trav.opér.</strong>
+            </p>
+
+            <!-- Boutons de contrôle -->
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
+                <!-- Menu déroulant de filtre -->
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <label style="font-weight: 600;">Filtrer par Post.trav.opér.:</label>
+                    <select id="entrepreneurPosteFilter" onchange="window.entrepreneurActions.filterByPoste(this.value)"
+                            style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px; min-width: 250px;">
+                        <option value="">-- Tous les postes --</option>
+                    </select>
+                </div>
+
+                <!-- Boutons d'action -->
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="window.entrepreneurActions.syncFromIw37n()" class="btn"
+                            style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                        🔄 Synchroniser avec IW37N
+                    </button>
+                    <button onclick="window.entrepreneurActions.exportToExcel()" class="btn"
+                            style="background: linear-gradient(145deg, #007bff, #0056b3); color: white; padding: 10px 20px;">
+                        📊 Exporter Excel
+                    </button>
+                </div>
+            </div>
+
+            <!-- Compteur -->
+            <div style="padding: 10px; background: #e3f2fd; border-radius: 5px; display: inline-block;">
+                <strong>Total de travaux: <span id="entrepreneurCount">0</span></strong>
+            </div>
+        </div>
+
+        <!-- Tableau des travaux -->
+        <div style="background: white; padding: 20px; border-radius: 10px;">
+            <div style="overflow-x: auto;">
+                <table id="entrepreneurTable" class="summary-table" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: linear-gradient(145deg, #495057, #343a40); color: white;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Ordre</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6;">Opération</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Désign. opér.</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Poste technique</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Post.trav.opér.</th>
+                        </tr>
+                    </thead>
+                    <tbody id="entrepreneurTableBody">
+                        <tr>
+                            <td colspan="5" style="padding: 30px; text-align: center; color: #666;">
+                                Cliquez sur "Synchroniser avec IW37N" pour charger les données.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

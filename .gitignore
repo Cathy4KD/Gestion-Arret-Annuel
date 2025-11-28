@@ -1,0 +1,46 @@
+﻿# Dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Data and backups
+server/data/backups/
+server/data/backups-daily/
+server/data/application-data.json
+server/data/application-data.json.tmp
+
+# Uploads
+server/uploads/*
+\!server/uploads/.gitkeep
+
+# Generated documents
+generated-docs/*
+\!generated-docs/.gitkeep
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary
+*.tmp
+*.bak
+*.old
+~*
+
+# Backups locaux
+BACKUP-AVANT-NETTOYAGE-*/
+
+# Fichiers divers
+nul
+consommables.png

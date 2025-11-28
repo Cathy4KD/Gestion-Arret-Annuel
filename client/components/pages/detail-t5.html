@@ -1,0 +1,44 @@
+<div id="detail-t5" class="page">
+                    <div class="summary-container">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                            <h2 style="margin: 0; color: #333;">CONVOQUER RENCONTRE DE DÉFINITION ET CONCERTATION DE L'ARRÊT</h2>
+                        </div>
+
+                        <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                            <h3 style="margin: 0 0 20px 0; color: #667eea;">📋 Informations sur la Rencontre</h3>
+
+                            <div style="display: grid; gap: 20px;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Date de la Rencontre:</label>
+                                    <input type="date" id="rencontre-date" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px;">
+                                </div>
+
+                                <div>
+                                    <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Participants:</label>
+                                    <textarea id="rencontre-participants" rows="4" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px;" placeholder="Liste des participants..."></textarea>
+                                </div>
+
+                                <div>
+                                    <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Implication du Service Incendie:</label>
+                                    <textarea id="rencontre-incendie" rows="3" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px;" placeholder="Détails de l'implication du service incendie..."></textarea>
+                                </div>
+
+                                <div>
+                                    <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Ordre du Jour:</label>
+                                    <textarea id="rencontre-agenda" rows="6" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px;" placeholder="Points à l'ordre du jour..."></textarea>
+                                </div>
+
+                                <div>
+                                    <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Compte-Rendu / Notes:</label>
+                                    <textarea id="rencontre-notes" rows="8" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px;" placeholder="Compte-rendu de la rencontre..."></textarea>
+                                </div>
+
+                                <div style="display: flex; gap: 10px;">
+                                    <button onclick="saveRencontreData()" style="padding: 12px 24px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">💾 Sauvegarder</button>
+                                    <button onclick="loadRencontreData()" style="padding: 12px 24px; background: #17a2b8; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">🔄 Recharger</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-suivi-pieces-delai</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+<div id="detail-suivi-pieces-delai" class="page">
+    <div class="summary-container" style="max-width: 98%; padding: 20px;">
+        <!-- En-tête principal -->
+        <div style="display: flex; align-items: center; margin-bottom: 25px;">
+            <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+            <h2 style="margin: 0; color: #333;">📦 SUIVI DES LOTS MAGASIN - COMMANDES À LONG DÉLAI</h2>
+        </div>
+
+        <!-- Légende des couleurs globale -->
+        <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin-bottom: 25px; border-left: 4px solid #667eea;">
+            <p style="margin: 0; font-weight: bold; color: #333;">🎨 Légende des statuts:</p>
+            <p style="margin: 8px 0 0 0; color: #555;">
+                <span style="display: inline-block; width: 20px; height: 15px; background: #f8d7da; border: 1px solid #ccc; margin-right: 5px; vertical-align: middle;"></span> <strong>Rouge</strong> = À commander |
+                <span style="display: inline-block; width: 20px; height: 15px; background: #ffe0b2; border: 1px solid #ccc; margin: 0 5px; vertical-align: middle;"></span> <strong>Orange</strong> = Commandé/En transit |
+                <span style="display: inline-block; width: 20px; height: 15px; background: #d4edda; border: 1px solid #ccc; margin: 0 5px; vertical-align: middle;"></span> <strong>Vert</strong> = Reçu |
+                <span style="display: inline-block; width: 20px; height: 15px; background: #e0e0e0; border: 1px solid #ccc; margin: 0 5px; vertical-align: middle;"></span> <strong>Gris</strong> = Annulé
+            </p>
+        </div>
+
+        <!-- SECTION 1: Pièces > 90 jours -->
+        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 25px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 3px solid #dc3545; padding-bottom: 10px;">
+                <h3 style="margin: 0; color: #dc3545;">🔴 Pièces avec Délai > 90 Jours</h3>
+                <div>
+                    <button onclick="syncT30FromIW38()" style="padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 10px;">🔄 Charger depuis Gestion des Pièces</button>
+                    <button onclick="exportT30ToExcel()" style="padding: 10px 20px; background: #4299e1; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">📥 Exporter Excel</button>
+                </div>
+            </div>
+
+            <!-- Barre de recherche et tri -->
+            <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                <div style="flex: 1;">
+                    <input type="text" placeholder="🔍 Rechercher par Ordre, Désignation ou Article..."
+                           oninput="window.updateT30Search(this.value)"
+                           style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px;">
+                </div>
+                <button onclick="window.toggleT30Sort()"
+                        style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; white-space: nowrap;">
+                    ⇅ Trier par Délai
+                </button>
+            </div>
+
+            <p style="color: #000000; margin-bottom: 10px;">Total de pièces: <strong><span id="t30Count">0</span></strong></p>
+            <p style="color: #dc3545; margin-bottom: 15px; font-style: italic;">⚠️ Les pièces avec un délai > 120 jours sont affichées en rouge foncé (très urgent)</p>
+
+            <div style="overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 8px;">
+                <table style="width: 100%; border-collapse: collapse; background: white;">
+                    <thead style="position: sticky; top: 0; background: white; z-index: 5;">
+                        <tr style="background: linear-gradient(145deg, #dc3545, #c82333); color: white;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 8%;">Ordre</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 20%;">Désignation composant</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 10%;">Article</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 7%;">Qté réservée</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 5%;">Unité</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 8%;">Délai (jours)</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 10%;">Date commande</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 10%;">Statut</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 22%;">Remarques</th>
+                        </tr>
+                    </thead>
+                    <tbody id="t30TableBody">
+                        <tr>
+                            <td colspan="9" style="padding: 30px; text-align: center; color: #666; border: 1px solid #dee2e6;">
+                                Aucune pièce avec délai > 90 jours. Cliquez sur "🔄 Charger depuis Gestion des Pièces" pour charger les données.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECTION 2: Pièces 60-89 jours -->
+        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 25px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 3px solid #ff8c00; padding-bottom: 10px;">
+                <h3 style="margin: 0; color: #ff8c00;">🟠 Pièces avec Délai 60-89 Jours</h3>
+                <div>
+                    <button onclick="syncT60FromIW38()" style="padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 10px;">🔄 Charger depuis Gestion des Pièces</button>
+                    <button onclick="exportT60ToExcel()" style="padding: 10px 20px; background: #4299e1; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">📥 Exporter Excel</button>
+                </div>
+            </div>
+
+            <p style="color: #000000; margin-bottom: 10px;">Total de pièces: <strong><span id="t60Count">0</span></strong></p>
+            <p style="color: #ff8c00; margin-bottom: 15px; font-style: italic;">⚠️ Les pièces avec un délai >= 75 jours sont affichées en orange (urgent)</p>
+
+            <div style="overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 8px;">
+                <table style="width: 100%; border-collapse: collapse; background: white;">
+                    <thead style="position: sticky; top: 0; background: white; z-index: 5;">
+                        <tr style="background: linear-gradient(145deg, #ff8c00, #e67e00); color: white;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 8%;">Ordre</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 22%;">Désignation composant</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 7%;">Qté réservée</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 5%;">Unité</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 8%;">Délai (jours)</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 10%;">Date commande</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 14%;">Fournisseur</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 12%;">Statut</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 14%;">Remarques</th>
+                        </tr>
+                    </thead>
+                    <tbody id="t60TableBody">
+                        <tr>
+                            <td colspan="9" style="padding: 30px; text-align: center; color: #666; border: 1px solid #dee2e6;">
+                                Aucune pièce avec délai 60-89 jours. Cliquez sur "🔄 Charger depuis Gestion des Pièces" pour charger les données.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECTION 3: Pièces 30-59 jours -->
+        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 3px solid #ffc107; padding-bottom: 10px;">
+                <h3 style="margin: 0; color: #ffc107;">🟡 Pièces avec Délai 30-59 Jours</h3>
+                <div>
+                    <button onclick="syncT30FromIW38()" style="padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 10px;">🔄 Charger depuis Gestion des Pièces</button>
+                    <button onclick="exportT30ToExcel()" style="padding: 10px 20px; background: #4299e1; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">📥 Exporter Excel</button>
+                </div>
+            </div>
+
+            <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107; margin-bottom: 20px;">
+                <strong>⚠️ Important:</strong> Ces commandes doivent être passées au minimum 30 jours avant l'arrêt.
+            </div>
+
+            <div style="max-height: 400px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 8px; padding: 20px; background: #fffef0;">
+                <div style="display: grid; gap: 20px;">
+                    <div>
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Date limite de commande</label>
+                        <input type="date" id="t30OrderDeadline" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px;">
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Liste des articles (30-59 jours)</label>
+                        <textarea id="t30Items" rows="6" placeholder="Liste des articles à commander avec quantités..."
+                                  style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Fournisseurs</label>
+                        <textarea id="t30Suppliers" rows="4" placeholder="Liste des fournisseurs contactés..."
+                                  style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Statut et suivi</label>
+                        <textarea id="t30Tracking" rows="4" placeholder="Suivi des commandes passées..."
+                                  style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 20px;">
+                    <button onclick="saveT30Data()"
+                            class="btn" style="background: #28a745; color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        💾 Sauvegarder
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

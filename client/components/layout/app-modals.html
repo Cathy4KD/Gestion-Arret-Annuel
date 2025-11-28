@@ -1,0 +1,18 @@
+<!-- Modals globaux disponibles dans toute l'application -->
+
+<!-- Modal de sélection des responsables -->
+<div id="responsibleModal" class="responsible-modal" onclick="window.closeModalOnOverlay?.(event)">
+    <div class="responsible-modal-content" onclick="event.stopPropagation()">
+        <div class="responsible-modal-header">
+            <h3>Sélectionner les responsables</h3>
+            <button onclick="window.closeResponsibleModal?.()" class="responsible-modal-close">&times;</button>
+        </div>
+        <div class="responsible-modal-body">
+            <div id="responsibleCheckboxList" class="checkbox-list"></div>
+        </div>
+        <div class="responsible-modal-footer">
+            <button onclick="window.closeResponsibleModal?.()" class="btn btn-secondary">Annuler</button>
+            <button onclick="window.saveResponsibles?.()" class="btn btn-primary">Sauvegarder</button>
+        </div>
+    </div>
+</div>

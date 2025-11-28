@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-t55</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+<div id="detail-t55" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; margin-bottom: 20px; justify-content: space-between;">
+            <div style="display: flex; align-items: center;">
+                <button onclick="switchToPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                <h2 style="margin: 0; color: #333; flex: 1;">FAIRE DEVIS ET CORRECTION</h2>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="switchToPage('detail-t55-historique')" style="padding: 12px 24px; background: linear-gradient(145deg, #4299e1, #3182ce); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px;">
+                    📋 Historique
+                </button>
+                <button onclick="exportT55ToDOCX()" id="t55ExportDOCXBtn" style="display: none; padding: 12px 24px; background: linear-gradient(145deg, #dc3545, #c82333); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px;">
+                    📄 Exporter DOCX
+                </button>
+            </div>
+        </div>
+
+        <!-- Section Template DOCX -->
+        <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+            <h3 style="color: #667eea; margin-top: 0;">📄 Template DOCX Global</h3>
+
+            <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 10px;">
+                <div style="flex: 1;">
+                    <input type="file" id="t55DocxTemplateInput" accept=".docx" style="display: none;" onchange="uploadT55DocxTemplate(this.files)">
+                    <button onclick="document.getElementById('t55DocxTemplateInput').click()"
+                            style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        📤 Upload Template DOCX
+                    </button>
+                    <span id="t55DocxTemplateStatus" style="margin-left: 15px; color: #666; font-style: italic;">
+                        Aucun template chargé
+                    </span>
+                </div>
+            </div>
+            <p style="margin: 0; color: #666; font-size: 0.9em;">
+                💡 Ce template sera utilisé pour générer les devis DOCX de tous les entrepreneurs
+            </p>
+        </div>
+
+        <!-- Section Sélection Entrepreneur -->
+        <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+            <h3 style="color: #667eea; margin-top: 0;">👷 Sélection de l'Entrepreneur</h3>
+
+            <div style="display: flex; gap: 15px; align-items: flex-start; margin-bottom: 20px;">
+                <div style="flex: 1;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">Entrepreneur (Post.trav.opér. IW37N):</label>
+                    <select id="t55EntrepreneurSelect" onchange="loadT55EntrepreneurData()"
+                            style="width: 100%; padding: 12px; border: 2px solid #667eea; border-radius: 8px; font-size: 1em; cursor: pointer;">
+                        <option value="">-- Sélectionner un entrepreneur --</option>
+                    </select>
+                </div>
+                <div style="padding-top: 30px;">
+                    <button onclick="syncT55Entrepreneurs()"
+                            style="padding: 12px 20px; background: #4a7c59; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; white-space: nowrap;">
+                        🔄 Synchroniser IW37N
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulaire Devis (caché par défaut) -->
+        <div id="t55DevisForm" style="display: none;">
+
+            <!-- Section 1: Informations Générales -->
+            <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                <h3 style="color: #667eea; margin-top: 0; border-bottom: 2px solid #667eea; padding-bottom: 10px;">📋 Informations Générales</h3>
+
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Titre du devis:</label>
+                        <input type="text" id="t55TitreDevis" onchange="saveT55Data()" value="Devis général"
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Spécialité:</label>
+                        <select id="t55Specialite" onchange="saveT55Data()"
+                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                            <option value="">-- Sélectionner --</option>
+                            <option value="Mécanique">Mécanique (MEC)</option>
+                            <option value="Électrique">Électrique</option>
+                            <option value="Tuyauterie">Tuyauterie</option>
+                            <option value="Structure">Structure</option>
+                            <option value="Réfractaire">Réfractaire</option>
+                            <option value="Instrumentation">Instrumentation</option>
+                            <option value="Cohésion">Cohésion (COH)</option>
+                            <option value="Incendie">Incendie (INC)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Lieu:</label>
+                        <input type="text" id="t55Lieu" onchange="saveT55Data()" value="Rio Tinto Fer et Titane, Sorel-Tracy, Québec, Canada"
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Type de contrat:</label>
+                        <input type="text" id="t55TypeContrat" onchange="saveT55Data()" value="Dépenses contrôlées"
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 1B: Personnes Responsables -->
+            <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                <h3 style="color: #667eea; margin-top: 0; border-bottom: 2px solid #667eea; padding-bottom: 10px;">👥 Personnes Responsables</h3>
+
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Responsable:</label>
+                        <input type="text" id="t55Responsable" onchange="saveT55Data()" placeholder="Nom du responsable"
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Vérificateur:</label>
+                        <input type="text" id="t55Verificateur" onchange="saveT55Data()" placeholder="Nom du vérificateur"
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Approbateur:</label>
+                        <input type="text" id="t55Approbateur" onchange="saveT55Data()" placeholder="Nom de l'approbateur"
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Dates Clés -->
+            <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                <h3 style="color: #667eea; margin-top: 0; border-bottom: 2px solid #667eea; padding-bottom: 10px;">📅 7. DATES CLÉS</h3>
+
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Début des visites:</label>
+                        <input type="date" id="t55DateDebutVisites" onchange="saveT55Data()"
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Remise soumission:</label>
+                        <input type="date" id="t55DateRemiseSoumission" onchange="saveT55Data()"
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Adjudication:</label>
+                        <input type="date" id="t55DateAdjudication" onchange="saveT55Data()"
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Liste Cognibox:</label>
+                        <input type="date" id="t55DateListeCognibox" onchange="saveT55Data()"
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Début mobilisation:</label>
+                        <input type="date" id="t55DateDebutMobilisation" onchange="saveT55Data()"
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Fin mobilisation:</label>
+                        <input type="date" id="t55DateFinMobilisation" onchange="saveT55Data()"
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Début arrêt:</label>
+                        <input type="date" id="t55DateDebutArret" onchange="saveT55Data()"
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Fin arrêt:</label>
+                        <input type="date" id="t55DateFinArret" onchange="saveT55Data()"
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Démobilisation:</label>
+                        <input type="date" id="t55DateDemobilisation" onchange="saveT55Data()"
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Date de vérification:</label>
+                        <input type="date" id="t55DateVerification" onchange="saveT55Data()"
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Date d'approbation:</label>
+                        <input type="date" id="t55DateApprobation" onchange="saveT55Data()"
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: DESSINS -->
+            <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 style="color: #667eea; margin: 0; border-bottom: 2px solid #667eea; padding-bottom: 10px; flex: 1;">📐 DESSINS FAISANT PARTIE DE CETTE SPÉCIFICATION</h3>
+                    <button onclick="addT55DessinRow()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                        ➕ Ajouter
+                    </button>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #f8f9fa;">
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 30%;">Numéro de dessin</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: center; width: 15%;">Révision</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 50%;">Titre</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: center; width: 5%;">❌</th>
+                            </tr>
+                        </thead>
+                        <tbody id="t55DessinsTableBody">
+                            <tr><td colspan="4" style="padding: 20px; text-align: center; color: #999;">Aucun dessin. Cliquez sur "Ajouter" pour commencer.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Section 4A: CONVERTISSEUR -->
+            <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 style="color: #667eea; margin: 0; border-bottom: 2px solid #667eea; padding-bottom: 10px; flex: 1;">⚙️ 6.2 TRAVAUX MÉCANIQUES - CONVERTISSEUR</h3>
+                    <button onclick="addT55ConvertisseurRow()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                        ➕ Ajouter
+                    </button>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #f8f9fa;">
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 8%;"># Item</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 12%;">Équipement</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 10%;"># Ordre</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 25%;">Description des travaux</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 13%;">Matériel fourni par RTFT</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 13%;">Matériel fourni par entrepreneur</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 14%;">Dessins/ références</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: center; width: 5%;">❌</th>
+                            </tr>
+                        </thead>
+                        <tbody id="t55ConvertisseurTableBody">
+                            <tr><td colspan="8" style="padding: 20px; text-align: center; color: #999;">Aucun travail Convertisseur. Cliquez sur "Ajouter" pour commencer.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Section 4B: COULÉE CONTINUE -->
+            <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 style="color: #667eea; margin: 0; border-bottom: 2px solid #667eea; padding-bottom: 10px; flex: 1;">🏗️ 6.2 TRAVAUX MÉCANIQUES - COULÉE CONTINUE</h3>
+                    <button onclick="addT55CouleeContinueRow()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                        ➕ Ajouter
+                    </button>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #f8f9fa;">
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 8%;"># Item</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 12%;">Équipement</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 10%;"># Ordre</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 25%;">Description des travaux</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 13%;">Matériel fourni par RTFT</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 13%;">Matériel fourni par entrepreneur</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 14%;">Dessins/ références</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: center; width: 5%;">❌</th>
+                            </tr>
+                        </thead>
+                        <tbody id="t55CouleeContinueTableBody">
+                            <tr><td colspan="8" style="padding: 20px; text-align: center; color: #999;">Aucun travail Coulée continue. Cliquez sur "Ajouter" pour commencer.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Section 6: Historique des Devis et Corrections (masquée quand entrepreneur sélectionné) -->
+            <div id="t55HistoriqueSection" style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 style="color: #667eea; margin: 0; border-bottom: 2px solid #667eea; padding-bottom: 10px; flex: 1;">📚 Historique des Devis et Corrections</h3>
+                    <button onclick="addT55HistoriqueRow()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                        ➕ Ajouter
+                    </button>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #f8f9fa;">
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 5%;">Occ.</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 6%;">Révison</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 6%;">Item</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 10%;">Equipement</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 8%;">Ordre</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 20%;">Description des travaux</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 10%;">Matériel RTFT</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 10%;">Matériel Entr.</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 10%;">Dessins - Réf.</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 8%;">Gammes</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left; width: 10%;">CptrGrpGam</th>
+                                <th style="padding: 10px; border: 1px solid #dee2e6; text-align: center; width: 3%;">❌</th>
+                            </tr>
+                        </thead>
+                        <tbody id="t55HistoriqueTableBody">
+                            <tr><td colspan="12" style="padding: 20px; text-align: center; color: #999;">Aucune entrée. Cliquez sur "Ajouter" pour commencer.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

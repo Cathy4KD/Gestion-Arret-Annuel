@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoring Serveur - Administration</title>
+    <link rel="stylesheet" href="../styles/common.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #333;
+            font-size: 28px;
+        }
+
+        .last-update {
+            color: #666;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4CAF50;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .card-icon {
+            font-size: 32px;
+            margin-right: 15px;
+            filter: grayscale(0.3);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            color: #333;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .stat-value.success {
+            color: #4CAF50;
+        }
+
+        .stat-value.warning {
+            color: #FF9800;
+        }
+
+        .stat-value.error {
+            color: #f44336;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-fill.warning {
+            background: linear-gradient(90deg, #FF9800 0%, #F57C00 100%);
+        }
+
+        .progress-fill.error {
+            background: linear-gradient(90deg, #f44336 0%, #d32f2f 100%);
+        }
+
+        .large-stat {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .large-stat-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .large-stat-label {
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .health-status {
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+
+        .health-status.ok {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .health-status.warning {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+
+        .health-status.error {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+
+        .alert-list {
+            margin-top: 15px;
+        }
+
+        .alert-item {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-item.warning {
+            background: #FFF3E0;
+            color: #E65100;
+            border-left: 4px solid #FF9800;
+        }
+
+        .alert-item.error {
+            background: #FFEBEE;
+            color: #C62828;
+            border-left: 4px solid #f44336;
+        }
+
+        .btn-refresh {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-refresh:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-refresh:active {
+            transform: translateY(0);
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .error-message {
+            background: #FFEBEE;
+            color: #C62828;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Monitoring Serveur</h1>
+            <div>
+                <div class="last-update">
+                    <span class="status-indicator"></span>
+                    <span id="lastUpdate">Chargement...</span>
+                </div>
+                <button class="btn-refresh" onclick="loadStats()">🔄 Actualiser</button>
+            </div>
+        </div>
+
+        <div id="errorContainer"></div>
+
+        <div class="dashboard-grid">
+            <!-- Server Info Card -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">🖥️</span>
+                    <h2 class="card-title">Informations Serveur</h2>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Uptime</span>
+                    <span class="stat-value" id="uptime">-</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Démarré le</span>
+                    <span class="stat-value" id="startTime">-</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Node.js</span>
+                    <span class="stat-value" id="nodeVersion">-</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Plateforme</span>
+                    <span class="stat-value" id="platform">-</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Hostname</span>
+                    <span class="stat-value" id="hostname">-</span>
+                </div>
+            </div>
+
+            <!-- Memory Card -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">💾</span>
+                    <h2 class="card-title">Mémoire</h2>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Heap utilisée</span>
+                    <span class="stat-value" id="heapUsed">-</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="heapProgress"></div>
+                </div>
+                <div class="stat-row" style="margin-top: 15px;">
+                    <span class="stat-label">Utilisation Heap</span>
+                    <span class="stat-value" id="heapPercent">-</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">RSS</span>
+                    <span class="stat-value" id="rss">-</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Mémoire système</span>
+                    <span class="stat-value" id="systemMemory">-</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="systemProgress"></div>
+                </div>
+                <div class="stat-row" style="margin-top: 15px;">
+                    <span class="stat-label">Utilisation système</span>
+                    <span class="stat-value" id="systemPercent">-</span>
+                </div>
+            </div>
+
+            <!-- CPU Card -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">⚙️</span>
+                    <h2 class="card-title">Processeur</h2>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Nombre de CPUs</span>
+                    <span class="stat-value" id="cpuCount">-</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Modèle</span>
+                    <span class="stat-value" id="cpuModel" style="font-size: 12px;">-</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Vitesse</span>
+                    <span class="stat-value" id="cpuSpeed">-</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">User time</span>
+                    <span class="stat-value" id="cpuUser">-</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">System time</span>
+                    <span class="stat-value" id="cpuSystem">-</span>
+                </div>
+            </div>
+
+            <!-- Network Card -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">🌐</span>
+                    <h2 class="card-title">Réseau</h2>
+                </div>
+                <div class="large-stat">
+                    <div class="large-stat-label">Requêtes / minute</div>
+                    <div class="large-stat-value" id="rpm">0</div>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Total requêtes</span>
+                    <span class="stat-value" id="requestCount">-</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Clients connectés</span>
+                    <span class="stat-value success" id="connectedClients">-</span>
+                </div>
+            </div>
+
+            <!-- Data Card -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">📁</span>
+                    <h2 class="card-title">Données</h2>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Taille des données</span>
+                    <span class="stat-value" id="dataSize">-</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Backups incrémentiels</span>
+                    <span class="stat-value success" id="backupsCount">-</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Backups quotidiens</span>
+                    <span class="stat-value success" id="dailyBackupsCount">-</span>
+                </div>
+            </div>
+
+            <!-- Health Card -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">❤️</span>
+                    <h2 class="card-title">Santé du Système</h2>
+                </div>
+                <div class="health-status" id="healthStatus">
+                    Chargement...
+                </div>
+                <div class="alert-list" id="alertList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let autoRefreshInterval = null;
+
+        // Format bytes to human readable
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Format microseconds to milliseconds
+        function formatMicroseconds(microseconds) {
+            return (microseconds / 1000).toFixed(2) + ' ms';
+        }
+
+        // Format date
+        function formatDate(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleString('fr-FR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Load statistics
+        async function loadStats() {
+            const errorContainer = document.getElementById('errorContainer');
+            errorContainer.innerHTML = '';
+
+            try {
+                // Load stats
+                const statsResponse = await fetch('/api/admin/stats');
+                const statsData = await statsResponse.json();
+
+                if (!statsData.success) {
+                    throw new Error(statsData.error?.message || 'Erreur lors du chargement des stats');
+                }
+
+                const stats = statsData.data;
+
+                // Update server info
+                document.getElementById('uptime').textContent = stats.server.uptimeFormatted;
+                document.getElementById('startTime').textContent = formatDate(stats.server.startTime);
+                document.getElementById('nodeVersion').textContent = stats.server.nodeVersion;
+                document.getElementById('platform').textContent = stats.server.platform;
+                document.getElementById('hostname').textContent = stats.server.hostname;
+
+                // Update memory
+                document.getElementById('heapUsed').textContent = formatBytes(stats.memory.used);
+                document.getElementById('heapPercent').textContent = stats.memory.usagePercent + '%';
+                document.getElementById('rss').textContent = formatBytes(stats.memory.rss);
+                document.getElementById('systemMemory').textContent =
+                    formatBytes(stats.memory.systemTotal - stats.memory.systemFree) + ' / ' +
+                    formatBytes(stats.memory.systemTotal);
+                document.getElementById('systemPercent').textContent = stats.memory.systemUsagePercent + '%';
+
+                // Update progress bars
+                const heapProgress = document.getElementById('heapProgress');
+                heapProgress.style.width = stats.memory.usagePercent + '%';
+                heapProgress.className = 'progress-fill';
+                if (parseFloat(stats.memory.usagePercent) > 90) {
+                    heapProgress.classList.add('error');
+                    document.getElementById('heapPercent').classList.add('error');
+                } else if (parseFloat(stats.memory.usagePercent) > 75) {
+                    heapProgress.classList.add('warning');
+                    document.getElementById('heapPercent').classList.add('warning');
+                } else {
+                    document.getElementById('heapPercent').classList.add('success');
+                }
+
+                const systemProgress = document.getElementById('systemProgress');
+                systemProgress.style.width = stats.memory.systemUsagePercent + '%';
+                systemProgress.className = 'progress-fill';
+                if (parseFloat(stats.memory.systemUsagePercent) > 90) {
+                    systemProgress.classList.add('error');
+                    document.getElementById('systemPercent').classList.add('error');
+                } else if (parseFloat(stats.memory.systemUsagePercent) > 75) {
+                    systemProgress.classList.add('warning');
+                    document.getElementById('systemPercent').classList.add('warning');
+                } else {
+                    document.getElementById('systemPercent').classList.add('success');
+                }
+
+                // Update CPU
+                document.getElementById('cpuCount').textContent = stats.cpu.count;
+                document.getElementById('cpuModel').textContent = stats.cpu.model;
+                document.getElementById('cpuSpeed').textContent = stats.cpu.speed + ' MHz';
+                document.getElementById('cpuUser').textContent = formatMicroseconds(stats.cpu.user);
+                document.getElementById('cpuSystem').textContent = formatMicroseconds(stats.cpu.system);
+
+                // Update network
+                document.getElementById('rpm').textContent = stats.network.requestsPerMinute;
+                document.getElementById('requestCount').textContent = stats.network.requestCount.toLocaleString();
+                document.getElementById('connectedClients').textContent = stats.network.connectedClients;
+
+                // Update data
+                document.getElementById('dataSize').textContent = stats.data.sizeFormatted;
+                document.getElementById('backupsCount').textContent = stats.data.backups;
+                document.getElementById('dailyBackupsCount').textContent = stats.data.dailyBackups;
+
+                // Load health
+                const healthResponse = await fetch('/api/admin/health');
+                const healthData = await healthResponse.json();
+
+                if (!healthData.success) {
+                    throw new Error(healthData.error?.message || 'Erreur lors du chargement de la santé');
+                }
+
+                const health = healthData.data;
+
+                // Update health status
+                const healthStatus = document.getElementById('healthStatus');
+                healthStatus.className = 'health-status ' + health.status;
+
+                if (health.status === 'ok') {
+                    healthStatus.textContent = '✓ Système en bonne santé';
+                } else if (health.status === 'warning') {
+                    healthStatus.textContent = '⚠ Avertissements détectés';
+                } else {
+                    healthStatus.textContent = '✗ Erreurs détectées';
+                }
+
+                // Update alerts
+                const alertList = document.getElementById('alertList');
+                alertList.innerHTML = '';
+
+                if (health.alerts && health.alerts.length > 0) {
+                    health.alerts.forEach(alert => {
+                        const alertItem = document.createElement('div');
+                        alertItem.className = 'alert-item ' + alert.level;
+                        alertItem.innerHTML = `
+                            <span>${alert.level === 'error' ? '✗' : '⚠'}</span>
+                            <span>${alert.message}</span>
+                        `;
+                        alertList.appendChild(alertItem);
+                    });
+                }
+
+                // Update last update time
+                document.getElementById('lastUpdate').textContent =
+                    'Dernière mise à jour: ' + new Date().toLocaleTimeString('fr-FR');
+
+            } catch (error) {
+                console.error('Erreur:', error);
+                errorContainer.innerHTML = `
+                    <div class="error-message">
+                        ✗ Erreur: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Start auto-refresh
+        function startAutoRefresh() {
+            loadStats();
+            autoRefreshInterval = setInterval(loadStats, 10000); // Refresh every 10 seconds
+        }
+
+        // Stop auto-refresh
+        function stopAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                autoRefreshInterval = null;
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            startAutoRefresh();
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            stopAutoRefresh();
+        });
+    </script>
+</body>
+</html>

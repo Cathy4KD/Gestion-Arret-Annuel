@@ -1,0 +1,77 @@
+<div id="detail-t41" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                    ← Retour
+                </button>
+                <h2 style="margin: 0; color: #333;">🔍 PLANIFIER L'INSPECTION DES EQUIPEMENTS DE LEVAGE REQUIS</h2>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin-bottom: 25px; border-left: 4px solid #2196f3;">
+            <h3 style="margin: 0 0 10px 0; color: #1565c0;">
+                ℹ️ À propos
+            </h3>
+            <p style="margin: 0; color: #333; line-height: 1.6;">
+                Planifiez et suivez les inspections des équipements de levage nécessaires pour l'arrêt annuel. Identifiez les équipements critiques et programmez les inspections en conséquence.
+            </p>
+        </div>
+
+        <!-- Tableau des Inspections -->
+        <div style="background: white; padding: 20px; border-radius: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: #333;">📋 Suivi des Inspections (<span id="inspectionCount">0</span>)</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="addInspectionRow()" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                        ➕ Ajouter
+                    </button>
+                    <button onclick="exportInspectionToPDF()" class="btn" style="background: linear-gradient(145deg, #dc3545, #c82333); color: white; padding: 10px 20px;">
+                        📄 Exporter PDF
+                    </button>
+                    <button onclick="exportInspectionToExcel()" class="btn" style="background: linear-gradient(145deg, #4299e1, #3182ce); color: white; padding: 10px 20px;">
+                        📥 Exporter Excel
+                    </button>
+                </div>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table id="inspectionTable" class="summary-table" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 180px;">Équipement</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 150px;">Numéro de série / ID</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 150px;">Localisation</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 140px;">Date prévue</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 140px;">Date réalisée</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 150px;">Statut</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 150px;">Inspecteur</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 200px;">Remarques</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; min-width: 100px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inspectionTableBody">
+                        <tr>
+                            <td colspan="9" style="padding: 30px; text-align: center; color: #666;">
+                                Aucune inspection ajoutée. Cliquez sur "Ajouter" pour commencer.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Légende des statuts -->
+            <div style="background: #f0f8ff; padding: 12px; border-radius: 6px; margin-top: 15px; border-left: 4px solid #667eea;">
+                <p style="margin: 0; font-weight: bold; color: #333;">🎨 Légende des statuts:</p>
+                <p style="margin: 5px 0 0 0; color: #555;">
+                    <span style="display: inline-block; padding: 3px 10px; background: #f8d7da; border-radius: 3px; margin-right: 10px;">À planifier</span>
+                    <span style="display: inline-block; padding: 3px 10px; background: #fff3cd; border-radius: 3px; margin-right: 10px;">Planifié</span>
+                    <span style="display: inline-block; padding: 3px 10px; background: #cfe2ff; border-radius: 3px; margin-right: 10px;">En cours</span>
+                    <span style="display: inline-block; padding: 3px 10px; background: #d4edda; border-radius: 3px; margin-right: 10px;">Complété</span>
+                    <span style="display: inline-block; padding: 3px 10px; background: #e0e0e0; border-radius: 3px;">Non conforme</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

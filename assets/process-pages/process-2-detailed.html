@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process 2 - Diagramme Détaillé</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            margin: 0 auto;
+            overflow-x: auto;
+        }
+
+        .process-diagram {
+            position: relative;
+            width: 1590px;
+            height: 850px;
+            background: white;
+            margin: 0 auto;
+        }
+
+        /* Sections principales avec bordures arrondies */
+        .phase-section {
+            position: absolute;
+            border: 3px solid #000;
+            border-radius: 20px;
+            background: white;
+        }
+
+        .phase-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #8B0000;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        /* Section DÉFINIR */
+        .definir-section {
+            left: 10px;
+            top: 10px;
+            width: 630px;
+            height: 195px;
+        }
+
+        /* Section PLANIFIER */
+        .planifier-section {
+            left: 650px;
+            top: 10px;
+            width: 690px;
+            height: 270px;
+        }
+
+        /* Section ANALYSER POUR AMÉLIORER */
+        .analyser-section {
+            left: 10px;
+            top: 215px;
+            width: 450px;
+            height: 340px;
+        }
+
+        /* Section CONSIGNER */
+        .consigner-section {
+            left: 10px;
+            top: 565px;
+            width: 140px;
+            height: 230px;
+        }
+
+        /* Section PRÉPARER */
+        .preparer-section {
+            left: 1350px;
+            top: 290px;
+            width: 225px;
+            height: 505px;
+        }
+
+        /* Section EXÉCUTER */
+        .executer-section {
+            left: 160px;
+            top: 705px;
+            width: 1180px;
+            height: 135px;
+        }
+
+        /* Éléments cliquables */
+        .clickable {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .clickable:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 100;
+        }
+
+        .clickable.active {
+            box-shadow: 0 0 20px rgba(0,123,255,0.7);
+            border-color: #007bff !important;
+        }
+
+        /* Cercles jaunes */
+        .circle {
+            position: absolute;
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            background: #FFD700;
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 8px;
+            font-weight: bold;
+            padding: 5px;
+            line-height: 1.2;
+        }
+
+        /* Boîtes rectangulaires */
+        .box {
+            position: absolute;
+            border: 2px solid #000;
+            padding: 4px;
+            font-size: 8px;
+            font-weight: bold;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.3;
+        }
+
+        .box-yellow {
+            background: #FFEB99;
+        }
+
+        .box-cyan {
+            background: #B0E0E6;
+        }
+
+        .box-orange {
+            background: #FFB366;
+        }
+
+        .box-gray {
+            background: #E0E0E0;
+        }
+
+        /* Losanges */
+        .diamond {
+            position: absolute;
+            width: 65px;
+            height: 65px;
+            background: #FFEB99;
+            border: 2px solid #000;
+            transform: rotate(45deg);
+        }
+
+        .diamond-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 7px;
+            font-weight: bold;
+            text-align: center;
+            width: 85%;
+            line-height: 1.2;
+        }
+
+        /* Cylindres (bases de données) */
+        .cylinder {
+            position: absolute;
+            width: 75px;
+            height: 55px;
+        }
+
+        .cylinder-top {
+            width: 75px;
+            height: 18px;
+            background: #B0E0E6;
+            border: 2px solid #000;
+            border-radius: 50% 50% 0 0;
+            border-bottom: none;
+        }
+
+        .cylinder-body {
+            width: 75px;
+            height: 37px;
+            background: #B0E0E6;
+            border-left: 2px solid #000;
+            border-right: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 7px;
+            font-weight: bold;
+            text-align: center;
+            padding: 2px;
+            line-height: 1.2;
+        }
+
+        .cylinder-bottom {
+            width: 75px;
+            height: 8px;
+            background: #B0E0E6;
+            border: 2px solid #000;
+            border-radius: 0 0 50% 50%;
+            border-top: none;
+        }
+
+        /* Bouton vert SUIVANT */
+        .green-btn {
+            position: absolute;
+            background: #228B22;
+            color: white;
+            border: 2px solid #000;
+            border-radius: 6px;
+            padding: 10px 18px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Flèches de connexion */
+        .arrow {
+            position: absolute;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* Labels de sections */
+        .section-label {
+            position: absolute;
+            font-size: 8px;
+            font-weight: bold;
+            background: white;
+            padding: 2px 6px;
+            border: 1px solid #000;
+            border-radius: 3px;
+        }
+
+        /* Labels verticaux */
+        .vertical-label {
+            position: absolute;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-weight: bold;
+            font-size: 16px;
+            color: #8B0000;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 8% auto;
+            padding: 30px;
+            border: 3px solid #000;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .close {
+            color: #666;
+            float: right;
+            font-size: 32px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 20px;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        #info-panel {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            border: 2px solid #ccc;
+            min-height: 120px;
+        }
+
+        #info-panel h3 {
+            color: #8B0000;
+            margin-bottom: 10px;
+        }
+
+        /* Note badges */
+        .note-badge {
+            position: absolute;
+            background: #fff;
+            border: 1px solid #000;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center; margin-bottom: 20px; color: #8B0000;">Diagramme de Processus - Version Détaillée</h1>
+
+        <div class="process-diagram">
+
+            <!-- SECTION DÉFINIR -->
+            <div class="phase-section definir-section">
+                <div class="phase-title">DÉFINIR</div>
+
+                <!-- Cercles en haut -->
+                <div class="circle clickable" style="left: 8px; top: 30px;"
+                     onclick="showInfo('Stratégie d\'arrêt', 'Élaboration de la stratégie globale d\'arrêt')">
+                    Stratégie d'arrêt
+                </div>
+
+                <div class="circle clickable" style="left: 88px; top: 30px;"
+                     onclick="showInfo('Exigences du projet', 'Exigences du projet et de besoins normatifs')">
+                    Exigences du projet et de besoins normatifs
+                </div>
+
+                <div class="circle clickable" style="left: 168px; top: 30px;"
+                     onclick="showInfo('Exigences activités', 'Exigences des activités et de production')">
+                    Exigences des activités et de production
+                </div>
+
+                <div class="circle clickable" style="left: 530px; top: 30px;"
+                     onclick="showInfo('DM et propositions', 'DM et propositions de nouveaux services/améliorations')">
+                    DM et propositions de nouveaux services/améliorations
+                </div>
+
+                <!-- Boîtes jaunes du processus -->
+                <div class="box box-yellow clickable" style="left: 8px; top: 110px; width: 68px; height: 48px;"
+                     onclick="showInfo('DI.0', 'Élaboration d\'un plan pour la définition de l\'arrêté')">
+                    DI.0 - Élaboration d'un plan pour la définition de l'arrêté
+                </div>
+
+                <div class="box box-yellow clickable" style="left: 82px; top: 110px; width: 72px; height: 48px;"
+                     onclick="showInfo('DI.1', 'Détermination des acteurs internes et des parties intéressées de l\'arrêt général')">
+                    DI.1 - Détermination des acteurs internes et des parties intéressées de l'arrêt général
+                </div>
+
+                <div class="box box-yellow clickable" style="left: 160px; top: 110px; width: 68px; height: 48px;"
+                     onclick="showInfo('DI.2', 'Détermination des objectifs de l\'arrêt')">
+                    DI.2 - Détermination des objectifs de l'arrêt
+                </div>
+
+                <div class="box box-yellow clickable" style="left: 234px; top: 110px; width: 68px; height: 48px;"
+                     onclick="showInfo('DI.3', 'Détermination des risques et des opportunités')">
+                    DI.3 - Détermination des risques et des opportunités
+                </div>
+
+                <div class="box box-yellow clickable" style="left: 308px; top: 110px; width: 68px; height: 48px;"
+                     onclick="showInfo('DI.4', 'Identification des besoins en évaluations de la conformité')">
+                    DI.4 - Identification des besoins en évaluations de la conformité
+                </div>
+
+                <div class="box box-yellow clickable" style="left: 382px; top: 110px; width: 68px; height: 48px;"
+                     onclick="showInfo('DI.5', 'Détermination des actions nécessaires à mettre en place au cours de l\'arrêté et des prérequis')">
+                    DI.5 - Détermination des actions nécessaires à mettre en place au cours de l'arrêté et des prérequis
+                </div>
+
+                <div class="box box-yellow clickable" style="left: 456px; top: 110px; width: 68px; height: 48px;"
+                     onclick="showInfo('DI.6', 'Détermination des risques et des évaluations des priorités liés aux prérequis')">
+                    DI.6 - Détermination des risques et des évaluations des priorités liés aux prérequis
+                </div>
+
+                <!-- Losange de décision -->
+                <div class="diamond clickable" style="left: 545px; top: 115px;"
+                     onclick="showInfo('Validation', 'Validation des besoins et de la cohérence de la proposition d\'arrêt')">
+                    <div class="diamond-content">
+                        Validation des besoins et de la cohérence?
+                    </div>
+                </div>
+
+                <!-- Flèches -->
+                <div class="arrow" style="left: 38px; top: 102px;">↓</div>
+                <div class="arrow" style="left: 113px; top: 102px;">↓</div>
+                <div class="arrow" style="left: 190px; top: 102px;">↓</div>
+
+                <!-- Note badge -->
+                <div class="note-badge" style="left: 250px; top: 168px;">i1</div>
+
+                <!-- Label section -->
+                <div class="section-label" style="left: 85px; top: 168px;">DG5.0 - Réunion visant à définir l'arrêté</div>
+            </div>
+
+            <!-- SECTION PLANIFIER -->
+            <div class="phase-section planifier-section">
+                <div class="phase-title">PLANIFIER</div>
+
+                <!-- Ligne principale : flux horizontal PARFAITEMENT ALIGNÉ -->
+                <div class="box box-cyan clickable" style="left: 10px; top: 78px; width: 88px; height: 48px;"
+                     onclick="showInfo('PL1.0', 'Détermination de la durée et du budget de l\'arrêt')">
+                    PL1.0 - Détermination de la durée et du budget de l'arrêt
+                </div>
+
+                <!-- Cylindre base de données -->
+                <div class="cylinder clickable" style="left: 106px; top: 78px;"
+                     onclick="showInfo('Base de données', 'Ordres de travail / Interventions / Fondation créoles')">
+                    <div class="cylinder-top"></div>
+                    <div class="cylinder-body">Ordres de travail / Interventions / Fondation créoles</div>
+                    <div class="cylinder-bottom"></div>
+                </div>
+
+                <div class="box box-cyan clickable" style="left: 189px; top: 78px; width: 88px; height: 48px;"
+                     onclick="showInfo('PL2.0', 'Élaboration du calendrier d\'exécution d\'arrêt')">
+                    PL2.0 - Élaboration du calendrier d'exécution d'arrêt
+                </div>
+
+                <div class="box box-cyan clickable" style="left: 285px; top: 78px; width: 82px; height: 48px;"
+                     onclick="showInfo('PL2.5', 'Approbation du temps d\'essais')">
+                    PL2.5 - Approbation du temps d'essais
+                </div>
+
+                <!-- PL4.0 AU-DESSUS de PL3.0 (parfaitement centré au-dessus) -->
+                <div class="box box-cyan clickable" style="left: 375px; top: 42px; width: 82px; height: 30px;"
+                     onclick="showInfo('PL4.0', 'Préparation des listes de travaux')">
+                    PL4.0 - Préparation des listes de travaux
+                </div>
+
+                <div class="box box-cyan clickable" style="left: 375px; top: 78px; width: 82px; height: 48px;"
+                     onclick="showInfo('PL3.0', 'Analyse de risque du calendrier d\'exécution')">
+                    PL3.0 - Analyse de risque du calendrier d'exécution
+                </div>
+
+                <div class="box box-cyan clickable" style="left: 465px; top: 78px; width: 82px; height: 48px;"
+                     onclick="showInfo('PL3.5', 'Finaliser le calendrier d\'arrêt approuvé')">
+                    PL3.5 - Finaliser le calendrier d'arrêt approuvé
+                </div>
+
+                <!-- Losange décision (aligné avec la ligne principale) -->
+                <div class="diamond clickable" style="left: 555px; top: 76px;"
+                     onclick="showInfo('Validation calendrier', 'Le calendrier est-il approuvé?')">
+                    <div class="diamond-content">
+                        Le calendrier est-il approuvé?
+                    </div>
+                </div>
+
+                <!-- Cylindre calendriers approuvés -->
+                <div class="cylinder clickable" style="left: 595px; top: 158px;"
+                     onclick="showInfo('Calendriers', 'Rachat d\'arrêts approuvés')">
+                    <div class="cylinder-top"></div>
+                    <div class="cylinder-body">Rachat d'arrêts approuvés</div>
+                    <div class="cylinder-bottom"></div>
+                </div>
+
+                <!-- PL5.0 en dessous de PL1.0 -->
+                <div class="box box-cyan clickable" style="left: 10px; top: 136px; width: 88px; height: 48px;"
+                     onclick="showInfo('PL5.0', 'Planification des services auxiliaires et logistiques nécessaires')">
+                    PL5.0 - Planification des services auxiliaires et logistiques nécessaires
+                </div>
+
+                <!-- Boîte à droite -->
+                <div class="box box-cyan clickable" style="left: 555px; top: 222px; width: 110px; height: 38px;"
+                     onclick="showInfo('PL7.0', 'Formulation des opportunités d\'amélioration')">
+                    PL7.0 - Formulation des opportunités d'amélioration
+                </div>
+
+                <!-- Note badge -->
+                <div class="note-badge" style="left: 320px; top: 138px;">i1</div>
+
+                <!-- Label -->
+                <div class="section-label" style="left: 10px; top: 193px;">Budget > +/- 5%</div>
+            </div>
+
+            <!-- SECTION ANALYSER POUR AMÉLIORER -->
+            <div class="phase-section analyser-section">
+                <div class="vertical-label" style="top: 50px;">ANALYSER POUR AMÉLIORER</div>
+
+                <!-- Disposition en 2 colonnes dans ANALYSER -->
+                <!-- Colonne 1 : A1.0 et A2.0 -->
+                <div style="position: absolute; left: 60px; top: 50px; width: 150px;">
+                    <div class="box box-cyan clickable" style="position: relative; width: 145px; height: 52px; margin-bottom: 8px;"
+                         onclick="showInfo('A1.0', 'Préparation et planification d\'un événement d\'amélioration de l\'arrêt')">
+                        A1.0 - Préparation et planification d'un événement d'amélioration de l'arrêt
+                    </div>
+
+                    <div class="box box-cyan clickable" style="position: relative; width: 145px; height: 52px;"
+                         onclick="showInfo('A2.0', 'Analyse d\'autres arrêts de la méthodologie')">
+                        A2.0 - Analyse d'autres arrêts de la méthodologie
+                    </div>
+                </div>
+
+                <!-- Colonne 2 : A3.0 et A4.0 -->
+                <div style="position: absolute; left: 220px; top: 50px; width: 150px;">
+                    <div class="box box-cyan clickable" style="position: relative; width: 145px; height: 52px; margin-bottom: 8px;"
+                         onclick="showInfo('A3.0', 'Rencontre de revue de service d\'un plan d\'action')">
+                        A3.0 - Rencontre de revue de service d'un plan d'action
+                    </div>
+
+                    <div class="box box-cyan clickable" style="position: relative; width: 145px; height: 52px;"
+                         onclick="showInfo('A4.0', 'Réalité des difficultés leçons apprises et plan')">
+                        A4.0 - Réalité des difficultés leçons apprises et plan
+                    </div>
+                </div>
+
+                <!-- Section du bas : Label + A5.0 -->
+                <div style="position: absolute; left: 60px; top: 180px; width: 305px;">
+                    <div class="section-label" style="position: relative; width: 300px; font-size: 8px; text-align: center; margin-bottom: 8px;">
+                        A2.0 - Réunion de revue de l'arrêté
+                    </div>
+
+                    <div class="box box-cyan clickable" style="position: relative; width: 300px; height: 48px;"
+                         onclick="showInfo('A5.0', 'Préparation de la revue de l\'arrêté')">
+                        A5.0 - Préparation de la revue de l'arrêté
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION CONSIGNER -->
+            <div class="phase-section consigner-section">
+                <div class="vertical-label" style="top: 30px;">CONSIGNER</div>
+
+                <div style="position: absolute; top: 95px; left: 10px; width: 125px;">
+                    <div class="box box-orange clickable" style="position: relative; width: 118px; height: 48px; margin-bottom: 8px;"
+                         onclick="showInfo('C0.0', 'Lecture des responsabilités des aînés')">
+                        C0.0 - Lecture des responsabilités des aînés
+                    </div>
+
+                    <div class="box box-orange clickable" style="position: relative; width: 118px; height: 48px; margin-bottom: 8px;"
+                         onclick="showInfo('C1.0', 'Isolement, identifications et mise en sécurité de tous les équipements')">
+                        C1.0 - Isolement, identifications et mise en sécurité de tous les équipements
+                    </div>
+
+                    <div class="box box-orange clickable" style="position: relative; width: 118px; height: 48px; margin-bottom: 8px;"
+                         onclick="showInfo('C2.0', 'Suivis de consignation CMAS')">
+                        C2.0 - Suivis de consignation CMAS
+                    </div>
+
+                    <div class="box box-orange clickable" style="position: relative; width: 118px; height: 48px;"
+                         onclick="showInfo('C3.0', 'Maintien de la consignation durant activité')">
+                        C3.0 - Maintien de la consignation durant activité
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION PRÉPARER -->
+            <div class="phase-section preparer-section">
+                <div class="phase-title">PRÉPARER</div>
+
+                <!-- Flux vertical de haut en bas avec plus d'espace -->
+                <div class="box box-cyan clickable" style="left: 15px; top: 45px; width: 195px; height: 48px;"
+                     onclick="showInfo('PL4.2', 'Suppression du temps d\'essais')">
+                    PL4.2 - Suppression du temps d'essais
+                </div>
+
+                <!-- Bouton vert SUIVANT -->
+                <div class="green-btn clickable" style="left: 55px; top: 105px;"
+                     onclick="showInfo('SUIVANT', 'Passage à l\'étape suivante du processus')">
+                    Suivant
+                </div>
+
+                <div class="box box-cyan clickable" style="left: 15px; top: 160px; width: 195px; height: 48px;"
+                     onclick="showInfo('PR1.0', 'Examen des fonds de revue en vue de l\'exécution')">
+                    PR1.0 - Examen des fonds de revue en vue de l'exécution
+                </div>
+
+                <div class="box box-cyan clickable" style="left: 15px; top: 218px; width: 195px; height: 48px;"
+                     onclick="showInfo('PR2.0', 'Formation du personnel de sous-traitance')">
+                    PR2.0 - Formation du personnel de sous-traitance
+                </div>
+
+                <div class="box box-cyan clickable" style="left: 15px; top: 276px; width: 195px; height: 48px;"
+                     onclick="showInfo('PR3.0', 'Préparation et inspection de la zone de travail')">
+                    PR3.0 - Préparation et inspection de la zone de travail
+                </div>
+
+                <div class="box box-cyan clickable" style="left: 15px; top: 334px; width: 195px; height: 48px;"
+                     onclick="showInfo('PR4.0', 'Réception des matériaux et outillage à acquérir')">
+                    PR4.0 - Réception des matériaux et outillage à acquérir
+                </div>
+
+                <div class="box box-cyan clickable" style="left: 15px; top: 392px; width: 195px; height: 48px;"
+                     onclick="showInfo('PL3.5-2', 'Évaluation de la demande des ressources modifiées')">
+                    PL3.5-2 - Évaluation de la demande des ressources modifiées
+                </div>
+
+                <div class="box box-cyan clickable" style="left: 15px; top: 450px; width: 195px; height: 38px;"
+                     onclick="showInfo('PL4.0-2', 'Élaboration d\'un plan de gestion de coordination')">
+                    PL4.0-2 - Élaboration d'un plan de gestion de coordination
+                </div>
+
+                <!-- Note badge -->
+                <div class="note-badge" style="left: 100px; top: 350px;">i1</div>
+
+                <!-- Label -->
+                <div class="section-label" style="left: 30px; top: 410px;">Budget > +/- 5%</div>
+            </div>
+
+            <!-- SECTION EXÉCUTER -->
+            <div class="phase-section executer-section">
+                <div class="phase-title">EXÉCUTER</div>
+
+                <!-- Flux horizontal de gauche à droite avec plus d'espace -->
+                <div class="box box-orange clickable" style="left: 10px; top: 40px; width: 78px; height: 48px;"
+                     onclick="showInfo('E0.0', 'Réunion de lancement de l\'arrêt')">
+                    E0.0 - Réunion de lancement arrêt général
+                </div>
+
+                <div class="box box-orange clickable" style="left: 96px; top: 40px; width: 78px; height: 48px;"
+                     onclick="showInfo('EX1.0', 'Inspection des problèmes')">
+                    EX1.0 - Inspection des problèmes
+                </div>
+
+                <div class="box box-orange clickable" style="left: 182px; top: 40px; width: 78px; height: 48px;"
+                     onclick="showInfo('EX2.0', 'Gestion de l\'engagement')">
+                    EX2.0 - Gestion de l'engagement réalisé
+                </div>
+
+                <div class="box box-orange clickable" style="left: 268px; top: 40px; width: 78px; height: 48px;"
+                     onclick="showInfo('EX2.5', 'Réalisation des essais')">
+                    EX2.5 - Réalisation essais
+                </div>
+
+                <div class="box box-orange clickable" style="left: 354px; top: 40px; width: 78px; height: 48px;"
+                     onclick="showInfo('EX3.0', 'Gestion des passations')">
+                    EX3.0 - Gestion passations
+                </div>
+
+                <div class="box box-orange clickable" style="left: 440px; top: 40px; width: 78px; height: 48px;"
+                     onclick="showInfo('PE2.0', 'Gestion fin processus')">
+                    PE2.0 - Gestion fin processus
+                </div>
+
+                <div class="box box-orange clickable" style="left: 526px; top: 40px; width: 78px; height: 48px;"
+                     onclick="showInfo('PR4.5', 'Traitement résultats')">
+                    PR4.5 - Traitement résultats
+                </div>
+
+                <div class="box box-orange clickable" style="left: 612px; top: 40px; width: 78px; height: 48px;"
+                     onclick="showInfo('PR5.0', 'Examen final')">
+                    PR5.0 - Examen final
+                </div>
+
+                <div class="box box-orange clickable" style="left: 698px; top: 40px; width: 78px; height: 48px;"
+                     onclick="showInfo('PR6.0', 'Libération équipements')">
+                    PR6.0 - Libération équipements
+                </div>
+
+                <div class="box box-orange clickable" style="left: 784px; top: 40px; width: 78px; height: 48px;"
+                     onclick="showInfo('PR6.5', 'Dossiers rapports')">
+                    PR6.5 - Dossiers rapports
+                </div>
+
+                <div class="diamond clickable" style="left: 870px; top: 38px;"
+                     onclick="showInfo('Validation finale', 'Procédure de redémarrage')">
+                    <div class="diamond-content">
+                        Procédure de redémarrage
+                    </div>
+                </div>
+
+                <div class="box box-orange clickable" style="left: 950px; top: 40px; width: 78px; height: 48px;"
+                     onclick="showInfo('PR6.5-2', 'Validation critères')">
+                    PR6.5-2 - Validation critères
+                </div>
+
+                <!-- Label section -->
+                <div class="section-label" style="left: 350px; top: 100px;">
+                    PE5.0 - Réunions quotidiennes de l'équipe de gestion
+                </div>
+            </div>
+
+            <!-- Flèches de connexion pour créer le flux rectangulaire parfait -->
+
+            <!-- HAUT : De DÉFINIR vers PLANIFIER (horizontal) -->
+            <div class="arrow" style="left: 640px; top: 105px; font-size: 30px;">→</div>
+
+            <!-- DROITE : De PLANIFIER vers PRÉPARER (descend) -->
+            <div class="arrow" style="left: 1320px; top: 140px; font-size: 30px; transform: rotate(90deg);">→</div>
+            <div class="arrow" style="left: 1480px; top: 130px; font-size: 12px; font-weight: bold;">OUI</div>
+            <div class="arrow" style="left: 1480px; top: 40px; font-size: 12px; font-weight: bold;">NON</div>
+
+            <!-- DROITE BAS : De PRÉPARER vers EXÉCUTER (descend) -->
+            <div class="arrow" style="left: 1455px; top: 665px; font-size: 38px; color: #228B22; font-weight: bold;">↓</div>
+
+            <!-- BAS : De EXÉCUTER vers gauche (horizontal retour) -->
+            <div class="arrow" style="left: 145px; top: 765px; font-size: 30px; transform: rotate(180deg);">→</div>
+
+            <!-- GAUCHE BAS : De bas vers CONSIGNER (remonte) -->
+            <div class="arrow" style="left: 75px; top: 790px; font-size: 30px; transform: rotate(270deg);">→</div>
+
+            <!-- GAUCHE : De CONSIGNER vers ANALYSER (remonte) -->
+            <div class="arrow" style="left: 75px; top: 550px; font-size: 30px; transform: rotate(270deg);">→</div>
+
+            <!-- GAUCHE HAUT : De ANALYSER vers DÉFINIR (remonte et boucle) -->
+            <div class="arrow" style="left: 75px; top: 200px; font-size: 30px; transform: rotate(270deg);">→</div>
+        </div>
+
+        <!-- Panneau d'information -->
+        <div id="info-panel">
+            <h3>Informations sur l'élément sélectionné</h3>
+            <p>Cliquez sur n'importe quel élément du diagramme pour afficher ses détails.</p>
+            <p style="margin-top: 10px; color: #666; font-size: 14px;">
+                💡 Astuce : Survolez les éléments pour voir un effet de zoom et cliquez pour plus d'informations.
+            </p>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title" style="color: #8B0000; margin-bottom: 15px;"></h2>
+            <p id="modal-description" style="font-size: 16px; line-height: 1.6;"></p>
+            <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                <strong>Type d'élément :</strong> <span id="modal-type"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let activeElement = null;
+
+        function showInfo(title, description) {
+            // Mise à jour du panneau d'information
+            const infoPanel = document.getElementById('info-panel');
+            infoPanel.innerHTML = `
+                <h3 style="color: #8B0000;">${title}</h3>
+                <p style="font-size: 15px; margin-top: 10px; line-height: 1.6;">${description}</p>
+                <div style="margin-top: 15px; padding: 10px; background: #d1ecf1; border-left: 4px solid #0c5460; border-radius: 4px;">
+                    <strong>Conseil :</strong> Cliquez sur d'autres éléments pour explorer le processus complet.
+                </div>
+            `;
+
+            // Mise à jour du modal
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-description').textContent = description;
+
+            // Déterminer le type d'élément
+            let type = 'Processus';
+            if (title.includes('Base de données') || title.includes('Ordres de travail') || title.includes('Rachat')) {
+                type = 'Base de données';
+            } else if (title.includes('Stratégie') || title.includes('Exigences') || title.includes('DM et')) {
+                type = 'Entrée de processus';
+            } else if (title.includes('Validation') || title.includes('calendrier') || title.includes('approuvé')) {
+                type = 'Point de décision';
+            } else if (title.includes('SUIVANT')) {
+                type = 'Transition';
+            }
+
+            document.getElementById('modal-type').textContent = type;
+            document.getElementById('modal').style.display = 'block';
+
+            // Gestion de l'élément actif
+            if (activeElement) {
+                activeElement.classList.remove('active');
+            }
+
+            if (event && event.target) {
+                let target = event.target;
+                while (target && !target.classList.contains('clickable')) {
+                    target = target.parentElement;
+                }
+                if (target) {
+                    target.classList.add('active');
+                    activeElement = target;
+                }
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // Fermer le modal en cliquant en dehors
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Raccourcis clavier
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Message de bienvenue
+        console.log('%c📊 Diagramme de Processus Interactif', 'color: #8B0000; font-size: 20px; font-weight: bold;');
+        console.log('%cCliquez sur n\'importe quel élément pour en savoir plus!', 'color: #228B22; font-size: 14px;');
+    </script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-t50</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+<div id="detail-t50" class="page">
+            <div class="summary-container" style="max-width: 98%; padding: 20px;">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                    <h2 style="margin: 0; color: #333; flex: 1;">FAIRE RENCONTRE POUR LES TRAVAUX DES TOURS DE REFROIDISSEMENT</h2>
+                </div>
+
+                <!-- Barre d'actions globales -->
+                <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; display: flex; gap: 10px; align-items: center;">
+                    <button onclick="window.toursActions.addNewRencontre()"
+                            style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        ➕ Nouvelle Rencontre
+                    </button>
+                    <button onclick="window.toursActions.exportToursRefroidissementComplet()"
+                            style="padding: 10px 20px; background: #ff9800; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        📄 Exporter le Rapport Complet
+                    </button>
+                    <span style="margin-left: auto; color: #666; font-size: 0.9em;">💡 Gérez plusieurs comptes rendus de rencontre</span>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 250px 1fr; gap: 20px;">
+                    <!-- Sidebar: Liste des rencontres -->
+                    <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); height: fit-content;">
+                        <h3 style="color: #667eea; margin: 0 0 15px 0;">📚 Mes Rencontres</h3>
+                        <div id="rencontresListContainer">
+                            <!-- Liste générée par JS -->
+                        </div>
+                    </div>
+
+                    <!-- Contenu principal -->
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+
+                <!-- En-tête de la rencontre sélectionnée -->
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); color: white;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="font-size: 2em;">📋</div>
+                        <div style="flex: 1;">
+                            <div style="font-size: 0.85em; opacity: 0.9; margin-bottom: 5px;">Rencontre en cours d'édition</div>
+                            <input type="text" id="toursRencontreTitre"
+                                   placeholder="Nom de la rencontre"
+                                   onchange="window.toursActions.updateRencontreTitre(this.value)"
+                                   style="width: 100%; padding: 10px; border: none; border-radius: 5px; font-size: 1.2em; font-weight: bold; background: rgba(255,255,255,0.95); color: #333;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section Liste des Travaux -->
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">📋 Liste des Travaux</h3>
+
+                    <div style="margin-bottom: 15px;">
+                        <button onclick="addToursRefroidissementTravail()"
+                                style="padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                            ➕ Ajouter un Travail
+                        </button>
+                        <button onclick="exportToursRefroidissementToExcel()"
+                                style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-left: 10px;">
+                            📥 Exporter Excel
+                        </button>
+                    </div>
+
+                    <div style="overflow-x: auto; max-height: 400px; overflow-y: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                            <thead style="position: sticky; top: 0; background: white; z-index: 10;">
+                                <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; min-width: 300px;">Description du travail</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap;">Responsable</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap;">Priorité</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; min-width: 150px;">Commentaires</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center; white-space: nowrap;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="toursRefroidissementTableBody">
+                                <tr>
+                                    <td colspan="5" style="padding: 30px; text-align: center; color: #666;">
+                                        Aucun travail ajouté. Cliquez sur "Ajouter un Travail" pour commencer.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section Compte Rendu de Rencontre -->
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">📝 Compte Rendu de Rencontre</h3>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Date de la rencontre:</label>
+                        <input type="date" id="toursDateRencontre" onchange="saveToursRefroidissementData()"
+                               style="padding: 8px; border: 1px solid #ced4da; border-radius: 4px; width: 200px;">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Participants:</label>
+                        <input type="text" id="toursParticipants" onchange="saveToursRefroidissementData()"
+                               placeholder="Ex: Jean Dupont, Marie Martin, etc."
+                               style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Notes et décisions:</label>
+                        <textarea id="toursCompteRendu" onchange="saveToursRefroidissementData()"
+                                  rows="10"
+                                  placeholder="Saisir les notes, décisions et points importants de la rencontre..."
+                                  style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; resize: vertical;"></textarea>
+                    </div>
+                </div>
+
+                <!-- Section Documents PDF -->
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">📎 Documents et Soumissions</h3>
+
+                    <div style="margin-bottom: 15px;">
+                        <button onclick="addToursDocument()"
+                                style="padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                            ➕ Ajouter un Document
+                        </button>
+                    </div>
+
+                    <div id="toursDocumentsList" style="display: flex; flex-direction: column; gap: 10px;">
+                        <p style="color: #000000; text-align: center; padding: 20px;">Aucun document ajouté.</p>
+                    </div>
+                </div>
+
+                    </div> <!-- Fin contenu principal -->
+                </div> <!-- Fin grid -->
+            </div> <!-- Fin summary-container -->
+        </div> <!-- Fin detail-t50 -->
+</body>
+</html>

@@ -1,0 +1,1463 @@
+/**
+ * @fileoverview Module de gestion des Devis et Corrections (T55)
+ * @module data/t55-devis
+ */
+
+import { saveToStorage, loadFromStorage } from '../sync/storage-wrapper.js';
+
+let t55Data = {
+    entrepreneurs: {}, // { entrepreneurName: { toutes les données du formulaire } }
+    currentEntrepreneur: '' // Dernier entrepreneur sélectionné (sauvegardé sur serveur)
+};
+
+let currentEntrepreneur = '';
+
+/**
+ * Set T55 data (utilisé par server-sync pour injecter les données)
+ */
+export function setT55Data(data) {
+    t55Data = data || { entrepreneurs: {} };
+    console.log('[T55] ✅ Données injectées');
+}
+
+/**
+ * Set T55 entrepreneurs list (utilisé par server-sync pour injecter la liste)
+ */
+export function setT55EntrepreneursList(data) {
+    if (data && Array.isArray(data) && data.length > 0) {
+        console.log('[T55] ✅ Liste entrepreneurs injectée:', data.length, 'entrepreneurs');
+        populateEntrepreneursSelect(data);
+    } else {
+        console.log('[T55] ⚠️ Aucune liste entrepreneurs reçue du serveur');
+    }
+}
+
+// Exposer globalement
+if (typeof window !== 'undefined') {
+    window.setT55Data = setT55Data;
+    window.setT55EntrepreneursList = setT55EntrepreneursList;
+}
+
+export async function loadT55Data() {
+    const saved = await loadFromStorage('t55Data');
+    if (saved) {
+        t55Data = saved;
+        // S'assurer que la structure est complète
+        if (!t55Data.entrepreneurs) t55Data.entrepreneurs = {};
+        if (!t55Data.currentEntrepreneur) t55Data.currentEntrepreneur = '';
+        console.log('[T55] Données T55 chargées depuis le serveur');
+    } else {
+        t55Data = {
+            entrepreneurs: {},
+            currentEntrepreneur: ''
+        };
+        console.log('[T55] Aucune donnée T55 trouvée, initialisation');
+    }
+
+    // Charger la liste des entrepreneurs sauvegardée depuis le serveur
+    await loadEntrepreneursList();
+}
+
+export async function saveT55Data() {
+    if (!currentEntrepreneur) return;
+
+    // Récupérer toutes les valeurs du formulaire
+    const entrepreneurData = {
+        // Informations générales
+        titreDevis: document.getElementById('t55TitreDevis')?.value || 'Devis général',
+        specialite: document.getElementById('t55Specialite')?.value || '',
+        lieu: document.getElementById('t55Lieu')?.value || '',
+        typeContrat: document.getElementById('t55TypeContrat')?.value || '',
+
+        // Personnes responsables
+        responsable: document.getElementById('t55Responsable')?.value || '',
+        verificateur: document.getElementById('t55Verificateur')?.value || '',
+        approbateur: document.getElementById('t55Approbateur')?.value || '',
+
+        // Dates clés
+        dates: {
+            debutVisites: document.getElementById('t55DateDebutVisites')?.value || '',
+            remiseSoumission: document.getElementById('t55DateRemiseSoumission')?.value || '',
+            adjudication: document.getElementById('t55DateAdjudication')?.value || '',
+            listeCognibox: document.getElementById('t55DateListeCognibox')?.value || '',
+            debutMobilisation: document.getElementById('t55DateDebutMobilisation')?.value || '',
+            finMobilisation: document.getElementById('t55DateFinMobilisation')?.value || '',
+            debutArret: document.getElementById('t55DateDebutArret')?.value || '',
+            finArret: document.getElementById('t55DateFinArret')?.value || '',
+            demobilisation: document.getElementById('t55DateDemobilisation')?.value || '',
+            verification: document.getElementById('t55DateVerification')?.value || '',
+            approbation: document.getElementById('t55DateApprobation')?.value || ''
+        },
+
+        // Tableaux (SANS le tableau historique qui causait des problèmes)
+        dessins: getDessinsTableData() || [],
+        convertisseur: getConvertisseurTableData() || [],
+        couleeContinue: getCouleeContinueTableData() || [],
+
+        // Remarques
+        remarquesGenerales: document.getElementById('t55RemarquesGenerales')?.value || '',
+        corrections: document.getElementById('t55Corrections')?.value || '',
+
+        lastUpdated: new Date().toISOString()
+    };
+
+    t55Data.entrepreneurs[currentEntrepreneur] = entrepreneurData;
+    await saveToStorage('t55Data', t55Data);
+    console.log('[T55] Données sauvegardées sur le serveur pour', currentEntrepreneur);
+}
+
+function getDessinsTableData() {
+    const tbody = document.getElementById('t55DessinsTableBody');
+    if (!tbody) return [];
+
+    const dessins = [];
+    const rows = tbody.querySelectorAll('tr');
+
+    rows.forEach(row => {
+        const inputs = row.querySelectorAll('input, textarea');
+        if (inputs.length >= 3) {
+            dessins.push({
+                numero: inputs[0].value || '',
+                revision: inputs[1].value || '',
+                titre: inputs[2].value || ''
+            });
+        }
+    });
+
+    return dessins;
+}
+
+function getConvertisseurTableData() {
+    const tbody = document.getElementById('t55ConvertisseurTableBody');
+    if (!tbody) return [];
+
+    const convertisseur = [];
+    const rows = tbody.querySelectorAll('tr');
+
+    rows.forEach(row => {
+        const inputs = row.querySelectorAll('input, textarea');
+        if (inputs.length >= 7) {
+            convertisseur.push({
+                item: inputs[0].value || '',
+                equipement: inputs[1].value || '',
+                ordre: inputs[2].value || '',
+                description: inputs[3].value || '',
+                materielRTFT: inputs[4].value || '',
+                materielEntrepreneur: inputs[5].value || '',
+                dessinsRef: inputs[6].value || ''
+            });
+        }
+    });
+
+    return convertisseur;
+}
+
+function getCouleeContinueTableData() {
+    const tbody = document.getElementById('t55CouleeContinueTableBody');
+    if (!tbody) return [];
+
+    const couleeContinue = [];
+    const rows = tbody.querySelectorAll('tr');
+
+    rows.forEach(row => {
+        const inputs = row.querySelectorAll('input, textarea');
+        if (inputs.length >= 7) {
+            couleeContinue.push({
+                item: inputs[0].value || '',
+                equipement: inputs[1].value || '',
+                ordre: inputs[2].value || '',
+                description: inputs[3].value || '',
+                materielRTFT: inputs[4].value || '',
+                materielEntrepreneur: inputs[5].value || '',
+                dessinsRef: inputs[6].value || ''
+            });
+        }
+    });
+
+    return couleeContinue;
+}
+
+// FONCTION DÉSACTIVÉE - Tableau historique non utilisé pour la génération DOCX
+// function getHistoriqueTableData() {
+//     const tbody = document.getElementById('t55HistoriqueTableBody');
+//     if (!tbody) return [];
+//
+//     const historique = [];
+//     const rows = tbody.querySelectorAll('tr');
+//
+//     rows.forEach(row => {
+//         const inputs = row.querySelectorAll('input, textarea');
+//         if (inputs.length >= 11) {
+//             historique.push({
+//                 occ: inputs[0].value || '',
+//                 revision: inputs[1].value || '',
+//                 item: inputs[2].value || '',
+//                 equipement: inputs[3].value || '',
+//                 ordre: inputs[4].value || '',
+//                 description: inputs[5].value || '',
+//                 materielRTFT: inputs[6].value || '',
+//                 materielEntrepreneur: inputs[7].value || '',
+//                 dessinsRef: inputs[8].value || '',
+//                 gammes: inputs[9].value || '',
+//                 cptrGrpGam: inputs[10].value || ''
+//             });
+//         }
+//     });
+//
+//     return historique;
+// }
+
+/**
+ * Charge la liste des entrepreneurs depuis le storage
+ */
+async function loadEntrepreneursList() {
+    const saved = await loadFromStorage('t55EntrepreneursList');
+
+    if (saved && Array.isArray(saved) && saved.length > 0) {
+        console.log('[T55] ✅ Liste des entrepreneurs chargée depuis le serveur:', saved.length, 'entrepreneurs');
+        console.log('[T55] Entrepreneurs:', saved);
+
+        // Attendre que le DOM soit prêt et réessayer si nécessaire
+        let attempts = 0;
+        const maxAttempts = 20; // Augmenté à 20 tentatives
+        const retryInterval = 200; // Augmenté à 200ms entre chaque tentative
+
+        const tryPopulate = () => {
+            attempts++;
+            const select = document.getElementById('t55EntrepreneurSelect');
+
+            if (select) {
+                console.log(`[T55] ✅ Select trouvé après ${attempts} tentative(s), peuplement en cours...`);
+                populateEntrepreneursSelect(saved);
+                console.log('[T55] ✅ Menu déroulant peuplé avec', select.options.length - 1, 'entrepreneurs');
+
+                // Afficher un indicateur visuel que la liste a été chargée
+                if (select.options.length > 1) {
+                    const syncBtn = document.querySelector('button[onclick="syncT55Entrepreneurs()"]');
+                    if (syncBtn) {
+                        syncBtn.innerHTML = '✅ Liste sauvegardée';
+                        syncBtn.style.background = '#28a745';
+                        setTimeout(() => {
+                            syncBtn.innerHTML = '🔄 Synchroniser IW37N';
+                            syncBtn.style.background = '#4a7c59';
+                        }, 3000);
+                    }
+                }
+            } else {
+                if (attempts < maxAttempts) {
+                    console.log(`[T55] ⚠️ Select non trouvé, tentative ${attempts}/${maxAttempts}, nouvelle tentative dans ${retryInterval}ms...`);
+                    setTimeout(tryPopulate, retryInterval);
+                } else {
+                    console.error(`[T55] ❌ ÉCHEC: Select t55EntrepreneurSelect introuvable après ${maxAttempts} tentatives (${maxAttempts * retryInterval}ms)`);
+                    console.error('[T55] ❌ Vérifiez que vous êtes bien sur la page detail-t55');
+                }
+            }
+        };
+
+        tryPopulate();
+    } else {
+        console.log('[T55] ⚠️ Aucune liste d\'entrepreneurs sauvegardée. Cliquez sur "Synchroniser IW37N".');
+    }
+}
+
+/**
+ * Récupère le nom d'un code externe depuis les données contacts
+ * @param {string} code - Code externe
+ * @returns {string} Nom correspondant ou chaîne vide
+ */
+function getCodeExterneName(code) {
+    try {
+        if (typeof window.getCodesExternes === 'function') {
+            const codesExternes = window.getCodesExternes();
+            const codeData = codesExternes.find(c => c.code === code);
+            return codeData ? codeData.nom : '';
+        }
+    } catch (error) {
+        console.warn('[T55] Erreur récupération nom code externe:', error);
+    }
+    return '';
+}
+
+/**
+ * Remplit le menu déroulant des entrepreneurs
+ */
+function populateEntrepreneursSelect(entrepreneursList) {
+    const select = document.getElementById('t55EntrepreneurSelect');
+    if (!select) return;
+
+    select.innerHTML = '<option value="">-- Sélectionner un entrepreneur --</option>';
+
+    entrepreneursList.forEach(entrepreneur => {
+        const option = document.createElement('option');
+        option.value = entrepreneur;
+
+        // Afficher "CODE - Nom" si le nom existe, sinon juste le code
+        const codeName = getCodeExterneName(entrepreneur);
+        option.textContent = codeName ? `${entrepreneur} - ${codeName}` : entrepreneur;
+
+        select.appendChild(option);
+    });
+
+    console.log('[T55] Menu déroulant rempli avec', entrepreneursList.length, 'entrepreneurs');
+
+    // Mettre à jour le statut visuel
+    const statusDiv = document.getElementById('t55EntrepreneursListStatus');
+    if (statusDiv) {
+        statusDiv.innerHTML = `✅ <strong style="color: #28a745;">${entrepreneursList.length} entrepreneur(s)</strong> disponible(s)`;
+    }
+}
+
+export async function syncT55Entrepreneurs() {
+    console.log('[T55] Synchronisation des entrepreneurs depuis IW37N...');
+
+    const iw37nData = await loadFromStorage('iw37nData');
+
+    if (!iw37nData || !Array.isArray(iw37nData) || iw37nData.length === 0) {
+        alert('⚠️ Aucune donnée IW37N trouvée. Veuillez d\'abord importer les données IW37N.');
+        return;
+    }
+
+    console.log('[T55] Nombre de lignes IW37N à traiter:', iw37nData.length);
+
+    try {
+        const entrepreneursSet = new Set();
+        const allValuesSet = new Set();
+
+        iw37nData.forEach(row => {
+            const posteTravOper = row['Post.trav.opér.'] || row['Post.trav.oper.'] || row['PosteTravOper'] || '';
+            const posteTravOperStr = posteTravOper.toString().trim();
+
+            if (posteTravOperStr) {
+                allValuesSet.add(posteTravOperStr);
+            }
+
+            if (posteTravOperStr &&
+                posteTravOperStr !== '-' &&
+                !posteTravOperStr.toUpperCase().startsWith('A') &&
+                !posteTravOperStr.toUpperCase().startsWith('E')) {
+                entrepreneursSet.add(posteTravOperStr);
+            }
+        });
+
+        const allValuesArray = Array.from(allValuesSet).sort();
+        console.log('[T55] TOUTES les valeurs Post.trav.opér. trouvées:', allValuesArray);
+        console.log('[T55] Nombre total de valeurs uniques:', allValuesArray.length);
+
+        const entrepreneursArray = Array.from(entrepreneursSet).sort();
+
+        console.log(`[T55] ${entrepreneursArray.length} entrepreneurs trouvés (après filtre A/E)`);
+        console.log('[T55] Entrepreneurs trouvés:', entrepreneursArray);
+
+        if (entrepreneursArray.length === 0) {
+            console.warn('[T55] ⚠️ AUCUN entrepreneur trouvé après avoir exclu ceux commençant par A ou E!');
+            alert('⚠️ Aucun entrepreneur trouvé dans Post.trav.opér. après avoir exclu ceux commençant par A ou E.\n\n' +
+                  'Vérifiez que votre fichier IW37N contient bien des valeurs dans la colonne "Post.trav.opér." qui ne commencent pas par A ou E (ex: MECEXT, COH, INC, etc.)');
+            return;
+        }
+
+        // Charger la liste existante et fusionner avec les nouvelles valeurs
+        const existingList = await loadFromStorage('t55EntrepreneursList') || [];
+        console.log('[T55] Entrepreneurs existants en mémoire:', existingList);
+
+        // Créer un Set combiné pour éviter les doublons
+        const mergedSet = new Set([...existingList, ...entrepreneursArray]);
+        const mergedArray = Array.from(mergedSet).sort();
+
+        const newEntrepreneurs = entrepreneursArray.filter(e => !existingList.includes(e));
+        console.log('[T55] Nouveaux entrepreneurs ajoutés:', newEntrepreneurs.length > 0 ? newEntrepreneurs : 'aucun');
+
+        // Sauvegarder la liste fusionnée des entrepreneurs sur le serveur
+        await saveToStorage('t55EntrepreneursList', mergedArray);
+        console.log('[T55] ✅ Liste des entrepreneurs fusionnée et sauvegardée sur le serveur');
+
+        // Remplir le menu déroulant avec la liste fusionnée
+        populateEntrepreneursSelect(mergedArray);
+
+        // Vérifier que la sauvegarde a bien fonctionné
+        const verif = await loadFromStorage('t55EntrepreneursList');
+        if (verif && verif.length === mergedArray.length) {
+            console.log('[T55] ✅ Vérification : Liste correctement sauvegardée sur le serveur');
+            console.log('[T55] ✅ La liste sera maintenant disponible après un refresh (F5)');
+        } else {
+            console.error('[T55] ❌ PROBLÈME : Sauvegarde échouée! Liste non disponible après refresh.');
+        }
+
+        if (newEntrepreneurs.length > 0) {
+            alert(`✅ Synchronisation terminée!\n\n` +
+                  `📊 Total: ${mergedArray.length} entrepreneurs\n` +
+                  `✨ Nouveaux: ${newEntrepreneurs.length} entrepreneurs ajoutés\n\n` +
+                  `Nouveaux entrepreneurs: ${newEntrepreneurs.join(', ')}\n\n` +
+                  `💾 La liste reste en mémoire et les nouvelles valeurs ont été ajoutées.`);
+        } else {
+            alert(`✅ Synchronisation terminée!\n\n` +
+                  `📊 Total: ${mergedArray.length} entrepreneurs\n` +
+                  `ℹ️ Aucun nouvel entrepreneur (tous déjà en mémoire)\n\n` +
+                  `💾 La liste reste inchangée.`);
+        }
+
+    } catch (error) {
+        console.error('[T55] Erreur lors de la synchronisation:', error);
+        alert('❌ Erreur lors de la synchronisation avec IW37N.');
+    }
+}
+
+export async function loadT55EntrepreneurData() {
+    console.log('[T55] loadT55EntrepreneurData() appelée');
+
+    const select = document.getElementById('t55EntrepreneurSelect');
+    if (!select) {
+        console.error('[T55] Élément t55EntrepreneurSelect introuvable');
+        return;
+    }
+
+    currentEntrepreneur = select.value;
+    console.log('[T55] Entrepreneur sélectionné:', currentEntrepreneur);
+
+    // Sauvegarder la sélection sur le serveur pour la recharger après un refresh
+    t55Data.currentEntrepreneur = currentEntrepreneur;
+    await saveToStorage('t55Data', t55Data);
+
+    const devisForm = document.getElementById('t55DevisForm');
+    const exportBtn = document.getElementById('t55ExportDOCXBtn');
+
+    if (!currentEntrepreneur) {
+        console.log('[T55] Aucun entrepreneur sélectionné, masquage du formulaire');
+        if (devisForm) devisForm.style.display = 'none';
+        if (exportBtn) exportBtn.style.display = 'none';
+        return;
+    }
+
+    console.log('[T55] Affichage du formulaire');
+    if (devisForm) {
+        devisForm.style.display = 'block';
+        console.log('[T55] Formulaire affiché');
+    } else {
+        console.error('[T55] Élément t55DevisForm introuvable!');
+    }
+    if (exportBtn) exportBtn.style.display = 'block';
+
+    // Masquer la section Historique des Devis et Corrections pour les entrepreneurs
+    const historiqueSection = document.getElementById('t55HistoriqueSection');
+    if (historiqueSection) {
+        historiqueSection.style.display = 'none';
+        console.log('[T55] Section Historique masquée (non utilisée pour les entrepreneurs)');
+    }
+
+    const entrepreneurData = t55Data.entrepreneurs[currentEntrepreneur] || {};
+    console.log('[T55] Données entrepreneur:', entrepreneurData);
+
+    // Charger les données - avec vérifications de sécurité
+    const titreDevis = document.getElementById('t55TitreDevis');
+    const specialite = document.getElementById('t55Specialite');
+    const lieu = document.getElementById('t55Lieu');
+    const typeContrat = document.getElementById('t55TypeContrat');
+
+    if (titreDevis) titreDevis.value = entrepreneurData.titreDevis || 'Devis général';
+    if (specialite) specialite.value = entrepreneurData.specialite || '';
+    if (lieu) lieu.value = entrepreneurData.lieu || 'Rio Tinto Fer et Titane, Sorel-Tracy, Québec, Canada';
+    if (typeContrat) typeContrat.value = entrepreneurData.typeContrat || 'Dépenses contrôlées';
+
+    // Charger les personnes responsables
+    const responsable = document.getElementById('t55Responsable');
+    const verificateur = document.getElementById('t55Verificateur');
+    const approbateur = document.getElementById('t55Approbateur');
+
+    if (responsable) responsable.value = entrepreneurData.responsable || '';
+    if (verificateur) verificateur.value = entrepreneurData.verificateur || '';
+    if (approbateur) approbateur.value = entrepreneurData.approbateur || '';
+
+    if (entrepreneurData.dates) {
+        const dateDebutVisites = document.getElementById('t55DateDebutVisites');
+        const dateRemiseSoumission = document.getElementById('t55DateRemiseSoumission');
+        const dateAdjudication = document.getElementById('t55DateAdjudication');
+        const dateListeCognibox = document.getElementById('t55DateListeCognibox');
+        const dateDebutMobilisation = document.getElementById('t55DateDebutMobilisation');
+        const dateFinMobilisation = document.getElementById('t55DateFinMobilisation');
+        const dateDebutArret = document.getElementById('t55DateDebutArret');
+        const dateFinArret = document.getElementById('t55DateFinArret');
+        const dateDemobilisation = document.getElementById('t55DateDemobilisation');
+        const dateVerification = document.getElementById('t55DateVerification');
+        const dateApprobation = document.getElementById('t55DateApprobation');
+
+        if (dateDebutVisites) dateDebutVisites.value = entrepreneurData.dates.debutVisites || '';
+        if (dateRemiseSoumission) dateRemiseSoumission.value = entrepreneurData.dates.remiseSoumission || '';
+        if (dateAdjudication) dateAdjudication.value = entrepreneurData.dates.adjudication || '';
+        if (dateListeCognibox) dateListeCognibox.value = entrepreneurData.dates.listeCognibox || '';
+        if (dateDebutMobilisation) dateDebutMobilisation.value = entrepreneurData.dates.debutMobilisation || '';
+        if (dateFinMobilisation) dateFinMobilisation.value = entrepreneurData.dates.finMobilisation || '';
+        if (dateDebutArret) dateDebutArret.value = entrepreneurData.dates.debutArret || '';
+        if (dateFinArret) dateFinArret.value = entrepreneurData.dates.finArret || '';
+        if (dateDemobilisation) dateDemobilisation.value = entrepreneurData.dates.demobilisation || '';
+        if (dateVerification) dateVerification.value = entrepreneurData.dates.verification || '';
+        if (dateApprobation) dateApprobation.value = entrepreneurData.dates.approbation || '';
+    }
+
+    const remarquesGenerales = document.getElementById('t55RemarquesGenerales');
+    const corrections = document.getElementById('t55Corrections');
+
+    if (remarquesGenerales) remarquesGenerales.value = entrepreneurData.remarquesGenerales || '';
+    if (corrections) corrections.value = entrepreneurData.corrections || '';
+
+    console.log('[T55] Rendu des tableaux...');
+    renderDessinsTable(entrepreneurData.dessins || []);
+
+    // Charger automatiquement les données depuis IW37N et Historique
+    await autoFillFromIW37NAndHistorique();
+
+    // Recharger les données après l'auto-fill
+    const updatedData = t55Data.entrepreneurs[currentEntrepreneur] || {};
+
+    renderConvertisseurTable(updatedData.convertisseur || []);
+    renderCouleeContinueTable(updatedData.couleeContinue || []);
+    // renderHistoriqueTable(updatedData.historique || []); // NON UTILISÉ POUR LA GÉNÉRATION DOCX
+    console.log('[T55] Tableaux rendus avec succès');
+}
+
+/**
+ * Remplit automatiquement les tableaux Convertisseur et Coulée Continue
+ * en se basant sur IW37N (filtre par Post.trav.opér.) et Historique (colonnes Gammes et Révision)
+ */
+async function autoFillFromIW37NAndHistorique() {
+    if (!currentEntrepreneur) {
+        console.log('[T55] Aucun entrepreneur sélectionné, skip auto-fill');
+        return;
+    }
+
+    console.log('[T55] 🔄 Auto-remplissage depuis IW37N et Historique pour:', currentEntrepreneur);
+
+    try {
+        // 1. Charger les données IW37N
+        const iw37nData = await loadFromStorage('iw37nData');
+        if (!iw37nData || !Array.isArray(iw37nData)) {
+            console.warn('[T55] ⚠️ Aucune donnée IW37N disponible');
+            return;
+        }
+        console.log('[T55] ✅ IW37N chargé:', iw37nData.length, 'lignes');
+
+        // 2. Charger les données de l'historique T55
+        const historiqueData = await loadFromStorage('t55HistoriqueData');
+        if (!historiqueData || !Array.isArray(historiqueData)) {
+            console.warn('[T55] ⚠️ Aucune donnée Historique disponible');
+            return;
+        }
+        console.log('[T55] ✅ Historique T55 chargé:', historiqueData.length, 'entrées');
+
+        // 3. Filtrer IW37N par Post.trav.opér. (entrepreneur sélectionné)
+        console.log('[T55] 🔍 Filtrage IW37N pour entrepreneur:', currentEntrepreneur);
+        console.log('[T55] 🔍 Exemple de première ligne IW37N:', iw37nData[0]);
+
+        const ordresEntrepreneur = iw37nData.filter(ligne => {
+            const posteTrav = (ligne['Post.trav.opér.'] || ligne.posteTravOper || '').toString().trim();
+            const match = posteTrav === currentEntrepreneur;
+
+            // Log pour debug (seulement les 5 premières lignes)
+            if (iw37nData.indexOf(ligne) < 5) {
+                console.log('[T55] 🔍 Ligne', iw37nData.indexOf(ligne), '- Post.trav.opér.:', `"${posteTrav}"`, '- Match:', match);
+            }
+
+            return match;
+        });
+        console.log('[T55] 📋 Ordres filtrés pour', currentEntrepreneur, ':', ordresEntrepreneur.length);
+
+        if (ordresEntrepreneur.length > 0) {
+            console.log('[T55] 📋 Exemple premier ordre filtré:', ordresEntrepreneur[0]);
+        }
+
+        if (ordresEntrepreneur.length === 0) {
+            console.log('[T55] ⚠️ Aucun ordre trouvé pour cet entrepreneur dans IW37N');
+            alert(`⚠️ Aucun ordre trouvé dans IW37N pour l'entrepreneur: ${currentEntrepreneur}\n\nVérifiez que:\n1. Les données IW37N sont bien chargées\n2. La colonne "Post.trav.opér." contient bien "${currentEntrepreneur}"`);
+            return;
+        }
+
+        // 4. ÉTAPE 2: Dédupliquer les ordres et faire le matching avec Historique
+        const convertisseurData = [];
+        const couleeContinueData = [];
+        const ordresTraites = new Set(); // Pour éviter les doublons
+
+        console.log('[T55] 📝 Traitement des ordres avec matching Historique...');
+
+        ordresEntrepreneur.forEach((ordreIW37N, index) => {
+            const numeroOrdre = (ordreIW37N['Ordre'] || ordreIW37N.ordre || '').toString().trim();
+            const designation = ordreIW37N['Désignation'] || ordreIW37N.designation || '';
+
+            // Utiliser "Grpe de gammes" au lieu de "Gamme"
+            const gammeIW37N = (ordreIW37N['Grpe de gammes'] || ordreIW37N['Grpe de Gammes'] || ordreIW37N.grpeDeGammes || '').toString().trim();
+
+            // CORRECTION: Récupérer la révision depuis IW37N, pas depuis Historique
+            const revisionIW37N = (ordreIW37N['Révision'] || ordreIW37N.revision || '').toString().trim().toUpperCase();
+
+            // Ignorer si déjà traité (évite les doublons)
+            if (ordresTraites.has(numeroOrdre)) {
+                return;
+            }
+            ordresTraites.add(numeroOrdre);
+
+            if (index < 5) {
+                console.log(`[T55] 📝 Ordre ${index + 1}:`, {
+                    ordre: numeroOrdre,
+                    designation: designation,
+                    grpeDeGammes: gammeIW37N,
+                    revision: revisionIW37N
+                });
+            }
+
+            // Chercher dans l'historique via le numéro de Grpe de Gammes (pour récupérer les autres infos)
+            let entreeHistorique = null;
+
+            if (gammeIW37N) {
+                // Chercher correspondance exacte par Gammes dans l'Historique
+                entreeHistorique = historiqueData.find(h => {
+                    const gammes = (h.gammes || h.Gammes || '').toString().trim();
+                    return gammes === gammeIW37N;
+                });
+
+                if (entreeHistorique) {
+                    if (index < 5) {
+                        console.log(`[T55]   ✅ Match Historique trouvé pour Grpe de Gammes: ${gammeIW37N}`);
+                        console.log(`[T55]      - Item: ${entreeHistorique.item}`);
+                        console.log(`[T55]      - Équipement: ${entreeHistorique.equipement || entreeHistorique.Équipement}`);
+                        console.log(`[T55]      - Description: ${entreeHistorique.descriptionTravaux || entreeHistorique['Description des travaux']}`);
+                        console.log(`[T55]      - Matériel RTFT: ${entreeHistorique.materielRTFT || entreeHistorique['Matériel fournis par RTFT']}`);
+                        console.log(`[T55]      - Matériel Entrepreneur: ${entreeHistorique.materielEntrepreneur || entreeHistorique['Matériel fournis par Entrepreneur']}`);
+                        console.log(`[T55]      - Dessins/Réf: ${entreeHistorique.dessinsReferences || entreeHistorique['Dessins - Références']}`);
+                    }
+                } else {
+                    if (index < 5) {
+                        console.log(`[T55]   ⚠️ Pas de match Historique pour Grpe de Gammes: "${gammeIW37N}"`);
+                        // Afficher les 3 premières gammes de l'historique pour debug
+                        console.log(`[T55]      Exemples Gammes Historique:`, historiqueData.slice(0, 3).map(h => h.gammes || h.Gammes));
+                    }
+                }
+            } else {
+                if (index < 5) {
+                    console.log(`[T55]   ⚠️ Pas de numéro de Grpe de Gammes dans IW37N pour cet ordre`);
+                }
+            }
+
+            // Créer l'objet de travail avec données de l'Historique si match trouvé
+            const travail = {
+                item: entreeHistorique ? (entreeHistorique.item || '') : '',
+                equipement: entreeHistorique ? (entreeHistorique.equipement || entreeHistorique.Équipement || '') : '',
+                ordre: numeroOrdre,
+                description: entreeHistorique ? (entreeHistorique.descriptionTravaux || entreeHistorique['Description des travaux'] || designation) : designation,
+                materielRTFT: entreeHistorique ? (entreeHistorique.materielRTFT || entreeHistorique['Matériel fournis par RTFT'] || '') : '',
+                materielEntrepreneur: entreeHistorique ? (entreeHistorique.materielEntrepreneur || entreeHistorique['Matériel fournis par Entrepreneur'] || '') : '',
+                dessinsRef: entreeHistorique ? (entreeHistorique.dessinsReferences || entreeHistorique['Dessins - Références'] || '') : ''
+            };
+
+            // Log pour vérifier les données remplies
+            if (index < 5) {
+                console.log(`[T55]   📋 Travail créé:`, travail);
+            }
+
+            // Dispatcher selon la révision d'IW37N
+            if (revisionIW37N.startsWith('ACI')) {
+                convertisseurData.push(travail);
+                if (index < 5) {
+                    console.log(`[T55]   ➡️ CONVERTISSEUR (Révision: ${revisionIW37N})`);
+                }
+            } else if (revisionIW37N.startsWith('ACC')) {
+                couleeContinueData.push(travail);
+                if (index < 5) {
+                    console.log(`[T55]   ➡️ COULÉE CONTINUE (Révision: ${revisionIW37N})`);
+                }
+            } else {
+                // Si pas de révision ou révision inconnue, mettre dans Convertisseur par défaut
+                convertisseurData.push(travail);
+                if (index < 5) {
+                    console.log(`[T55]   ⚠️ Révision inconnue (${revisionIW37N}), ajouté à Convertisseur par défaut`);
+                }
+            }
+        });
+
+        console.log('[T55] ✅ Traitement terminé:');
+        console.log('[T55]   - Total ordres trouvés:', ordresEntrepreneur.length);
+        console.log('[T55]   - Ordres uniques traités:', ordresTraites.size);
+        console.log('[T55]   - CONVERTISSEUR (ACI):', convertisseurData.length);
+        console.log('[T55]   - COULÉE CONTINUE (ACC):', couleeContinueData.length);
+
+        // Informer l'utilisateur
+        if (convertisseurData.length > 0) {
+            console.log(`[T55] ✅ ${convertisseurData.length} ordre(s) chargé(s) pour ${currentEntrepreneur}`);
+        }
+
+        // 5. Sauvegarder dans les données de l'entrepreneur
+        if (!t55Data.entrepreneurs[currentEntrepreneur]) {
+            t55Data.entrepreneurs[currentEntrepreneur] = {};
+        }
+        t55Data.entrepreneurs[currentEntrepreneur].convertisseur = convertisseurData;
+        t55Data.entrepreneurs[currentEntrepreneur].couleeContinue = couleeContinueData;
+
+        // Sauvegarder sur le serveur
+        await saveToStorage('t55Data', t55Data);
+        console.log('[T55] 💾 Données auto-remplies sauvegardées sur le serveur');
+
+    } catch (error) {
+        console.error('[T55] ❌ Erreur lors de l\'auto-remplissage:', error);
+    }
+}
+
+function renderDessinsTable(dessins) {
+    console.log('[T55] renderDessinsTable() appelée avec', dessins.length, 'dessins');
+    const tbody = document.getElementById('t55DessinsTableBody');
+    if (!tbody) {
+        console.error('[T55] Élément t55DessinsTableBody introuvable!');
+        return;
+    }
+
+    if (dessins.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="padding: 20px; text-align: center; color: #999;">Aucun dessin. Cliquez sur "Ajouter" pour commencer.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = '';
+    dessins.forEach((dessin, index) => {
+        const row = document.createElement('tr');
+        row.style.background = index % 2 === 0 ? 'white' : '#f8f9fa';
+        row.innerHTML = `
+            <td style="padding: 8px; border: 1px solid #dee2e6;">
+                <input type="text" value="${dessin.numero || ''}" onchange="saveT55Data()"
+                       style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+            </td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">
+                <input type="text" value="${dessin.revision || ''}" onchange="saveT55Data()"
+                       style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+            </td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">
+                <input type="text" value="${dessin.titre || ''}" onchange="saveT55Data()"
+                       style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+            </td>
+            <td style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">
+                <button onclick="deleteT55DessinRow(this)" style="padding: 4px 8px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer;">
+                    ❌
+                </button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function renderConvertisseurTable(convertisseur) {
+    const tbody = document.getElementById('t55ConvertisseurTableBody');
+    if (!tbody) return;
+
+    if (convertisseur.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="padding: 20px; text-align: center; color: #999;">Aucun travail Convertisseur. Cliquez sur "Ajouter" pour commencer.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = '';
+    convertisseur.forEach((travail, index) => {
+        const row = document.createElement('tr');
+        row.style.background = index % 2 === 0 ? 'white' : '#f8f9fa';
+        row.innerHTML = `
+            <td style="padding: 8px; border: 1px solid #dee2e6;">
+                <input type="text" value="${travail.item || ''}" onchange="saveT55Data()"
+                       style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+            </td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">
+                <input type="text" value="${travail.equipement || ''}" onchange="saveT55Data()"
+                       style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+            </td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">
+                <input type="text" value="${travail.ordre || ''}" onchange="saveT55Data()"
+                       style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+            </td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">
+                <textarea onchange="saveT55Data()" rows="2"
+                          style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; resize: vertical;">${travail.description || ''}</textarea>
+            </td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">
+                <textarea onchange="saveT55Data()" rows="2"
+                          style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; resize: vertical;">${travail.materielRTFT || ''}</textarea>
+            </td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">
+                <textarea onchange="saveT55Data()" rows="2"
+                          style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; resize: vertical;">${travail.materielEntrepreneur || ''}</textarea>
+            </td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">
+                <input type="text" value="${travail.dessinsRef || ''}" onchange="saveT55Data()"
+                       style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+            </td>
+            <td style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">
+                <button onclick="deleteT55ConvertisseurRow(this)" style="padding: 4px 8px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer;">
+                    ❌
+                </button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function renderCouleeContinueTable(couleeContinue) {
+    const tbody = document.getElementById('t55CouleeContinueTableBody');
+    if (!tbody) return;
+
+    if (couleeContinue.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="padding: 20px; text-align: center; color: #999;">Aucun travail Coulée continue. Cliquez sur "Ajouter" pour commencer.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = '';
+    couleeContinue.forEach((travail, index) => {
+        const row = document.createElement('tr');
+        row.style.background = index % 2 === 0 ? 'white' : '#f8f9fa';
+        row.innerHTML = `
+            <td style="padding: 8px; border: 1px solid #dee2e6;">
+                <input type="text" value="${travail.item || ''}" onchange="saveT55Data()"
+                       style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+            </td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">
+                <input type="text" value="${travail.equipement || ''}" onchange="saveT55Data()"
+                       style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+            </td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">
+                <input type="text" value="${travail.ordre || ''}" onchange="saveT55Data()"
+                       style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+            </td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">
+                <textarea onchange="saveT55Data()" rows="2"
+                          style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; resize: vertical;">${travail.description || ''}</textarea>
+            </td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">
+                <textarea onchange="saveT55Data()" rows="2"
+                          style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; resize: vertical;">${travail.materielRTFT || ''}</textarea>
+            </td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">
+                <textarea onchange="saveT55Data()" rows="2"
+                          style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; resize: vertical;">${travail.materielEntrepreneur || ''}</textarea>
+            </td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">
+                <input type="text" value="${travail.dessinsRef || ''}" onchange="saveT55Data()"
+                       style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+            </td>
+            <td style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">
+                <button onclick="deleteT55CouleeContinueRow(this)" style="padding: 4px 8px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer;">
+                    ❌
+                </button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+// FONCTION DÉSACTIVÉE - Tableau historique non utilisé pour la génération DOCX
+// function renderHistoriqueTable(historique) {
+//     const tbody = document.getElementById('t55HistoriqueTableBody');
+//     if (!tbody) return;
+//
+//     if (historique.length === 0) {
+//         tbody.innerHTML = '<tr><td colspan="12" style="padding: 20px; text-align: center; color: #999;">Aucune entrée. Cliquez sur "Ajouter" pour commencer.</td></tr>';
+//         return;
+//     }
+//
+//     tbody.innerHTML = '';
+//     historique.forEach((entry, index) => {
+//         const row = document.createElement('tr');
+//         row.style.background = index % 2 === 0 ? 'white' : '#f8f9fa';
+//         row.innerHTML = `
+//             <td style="padding: 8px; border: 1px solid #dee2e6;">
+//                 <input type="text" value="${entry.occ || ''}" onchange="saveT55Data()"
+//                        style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+//             </td>
+//             <td style="padding: 8px; border: 1px solid #dee2e6;">
+//                 <input type="text" value="${entry.revision || ''}" onchange="saveT55Data()"
+//                        style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+//             </td>
+//             <td style="padding: 8px; border: 1px solid #dee2e6;">
+//                 <input type="text" value="${entry.item || ''}" onchange="saveT55Data()"
+//                        style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+//             </td>
+//             <td style="padding: 8px; border: 1px solid #dee2e6;">
+//                 <input type="text" value="${entry.equipement || ''}" onchange="saveT55Data()"
+//                        style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+//             </td>
+//             <td style="padding: 8px; border: 1px solid #dee2e6;">
+//                 <input type="text" value="${entry.ordre || ''}" onchange="saveT55Data()"
+//                        style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+//             </td>
+//             <td style="padding: 8px; border: 1px solid #dee2e6;">
+//                 <textarea onchange="saveT55Data()" rows="2"
+//                           style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; resize: vertical;">${entry.description || ''}</textarea>
+//             </td>
+//             <td style="padding: 8px; border: 1px solid #dee2e6;">
+//                 <textarea onchange="saveT55Data()" rows="2"
+//                           style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; resize: vertical;">${entry.materielRTFT || ''}</textarea>
+//             </td>
+//             <td style="padding: 8px; border: 1px solid #dee2e6;">
+//                 <textarea onchange="saveT55Data()" rows="2"
+//                           style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; resize: vertical;">${entry.materielEntrepreneur || ''}</textarea>
+//             </td>
+//             <td style="padding: 8px; border: 1px solid #dee2e6;">
+//                 <input type="text" value="${entry.dessinsRef || ''}" onchange="saveT55Data()"
+//                        style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+//             </td>
+//             <td style="padding: 8px; border: 1px solid #dee2e6;">
+//                 <input type="text" value="${entry.gammes || ''}" onchange="saveT55Data()"
+//                        style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+//             </td>
+//             <td style="padding: 8px; border: 1px solid #dee2e6;">
+//                 <input type="text" value="${entry.cptrGrpGam || ''}" onchange="saveT55Data()"
+//                        style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+//             </td>
+//             <td style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">
+//                 <button onclick="deleteT55HistoriqueRow(this)" style="padding: 4px 8px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer;">
+//                     ❌
+//                 </button>
+//             </td>
+//         `;
+//         tbody.appendChild(row);
+//     });
+// }
+
+export async function addT55DessinRow() {
+    if (!currentEntrepreneur) {
+        alert('⚠️ Veuillez d\'abord sélectionner un entrepreneur');
+        return;
+    }
+
+    const entrepreneurData = t55Data.entrepreneurs[currentEntrepreneur] || {};
+    const dessins = entrepreneurData.dessins || [];
+
+    dessins.push({ numero: '', revision: '', titre: '' });
+
+    entrepreneurData.dessins = dessins;
+    t55Data.entrepreneurs[currentEntrepreneur] = entrepreneurData;
+
+    renderDessinsTable(dessins);
+    await saveT55Data();
+}
+
+export function deleteT55DessinRow(button) {
+    if (confirm('Supprimer cette ligne ?')) {
+        const row = button.closest('tr');
+        row.remove();
+        saveT55Data();
+    }
+}
+
+export async function addT55ConvertisseurRow() {
+    if (!currentEntrepreneur) {
+        alert('⚠️ Veuillez d\'abord sélectionner un entrepreneur');
+        return;
+    }
+
+    const entrepreneurData = t55Data.entrepreneurs[currentEntrepreneur] || {};
+    const convertisseur = entrepreneurData.convertisseur || [];
+
+    convertisseur.push({ item: '', equipement: '', ordre: '', description: '', materielRTFT: '', materielEntrepreneur: '', dessinsRef: '' });
+
+    entrepreneurData.convertisseur = convertisseur;
+    t55Data.entrepreneurs[currentEntrepreneur] = entrepreneurData;
+
+    renderConvertisseurTable(convertisseur);
+    await saveT55Data();
+}
+
+export function deleteT55ConvertisseurRow(button) {
+    if (confirm('Supprimer cette ligne ?')) {
+        const row = button.closest('tr');
+        row.remove();
+        saveT55Data();
+    }
+}
+
+export async function addT55CouleeContinueRow() {
+    if (!currentEntrepreneur) {
+        alert('⚠️ Veuillez d\'abord sélectionner un entrepreneur');
+        return;
+    }
+
+    const entrepreneurData = t55Data.entrepreneurs[currentEntrepreneur] || {};
+    const couleeContinue = entrepreneurData.couleeContinue || [];
+
+    couleeContinue.push({ item: '', equipement: '', ordre: '', description: '', materielRTFT: '', materielEntrepreneur: '', dessinsRef: '' });
+
+    entrepreneurData.couleeContinue = couleeContinue;
+    t55Data.entrepreneurs[currentEntrepreneur] = entrepreneurData;
+
+    renderCouleeContinueTable(couleeContinue);
+    await saveT55Data();
+}
+
+export function deleteT55CouleeContinueRow(button) {
+    if (confirm('Supprimer cette ligne ?')) {
+        const row = button.closest('tr');
+        row.remove();
+        saveT55Data();
+    }
+}
+
+// FONCTIONS DÉSACTIVÉES - Tableau historique non utilisé pour la génération DOCX
+// export async function addT55HistoriqueRow() {
+//     if (!currentEntrepreneur) {
+//         alert('⚠️ Veuillez d\'abord sélectionner un entrepreneur');
+//         return;
+//     }
+//
+//     const entrepreneurData = t55Data.entrepreneurs[currentEntrepreneur] || {};
+//     const historique = entrepreneurData.historique || [];
+//
+//     historique.push({
+//         occ: '',
+//         revision: '',
+//         item: '',
+//         equipement: '',
+//         ordre: '',
+//         description: '',
+//         materielRTFT: '',
+//         materielEntrepreneur: '',
+//         dessinsRef: '',
+//         gammes: '',
+//         cptrGrpGam: ''
+//     });
+//
+//     entrepreneurData.historique = historique;
+//     t55Data.entrepreneurs[currentEntrepreneur] = entrepreneurData;
+//
+//     renderHistoriqueTable(historique);
+//     await saveT55Data();
+// }
+//
+// export function deleteT55HistoriqueRow(button) {
+//     if (confirm('Supprimer cette ligne ?')) {
+//         const row = button.closest('tr');
+//         row.remove();
+//         saveT55Data();
+//     }
+// }
+
+export function exportT55ToPDF() {
+    if (!currentEntrepreneur) {
+        alert('⚠️ Veuillez sélectionner un entrepreneur');
+        return;
+    }
+
+    alert('📄 Export PDF en cours de développement.\n\nPour l\'instant, utilisez Ctrl+P pour imprimer la page.');
+
+    // TODO: Implémenter l'export PDF avec jsPDF
+    // const { jsPDF } = window.jspdf;
+    // const doc = new jsPDF();
+    // ...
+}
+
+export function getT55Data() {
+    return t55Data;
+}
+
+/**
+ * Upload le template PDF global
+ * @param {FileList} files - Fichier PDF
+ */
+export async function uploadT55PdfTemplate(files) {
+    if (!files || files.length === 0) return;
+
+    const file = files[0];
+    if (file.type !== 'application/pdf') {
+        alert('⚠️ Veuillez sélectionner un fichier PDF');
+        return;
+    }
+
+    try {
+        // Lire le fichier comme Data URL
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            const pdfDataUrl = e.target.result;
+
+            // Sauvegarder le template PDF
+            await saveToStorage('t55PdfTemplate', {
+                filename: file.name,
+                dataUrl: pdfDataUrl,
+                uploadDate: new Date().toISOString()
+            });
+
+            // Mettre à jour le statut
+            const statusSpan = document.getElementById('t55PdfTemplateStatus');
+            if (statusSpan) {
+                statusSpan.innerHTML = `✅ <strong style="color: #28a745;">${file.name}</strong> - ${(file.size / 1024).toFixed(1)} KB`;
+            }
+
+            alert(`✅ Template PDF "${file.name}" uploadé avec succès !`);
+            console.log('[T55] Template PDF uploadé:', file.name);
+        };
+
+        reader.readAsDataURL(file);
+    } catch (error) {
+        console.error('[T55] Erreur lors de l\'upload du template PDF:', error);
+        alert('❌ Erreur lors de l\'upload du template PDF');
+    }
+}
+
+/**
+ * Charge le statut du template PDF
+ */
+async function loadPdfTemplateStatus() {
+    const template = await loadFromStorage('t55PdfTemplate');
+    const statusSpan = document.getElementById('t55PdfTemplateStatus');
+
+    if (template && statusSpan) {
+        const size = template.dataUrl ? (template.dataUrl.length * 0.75 / 1024).toFixed(1) : 0;
+        statusSpan.innerHTML = `✅ <strong style="color: #28a745;">${template.filename}</strong> - ${size} KB`;
+        console.log('[T55] Template PDF chargé:', template.filename);
+    }
+}
+
+/**
+ * Upload le template DOCX global
+ * @param {FileList} files - Fichier DOCX
+ */
+export async function uploadT55DocxTemplate(files) {
+    if (!files || files.length === 0) return;
+
+    const file = files[0];
+    if (!file.name.endsWith('.docx')) {
+        alert('⚠️ Veuillez sélectionner un fichier DOCX');
+        return;
+    }
+
+    try {
+        // Créer un FormData pour envoyer le fichier au serveur
+        const formData = new FormData();
+        formData.append('template', file);
+
+        console.log('[T55] Upload du template DOCX:', file.name);
+
+        // Envoyer le fichier au serveur
+        const response = await fetch('/api/t55/upload-template', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error('Erreur lors de l\'upload');
+        }
+
+        const result = await response.json();
+
+        // Sauvegarder les infos du template (utiliser le nom de fichier serveur, pas le nom original)
+        const templateData = {
+            filename: result.filename, // Nom de fichier sur le serveur (avec timestamp)
+            originalname: result.originalname, // Nom original pour affichage
+            path: result.path,
+            uploadDate: new Date().toISOString()
+        };
+
+        console.log('[T55] 💾 Sauvegarde des infos template sur le serveur:', templateData);
+        const saveSuccess = await saveToStorage('t55DocxTemplate', templateData);
+
+        if (saveSuccess) {
+            console.log('[T55] ✅ Template DOCX sauvegardé sur le serveur avec succès');
+        } else {
+            console.error('[T55] ❌ ÉCHEC de la sauvegarde du template sur le serveur!');
+        }
+
+        // Vérifier immédiatement que la sauvegarde a fonctionné
+        const verification = await loadFromStorage('t55DocxTemplate');
+        console.log('[T55] 🔍 Vérification immédiate - Template rechargé:', verification);
+
+        // Mettre à jour le statut (afficher le nom original, pas celui avec timestamp)
+        const statusSpan = document.getElementById('t55DocxTemplateStatus');
+        if (statusSpan) {
+            statusSpan.innerHTML = `✅ <strong style="color: #28a745;">${result.originalname}</strong> - ${(file.size / 1024).toFixed(1)} KB`;
+        }
+
+        alert(`✅ Template DOCX "${result.originalname}" uploadé avec succès !`);
+        console.log('[T55] Template DOCX uploadé:', result.originalname, '→ Serveur:', result.filename);
+    } catch (error) {
+        console.error('[T55] Erreur lors de l\'upload du template DOCX:', error);
+        alert('❌ Erreur lors de l\'upload du template DOCX');
+    }
+}
+
+/**
+ * Charge le statut du template DOCX
+ */
+async function loadDocxTemplateStatus() {
+    console.log('[T55] 📥 Chargement du statut du template DOCX...');
+
+    // Attendre que le DOM soit prêt ET que le socket soit connecté
+    let attempts = 0;
+    const maxAttempts = 30; // Augmenté pour attendre la synchronisation
+    const retryInterval = 300;
+
+    const tryLoad = async () => {
+        attempts++;
+        const statusSpan = document.getElementById('t55DocxTemplateStatus');
+
+        if (!statusSpan) {
+            if (attempts < maxAttempts) {
+                console.log(`[T55] ⏳ Attente du DOM (tentative ${attempts}/${maxAttempts})...`);
+                setTimeout(tryLoad, retryInterval);
+                return;
+            } else {
+                console.warn('[T55] ⚠️ Élément t55DocxTemplateStatus introuvable après', maxAttempts, 'tentatives');
+                return;
+            }
+        }
+
+        // Vérifier si le socket est connecté (pour s'assurer que la synchronisation peut fonctionner)
+        const socket = window.socket || (window.io && window.io.socket);
+        if (!socket || !socket.connected) {
+            if (attempts < maxAttempts) {
+                console.log(`[T55] ⏳ Attente de la connexion au serveur (tentative ${attempts}/${maxAttempts})...`);
+                setTimeout(tryLoad, retryInterval);
+                return;
+            } else {
+                console.warn('[T55] ⚠️ Socket non connecté après', maxAttempts, 'tentatives');
+                statusSpan.innerHTML = `<span style="color: #ff9800;">⚠️ Serveur non connecté</span>`;
+                return;
+            }
+        }
+
+        // DOM prêt et socket connecté, charger les données du serveur
+        console.log('[T55] 🔗 Socket connecté, chargement du template...');
+        const template = await loadFromStorage('t55DocxTemplate');
+        console.log('[T55] Template DOCX reçu du serveur:', template);
+
+        if (template && template.filename) {
+            // Afficher le nom original si disponible, sinon le nom de fichier serveur
+            const displayName = template.originalname || template.filename;
+            statusSpan.innerHTML = `✅ <strong style="color: #28a745;">${displayName}</strong>`;
+            console.log('[T55] ✅ Template DOCX chargé et affiché:', displayName, '(Serveur:', template.filename, ')');
+        } else {
+            console.log('[T55] ℹ️ Aucun template DOCX trouvé sur le serveur');
+            statusSpan.innerHTML = `<span style="color: #999;">Aucun template chargé</span>`;
+        }
+    };
+
+    tryLoad();
+}
+
+/**
+ * Exporte le devis vers DOCX en utilisant le template
+ */
+export async function exportT55ToDOCX() {
+    if (!currentEntrepreneur) {
+        alert('⚠️ Veuillez sélectionner un entrepreneur');
+        return;
+    }
+
+    try {
+        // Vérifier qu'un template est uploadé
+        const template = await loadFromStorage('t55DocxTemplate');
+        if (!template) {
+            alert('⚠️ Veuillez d\'abord uploader un template DOCX');
+            return;
+        }
+
+        console.log('[T55] Début de l\'export DOCX pour:', currentEntrepreneur);
+
+        // Récupérer toutes les données du formulaire
+        const entrepreneurData = t55Data.entrepreneurs[currentEntrepreneur];
+        if (!entrepreneurData) {
+            alert('⚠️ Aucune donnée pour cet entrepreneur');
+            return;
+        }
+
+        // Préparer les données pour le remplacement
+        const templateData = {
+            entrepreneur: currentEntrepreneur,
+            ...entrepreneurData
+        };
+
+        console.log('[T55] 📦 Template filename:', template.filename);
+        console.log('[T55] 📦 Entrepreneur:', currentEntrepreneur);
+        console.log('[T55] 📦 Données entrepreneurData:', entrepreneurData);
+        console.log('[T55] 📦 Nombre de dessins:', entrepreneurData.dessins?.length || 0);
+        console.log('[T55] 📦 Nombre de convertisseur:', entrepreneurData.convertisseur?.length || 0);
+        console.log('[T55] 📦 Nombre de couleeContinue:', entrepreneurData.couleeContinue?.length || 0);
+        console.log('[T55] 📦 Données complètes envoyées:', JSON.stringify(templateData, null, 2));
+
+        // Envoyer au serveur pour générer le DOCX
+        const response = await fetch('/api/t55/generate-docx', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                templateFilename: template.filename,
+                data: templateData
+            })
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            console.error('[T55] ❌ ========== ERREUR GÉNÉRATION DOCX ==========');
+            console.error('[T55] ❌ Erreur:', error.error);
+            console.error('[T55] ❌ Détails:', error.details);
+            console.error('[T55] ❌ Type:', error.type);
+            if (error.help) {
+                console.error('[T55] 💡 Aide:', error.help);
+            }
+
+            // Si c'est une multi-erreur, afficher toutes les erreurs
+            if (error.errors && Array.isArray(error.errors)) {
+                console.error('[T55] ❌ Liste des erreurs:');
+                error.errors.forEach(err => {
+                    console.error(`[T55] ❌ =====================================================`);
+                    console.error(`[T55] ❌ Erreur ${err.number}:`);
+                    console.error(`[T55] ❌   Type: ${err.type}`);
+                    console.error(`[T55] ❌   Message: ${err.message}`);
+                    console.error(`[T55] ❌   Explication: ${err.explanation}`);
+                    console.error(`[T55] ❌   Fichier: ${err.file}`);
+                    if (err.help) {
+                        console.error(`[T55] 💡   Aide: ${err.help}`);
+                    }
+                    console.error(`[T55] ❌ =====================================================`);
+                });
+            } else if (error.docxProperties && error.docxProperties.errors) {
+                // Fallback si les erreurs sont dans docxProperties
+                console.error('[T55] ❌ Erreurs détaillées de docxtemplater:');
+                error.docxProperties.errors.forEach((err, index) => {
+                    console.error(`[T55] ❌ =====================================================`);
+                    console.error(`[T55] ❌ Erreur ${index + 1}/${error.docxProperties.errors.length}:`);
+                    console.error(`[T55] ❌   Type: ${err.properties?.id || err.name}`);
+                    console.error(`[T55] ❌   Message: ${err.message}`);
+                    console.error(`[T55] ❌   Tag concerné: ${err.properties?.xtag || 'N/A'}`);
+                    console.error(`[T55] ❌   Explication: ${err.properties?.explanation || 'N/A'}`);
+                    console.error(`[T55] ❌   Fichier XML: ${err.properties?.file || 'N/A'}`);
+                    console.error(`[T55] ❌ =====================================================`);
+                });
+            }
+
+            if (error.docxProperties) {
+                console.error('[T55] 📋 Propriétés docxtemplater:', error.docxProperties);
+            }
+            console.error('[T55] ❌ ===============================================');
+
+            // Afficher une alerte plus détaillée à l'utilisateur
+            let alertMessage = `❌ ${error.error}\n\n`;
+            if (error.help) {
+                alertMessage += `💡 ${error.help}\n\n`;
+            }
+
+            // Afficher les erreurs individuelles dans l'alerte
+            if (error.errors && Array.isArray(error.errors)) {
+                alertMessage += `📋 Liste des erreurs:\n\n`;
+                error.errors.forEach(err => {
+                    alertMessage += `${err.number}. ${err.type}\n`;
+                    alertMessage += `   ${err.message}\n`;
+                    if (err.help) {
+                        alertMessage += `   💡 ${err.help}\n`;
+                    }
+                    alertMessage += `   📄 Fichier: ${err.file}\n\n`;
+                });
+            } else if (error.docxProperties && error.docxProperties.file) {
+                alertMessage += `📄 Fichier concerné: ${error.docxProperties.file}\n\n`;
+            }
+
+            alertMessage += `🔍 Consultez la console (F12) pour plus de détails.`;
+            alert(alertMessage);
+
+            throw new Error(error.error || 'Erreur lors de la génération du DOCX');
+        }
+
+        // Récupérer les informations du fichier généré
+        const result = await response.json();
+
+        console.log('[T55] Export DOCX terminé avec succès:', result.fileName);
+
+        // Proposer le téléchargement
+        const telecharger = confirm(`✅ Document généré avec succès!\n\nFichier: ${result.fileName}\n\nVoulez-vous télécharger le document maintenant?`);
+        if (telecharger) {
+            window.open(result.downloadUrl, '_blank');
+        }
+
+        // TODO: Ajouter à un historique des devis générés (comme pour les avis syndicaux)
+    } catch (error) {
+        console.error('[T55] Erreur lors de l\'export DOCX:', error);
+        alert('❌ Erreur lors de l\'export DOCX: ' + error.message);
+    }
+}
+
+/**
+ * Initialise la page T55 - charge toutes les données depuis le serveur
+ */
+async function initT55Page() {
+    console.log('[T55] 🔄 Initialisation de la page T55...');
+
+    // Charger toutes les données T55 depuis le serveur (entrepreneurs + formulaires)
+    await loadT55Data();
+
+    // Charger les statuts des templates (avec retry pour attendre le DOM)
+    console.log('[T55] 📄 Chargement des statuts des templates...');
+    await loadPdfTemplateStatus();
+    await loadDocxTemplateStatus();
+
+    // Recharger le dernier entrepreneur sélectionné depuis le serveur
+    const lastEntrepreneur = t55Data.currentEntrepreneur;
+    if (lastEntrepreneur) {
+        const select = document.getElementById('t55EntrepreneurSelect');
+        if (select) {
+            // Vérifier que l'entrepreneur existe toujours dans la liste
+            const option = Array.from(select.options).find(opt => opt.value === lastEntrepreneur);
+            if (option) {
+                select.value = lastEntrepreneur;
+                console.log('[T55] 👤 Rechargement de l\'entrepreneur depuis le serveur:', lastEntrepreneur);
+                // Charger ses données
+                await loadT55EntrepreneurData();
+            } else {
+                console.log('[T55] ⚠️ L\'entrepreneur sauvegardé n\'existe plus:', lastEntrepreneur);
+                t55Data.currentEntrepreneur = '';
+                await saveToStorage('t55Data', t55Data);
+            }
+        }
+    }
+
+    console.log('[T55] ✅ Page T55 initialisée avec toutes les données');
+}
+
+// Exposer une fonction pour le rechargement de la page T55
+// Cette fonction est appelée par le page-loader quand la page devient visible
+if (typeof window !== 'undefined') {
+    // Variable pour éviter les initialisations multiples simultanées
+    let isInitializing = false;
+    let lastInitTime = 0;
+
+    // Fonction d'initialisation avec throttle
+    async function safeInitT55Page() {
+        const now = Date.now();
+        // Éviter les initialisations trop rapprochées (moins de 500ms)
+        if (isInitializing || (now - lastInitTime) < 500) {
+            console.log('[T55] ⏭️ Initialisation déjà en cours ou trop récente, skip');
+            return;
+        }
+
+        isInitializing = true;
+        lastInitTime = now;
+        try {
+            await initT55Page();
+        } finally {
+            isInitializing = false;
+        }
+    }
+
+    // Exposer la fonction globalement pour que le page-loader puisse l'appeler
+    window.reloadT55Page = async () => {
+        console.log('[T55] 🔄 Rechargement forcé depuis page-loader');
+        await safeInitT55Page();
+    };
+
+    console.log('[T55] ✅ Module T55 chargé - reloadT55Page exposée globalement');
+}
+
+// Exposer les fonctions globalement
+if (typeof window !== 'undefined') {
+    window.syncT55Entrepreneurs = syncT55Entrepreneurs;
+    window.loadT55EntrepreneurData = loadT55EntrepreneurData;
+    window.saveT55Data = saveT55Data;
+    window.addT55DessinRow = addT55DessinRow;
+    window.deleteT55DessinRow = deleteT55DessinRow;
+    window.addT55ConvertisseurRow = addT55ConvertisseurRow;
+    window.deleteT55ConvertisseurRow = deleteT55ConvertisseurRow;
+    window.addT55CouleeContinueRow = addT55CouleeContinueRow;
+    window.deleteT55CouleeContinueRow = deleteT55CouleeContinueRow;
+    // window.addT55HistoriqueRow = addT55HistoriqueRow; // DÉSACTIVÉ
+    // window.deleteT55HistoriqueRow = deleteT55HistoriqueRow; // DÉSACTIVÉ
+    window.exportT55ToPDF = exportT55ToPDF;
+    window.uploadT55PdfTemplate = uploadT55PdfTemplate;
+    window.exportT55ToDOCX = exportT55ToDOCX;
+    window.uploadT55DocxTemplate = uploadT55DocxTemplate;
+}
+
+console.log('[T55] Module chargé');

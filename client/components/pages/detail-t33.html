@@ -1,0 +1,56 @@
+<div id="detail-t33" class="page">
+    <div class="summary-container" style="max-width: 98%; padding: 20px;">
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">
+                ← Retour
+            </button>
+            <h2 style="margin: 0; color: #333; flex: 1;">📋 PRIORISATION DES DEMANDES GÉNÉRÉES</h2>
+        </div>
+
+        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+            <div style="display: flex; gap: 15px; margin-bottom: 15px; align-items: center; flex-wrap: wrap;">
+                <p style="margin: 0; color: #666; flex: 1; min-width: 300px;">
+                    Ce tableau affiche automatiquement tous les avis du tableau AVIS dont la colonne "Ordre" est vide.
+                </p>
+                <button onclick="window.t33Actions.syncFromAvis()"
+                        style="padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; white-space: nowrap;">
+                    🔄 Synchroniser depuis AVIS
+                </button>
+                <button onclick="window.t33Actions.exportToExcel()"
+                        style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; white-space: nowrap;">
+                    📥 Exporter Excel
+                </button>
+            </div>
+
+            <div style="background: #fff3cd; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                <strong>Total de demandes:</strong> <span id="t33Count">0</span>
+            </div>
+        </div>
+
+        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <div style="overflow-x: auto; max-height: calc(100vh - 350px); overflow-y: auto;">
+                <table class="summary-table" style="width: 100%; border-collapse: collapse;">
+                    <thead style="position: sticky; top: 0; background: white; z-index: 10;">
+                        <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                            <th style="padding: 12px; border: 1px solid #dee2e6; white-space: nowrap;">Ordre</th>
+                            <th style="padding: 12px; border: 1px solid #dee2e6; white-space: nowrap;">Créé le</th>
+                            <th style="padding: 12px; border: 1px solid #dee2e6; white-space: nowrap;">Avis</th>
+                            <th style="padding: 12px; border: 1px solid #dee2e6; min-width: 200px;">Poste technique</th>
+                            <th style="padding: 12px; border: 1px solid #dee2e6; min-width: 300px;">Description</th>
+                            <th style="padding: 12px; border: 1px solid #dee2e6; white-space: nowrap;">Créé par</th>
+                            <th style="padding: 12px; border: 1px solid #dee2e6; white-space: nowrap;">Statut</th>
+                            <th style="padding: 12px; border: 1px solid #dee2e6; min-width: 250px;">Commentaire</th>
+                        </tr>
+                    </thead>
+                    <tbody id="t33TableBody">
+                        <tr>
+                            <td colspan="8" style="padding: 30px; text-align: center; color: #666; border: 1px solid #dee2e6;">
+                                Aucune demande. Cliquez sur "Synchroniser depuis AVIS" pour charger les avis avec Ordre vide.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

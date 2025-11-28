@@ -1,0 +1,79 @@
+<div id="detail-t116" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                    ← Retour
+                </button>
+                <h2 style="margin: 0; color: #333;">📅 REVUE ÉCHÉANCIER AVEC LES ENTREPRENEURS PRINCIPAUX</h2>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin-bottom: 25px; border-left: 4px solid #2196f3;">
+            <h3 style="margin: 0 0 10px 0; color: #1565c0;">
+                ℹ️ À propos
+            </h3>
+            <p style="margin: 0; color: #333; line-height: 1.6;">
+                Rencontre de revue de l'échéancier avec les entrepreneurs principaux pour valider les séquences et les dépendances.
+            </p>
+        </div>
+
+        <!-- Content Area -->
+        <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <h3 style="margin: 0 0 20px 0; color: #667eea;">
+                📋 Détails de la Revue d'Échéancier
+            </h3>
+
+            <div style="display: grid; gap: 20px;">
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Date de la revue</label>
+                    <input type="date" id="reviewDate" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px;">
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Entrepreneurs présents</label>
+                    <textarea id="contractors" rows="4" placeholder="Liste des entrepreneurs participants..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Points de l'échéancier revus</label>
+                    <textarea id="schedulePoints" rows="8" placeholder="Points critiques de l'échéancier discutés:&#10;• Séquences principales&#10;• Dépendances entre travaux&#10;• Dates jalons&#10;• Ressources requises..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Ajustements requis</label>
+                    <textarea id="adjustments" rows="6" placeholder="Modifications à apporter à l'échéancier suite à la revue..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Risques identifiés</label>
+                    <textarea id="risks" rows="4" placeholder="Risques potentiels sur le respect de l'échéancier..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Actions et engagements</label>
+                    <textarea id="actions" rows="4" placeholder="Actions à prendre et engagements de chaque entrepreneur..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Notes de la rencontre</label>
+                    <textarea id="notes" rows="4" placeholder="Résumé et notes importantes..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 20px;">
+                <button onclick="alert('Sauvegarde des données...')"
+                        class="btn" style="background: #28a745; color: white; padding: 12px 30px;">
+                    💾 Sauvegarder
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

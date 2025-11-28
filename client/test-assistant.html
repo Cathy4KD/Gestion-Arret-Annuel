@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Test Assistant</title>
+</head>
+<body>
+    <h1>Test de l'Assistant Virtuel</h1>
+    <p>Ouvrez la console du navigateur (F12) pour voir les messages de débogage.</p>
+
+    <script type="module">
+        console.log('[TEST] Début du test...');
+
+        // Test 1: Charger le widget HTML
+        fetch('/components/layout/assistant-widget.html')
+            .then(response => response.text())
+            .then(html => {
+                console.log('[TEST] Widget HTML chargé:', html.length, 'caractères');
+                document.body.insertAdjacentHTML('beforeend', html);
+                console.log('[TEST] Widget injecté dans le DOM');
+
+                // Vérifier que l'élément existe
+                const widget = document.getElementById('assistant-widget');
+                if (widget) {
+                    console.log('[TEST] ✅ Widget trouvé dans le DOM');
+                } else {
+                    console.error('[TEST] ❌ Widget NON trouvé dans le DOM');
+                }
+            })
+            .catch(error => {
+                console.error('[TEST] ❌ Erreur chargement widget:', error);
+            });
+
+        // Test 2: Charger le module JavaScript
+        import('./js/modules/assistant/virtual-assistant.js')
+            .then(module => {
+                console.log('[TEST] ✅ Module virtual-assistant chargé');
+                console.log('[TEST] Fonctions disponibles:', Object.keys(module));
+
+                // Initialiser l'assistant
+                if (module.initAssistant) {
+                    console.log('[TEST] Initialisation de l\'assistant...');
+                    module.initAssistant();
+                } else {
+                    console.error('[TEST] ❌ initAssistant non disponible');
+                }
+            })
+            .catch(error => {
+                console.error('[TEST] ❌ Erreur chargement module:', error);
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process 2 - Diagramme Interactif</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+            overflow-x: auto;
+        }
+
+        .process-diagram {
+            position: relative;
+            min-width: 1400px;
+            min-height: 1000px;
+        }
+
+        /* Sections principales */
+        .phase-section {
+            position: absolute;
+            border: 3px solid #333;
+            border-radius: 15px;
+            background: white;
+            padding: 15px;
+        }
+
+        .phase-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #8B0000;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        /* DÉFINIR section */
+        .definir-section {
+            left: 10px;
+            top: 10px;
+            width: 620px;
+            height: 240px;
+        }
+
+        /* PLANIFIER section */
+        .planifier-section {
+            left: 640px;
+            top: 10px;
+            width: 750px;
+            height: 240px;
+        }
+
+        /* ANALYSER POUR AMÉLIORER section */
+        .analyser-section {
+            left: 10px;
+            top: 220px;
+            width: 250px;
+            height: 300px;
+        }
+
+        /* CONSIGNER section */
+        .consigner-section {
+            left: 10px;
+            top: 530px;
+            width: 220px;
+            height: 300px;
+        }
+
+        /* PRÉPARER section */
+        .preparer-section {
+            left: 640px;
+            top: 260px;
+            width: 750px;
+            height: 300px;
+        }
+
+        /* EXÉCUTER section */
+        .executer-section {
+            left: 230px;
+            top: 630px;
+            width: 1160px;
+            height: 200px;
+        }
+
+        /* Éléments de process */
+        .process-box {
+            padding: 8px;
+            margin: 5px;
+            border: 2px solid #333;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 11px;
+            text-align: center;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .process-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+
+        .process-box.active {
+            box-shadow: 0 0 15px rgba(0,123,255,0.5);
+            border-color: #007bff;
+        }
+
+        /* Cercles jaunes */
+        .circle-yellow {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #FFD700;
+            border: 2px solid #333;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 10px;
+            text-align: center;
+            padding: 5px;
+        }
+
+        .circle-yellow:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        /* Boîtes jaunes */
+        .box-yellow {
+            background: #FFEB99;
+            width: 140px;
+            min-height: 60px;
+        }
+
+        /* Boîtes cyan/bleues */
+        .box-cyan {
+            background: #ADD8E6;
+            width: 140px;
+            min-height: 60px;
+        }
+
+        /* Boîtes orange */
+        .box-orange {
+            background: #FFA500;
+            width: 140px;
+            min-height: 60px;
+        }
+
+        /* Boîtes vertes */
+        .box-green {
+            background: #90EE90;
+            width: 100px;
+            min-height: 80px;
+        }
+
+        /* Losanges (décisions) */
+        .diamond {
+            width: 80px;
+            height: 80px;
+            background: #FFEB99;
+            border: 2px solid #333;
+            transform: rotate(45deg);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            display: inline-block;
+            margin: 20px;
+        }
+
+        .diamond-content {
+            transform: rotate(-45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            font-size: 10px;
+            text-align: center;
+            padding: 5px;
+        }
+
+        .diamond:hover {
+            transform: rotate(45deg) scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        /* Conteneur de cercles en haut */
+        .circles-container {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        /* Conteneur de boîtes */
+        .boxes-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        /* Modal pour afficher les informations */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 30px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        /* Styles pour les lignes de connexion */
+        .flow-line {
+            position: absolute;
+            background: #333;
+            height: 2px;
+        }
+
+        /* Bouton vert SUIVANT */
+        .green-button {
+            background: #228B22;
+            color: white;
+            padding: 15px 30px;
+            border: 2px solid #333;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .green-button:hover {
+            background: #1a6b1a;
+            transform: scale(1.05);
+        }
+
+        /* Layout flex pour les sections internes */
+        .flex-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .flex-col {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Label "ANALYSER POUR AMÉLIORER" vertical */
+        .vertical-label {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-weight: bold;
+            color: #8B0000;
+            font-size: 14px;
+            padding: 10px;
+        }
+
+        /* Info affichée */
+        #info-panel {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 5px;
+            min-height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center; margin-bottom: 20px;">Diagramme de Processus Interactif</h1>
+
+        <div class="process-diagram">
+            <!-- Section DÉFINIR -->
+            <div class="phase-section definir-section">
+                <div class="phase-title">DÉFINIR</div>
+                <div class="circles-container">
+                    <div class="circle-yellow" onclick="showInfo('Stratégie d\'arts', 'Définition de la stratégie globale')">
+                        Stratégie d'arts
+                    </div>
+                    <div class="circle-yellow" onclick="showInfo('Exigences du projet', 'Exigences du projet et besoins normatifs')">
+                        Exigences du projet et de besoins normatifs
+                    </div>
+                    <div class="circle-yellow" onclick="showInfo('Exigences activités', 'Exigences des activités et de production')">
+                        Exigences des activités et de production
+                    </div>
+                    <div class="circle-yellow" onclick="showInfo('DM et propositions', 'DM et propositions de nouveaux services')">
+                        DM et propositions de nouveaux services/améliorations
+                    </div>
+                </div>
+                <div class="boxes-container">
+                    <div class="process-box box-yellow" onclick="showInfo('DI.0', 'Élaboration d\'un plan pour la définition de l\'arrêté')">
+                        DI.0 - Élaboration d'un plan pour la définition de l'arrêté
+                    </div>
+                    <div class="process-box box-yellow" onclick="showInfo('DI.1', 'Détermination des acteurs internes et des parties intéressées')">
+                        DI.1 - Détermination des acteurs internes et des parties intéressées de l'arrêt général
+                    </div>
+                    <div class="process-box box-yellow" onclick="showInfo('DI.2', 'Détermination des objectifs de l\'arrêt')">
+                        DI.2 - Détermination des objectifs de l'arrêt
+                    </div>
+                    <div class="process-box box-yellow" onclick="showInfo('DI.3', 'Détermination des risques et des opportunités')">
+                        DI.3 - Détermination des risques et des opportunités
+                    </div>
+                    <div class="process-box box-yellow" onclick="showInfo('DI.4', 'Identification des besoins en évaluations de conformité')">
+                        DI.4 - Identification des besoins en évaluations de la conformité
+                    </div>
+                    <div class="process-box box-yellow" onclick="showInfo('DI.5', 'Détermination des actions nécessaires')">
+                        DI.5 - Détermination des actions nécessaires à mettre en place au cours de l'arrêté et des prérequis
+                    </div>
+                    <div class="process-box box-yellow" onclick="showInfo('DI.6', 'Détermination des risques et évaluation des priorités')">
+                        DI.6 - Détermination des risques et des évaluations des priorités liés aux prérequis
+                    </div>
+                    <div class="diamond" onclick="showInfo('Décision', 'Validation de la proposition d\'arrêt')">
+                        <div class="diamond-content">
+                            Validation des besoins et de la cohérence?
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section PLANIFIER -->
+            <div class="phase-section planifier-section">
+                <div class="phase-title">PLANIFIER</div>
+                <div class="flex-row" style="margin-top: 10px;">
+                    <div class="process-box box-cyan" onclick="showInfo('PL1.0', 'Détermination de la durée et du budget de l\'arrêt')">
+                        PL1.0 - Détermination de la durée et du budget de l'arrêt
+                    </div>
+                    <div class="process-box box-cyan" onclick="showInfo('Database', 'Ordres de travail / Interventions / Fondation créoles')">
+                        Ordres de travail / Interventions / Fondation créoles
+                    </div>
+                    <div class="process-box box-cyan" onclick="showInfo('PL2.0', 'Élaboration du calendrier d\'exécution')">
+                        PL2.0 - Élaboration du calendrier d'exécution d'arrêt
+                    </div>
+                    <div class="process-box box-cyan" onclick="showInfo('PL2.5', 'Approbation du temps d\'essais')">
+                        PL2.5 - Approbation du temps d'essais
+                    </div>
+                    <div class="process-box box-cyan" onclick="showInfo('PL3.0', 'Analyse de risque du calendrier')">
+                        PL3.0 - Analyse de risque du calendrier d'exécution
+                    </div>
+                    <div class="process-box box-cyan" onclick="showInfo('PL3.5', 'Finaliser le calendrier')">
+                        PL3.5 - Finaliser le calendrier d'arrêt approuvé
+                    </div>
+                    <div class="diamond" onclick="showInfo('Validation calendrier', 'Le calendrier est-il approuvé?')">
+                        <div class="diamond-content">
+                            Le calendrier est-il approuvé?
+                        </div>
+                    </div>
+                    <div class="process-box box-cyan" onclick="showInfo('Database 2', 'Rachat d\'arrêts approuvés')">
+                        Rachat d'arrêts approuvés
+                    </div>
+                    <div class="process-box box-cyan" onclick="showInfo('PL7.0', 'Formulation des opportunités')">
+                        PL7.0 - Formulation des opportunités d'amélioration
+                    </div>
+                </div>
+                <div style="margin-top: 10px;">
+                    <div class="process-box box-cyan" onclick="showInfo('PL4.0', 'Préparation des listes de travaux')">
+                        PL4.0 - Préparation des listes de travaux
+                    </div>
+                    <div class="process-box box-cyan" onclick="showInfo('PL5.0', 'Planification des services')">
+                        PL5.0 - Planification des services auxiliaires et logistiques nécessaires
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section ANALYSER POUR AMÉLIORER (verticale à gauche) -->
+            <div class="phase-section analyser-section">
+                <div class="vertical-label">ANALYSER POUR AMÉLIORER</div>
+                <div class="flex-col">
+                    <div class="process-box box-cyan" onclick="showInfo('A1.0', 'Préparation et planification')">
+                        A1.0 - Préparation et planification d'un événement d'amélioration de l'arrêt
+                    </div>
+                    <div class="process-box box-cyan" onclick="showInfo('A2.0', 'Analyse d\'autres arrêts')">
+                        A2.0 - Analyse d'autres d'arrêts et de la méthodologie
+                    </div>
+                    <div class="process-box box-cyan" onclick="showInfo('A3.0', 'Rencontre de service')">
+                        A3.0 - Rencontre de revue de service d'un plan d'action
+                    </div>
+                    <div class="process-box box-cyan" onclick="showInfo('A4.0', 'Réalité des difficultés')">
+                        A4.0 - Réalité des difficultés leçons apprises et plan
+                    </div>
+                    <div class="process-box box-cyan" onclick="showInfo('A2.0 Reunion', 'Réunion de revue de l\'arrêté')">
+                        A2.0 - Réunion de revue de l'arrêté
+                    </div>
+                    <div class="process-box box-cyan" onclick="showInfo('A1.0 Preparation', 'Préparation de la revue de l\'arrêté')">
+                        A1.0 - Préparation de la revue de l'arrêté
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section CONSIGNER -->
+            <div class="phase-section consigner-section">
+                <div class="vertical-label">CONSIGNER</div>
+                <div class="flex-col">
+                    <div class="process-box box-orange" onclick="showInfo('C0.0', 'Lecture des responsabilités')">
+                        C0.0 - Lecture des responsabilités des aînées
+                    </div>
+                    <div class="process-box box-orange" onclick="showInfo('C1.0', 'Isolement et identifications')">
+                        C1.0 - Isolement, identifications et mise en sécurité de tous les équipements
+                    </div>
+                    <div class="process-box box-orange" onclick="showInfo('C2.0', 'Suivis de consignation')">
+                        C2.0 - Suivis de consignation CMAS
+                    </div>
+                    <div class="process-box box-orange" onclick="showInfo('C3.0', 'Maintien de la consignation')">
+                        C3.0 - Maintien de la consignation durant activité
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section PRÉPARER -->
+            <div class="phase-section preparer-section">
+                <div class="phase-title">PRÉPARER</div>
+                <div class="flex-row" style="align-items: flex-start;">
+                    <div class="flex-col">
+                        <div class="process-box box-cyan" onclick="showInfo('PR1.0', 'Examen des fonds')">
+                            PR1.0 - Examen des fonds de revue en vue de l'exécution
+                        </div>
+                        <div class="process-box box-cyan" onclick="showInfo('PR2.0', 'Formation du personnel')">
+                            PR2.0 - Formation du personnel de sous-traitance
+                        </div>
+                    </div>
+                    <div class="green-button" onclick="showInfo('SUIVANT', 'Passage à l\'étape suivante')">
+                        Suivant
+                    </div>
+                    <div class="flex-col">
+                        <div class="process-box box-cyan" onclick="showInfo('PR3.0', 'Préparation et inspection')">
+                            PR3.0 - Préparation et inspection de la zone de travail
+                        </div>
+                        <div class="process-box box-cyan" onclick="showInfo('PR4.0', 'Réception des matériaux')">
+                            PR4.0 - Réception des matériaux et outillage à acquérir
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-col" style="margin-top: 15px;">
+                    <div class="process-box box-cyan" onclick="showInfo('PL3.5-2', 'Évaluation de la demande')">
+                        PL3.5-2 - Évaluation de la demande des ressources modifiées
+                    </div>
+                    <div class="process-box box-cyan" onclick="showInfo('PL4.0-2', 'Élaboration plan de gestion')">
+                        PL4.0-2 - Élaboration d'un plan de gestion de coordination
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section EXÉCUTER -->
+            <div class="phase-section executer-section">
+                <div class="phase-title">EXÉCUTER</div>
+                <div class="flex-row" style="margin-top: 10px; flex-wrap: wrap;">
+                    <div class="process-box box-orange" onclick="showInfo('E0.0', 'Réunion de lancement')">
+                        E0.0 - Réunion de lancement de l'arrêt et de l'exécution arrêt général
+                    </div>
+                    <div class="process-box box-orange" onclick="showInfo('EX1.0', 'Inspection des problèmes')">
+                        EX1.0 - Inspection des problèmes et analyse de l'arrêt
+                    </div>
+                    <div class="process-box box-orange" onclick="showInfo('EX2.0', 'Gestion de l\'engagement')">
+                        EX2.0 - Gestion de l'engagement réalisé
+                    </div>
+                    <div class="process-box box-orange" onclick="showInfo('EX2.5', 'Réalisation des essais')">
+                        EX2.5 - Réalisation des essais et validation
+                    </div>
+                    <div class="process-box box-orange" onclick="showInfo('EX3.0', 'Gestion des passations')">
+                        EX3.0 - Gestion des passations durant la quête de travail
+                    </div>
+                    <div class="process-box box-orange" onclick="showInfo('PE2.0', 'Gestion de la fin')">
+                        PE2.0 - Gestion de la fin de processus et de l'inventaire
+                    </div>
+                    <div class="process-box box-orange" onclick="showInfo('PR4.5', 'Traitement de résultats')">
+                        PR4.5 - Traitement de résultats d'essais
+                    </div>
+                    <div class="process-box box-orange" onclick="showInfo('PR5.0', 'Examen final')">
+                        PR5.0 - Examen final et préparation de la remise
+                    </div>
+                    <div class="process-box box-orange" onclick="showInfo('PR6.0', 'Libération')">
+                        PR6.0 - Libération des équipements et coordination
+                    </div>
+                    <div class="process-box box-orange" onclick="showInfo('PR6.5', 'Dossiers et rapports')">
+                        PR6.5 - Dossiers et rapports des dépens de
+                    </div>
+                    <div class="diamond" onclick="showInfo('Validation finale', 'Procédure de redémarrage')">
+                        <div class="diamond-content">
+                            Procédure de redémarrage
+                        </div>
+                    </div>
+                    <div class="process-box box-orange" onclick="showInfo('PR6.5-2', 'Validation')">
+                        PR6.5-2 - Validation des critères de redémarrage
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panneau d'information -->
+        <div id="info-panel">
+            <h3>Informations sur l'élément sélectionné</h3>
+            <p>Cliquez sur un élément du diagramme pour voir ses détails.</p>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title"></h2>
+            <p id="modal-description"></p>
+        </div>
+    </div>
+
+    <script>
+        function showInfo(title, description) {
+            // Mettre à jour le panneau d'information
+            const infoPanel = document.getElementById('info-panel');
+            infoPanel.innerHTML = `
+                <h3>${title}</h3>
+                <p>${description}</p>
+                <small>Cliquez sur d'autres éléments pour voir plus d'informations.</small>
+            `;
+
+            // Optionnel: ouvrir aussi le modal
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-description').textContent = description;
+            document.getElementById('modal').style.display = 'block';
+
+            // Retirer la classe active de tous les éléments
+            document.querySelectorAll('.process-box, .circle-yellow, .diamond').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            // Ajouter la classe active à l'élément cliqué
+            event.target.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // Fermer le modal si on clique en dehors
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Ajouter des raccourcis clavier
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

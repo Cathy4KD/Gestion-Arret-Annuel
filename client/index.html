@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Gestion Arrêt Annuel 2026</title>
+
+    <!-- CDN Libraries -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script defer>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof pdfjsLib !== 'undefined') {
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            }
+        });
+    </script>
+    <script defer src="/socket.io/socket.io.js"></script>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main-new.css">
+    <link rel="stylesheet" href="css/assistant-briefing.css">
+    <link rel="stylesheet" href="css/assistant-widget.css">
+
+    <script>
+        // Fonction pour attendre que Socket.IO soit chargé
+        function waitForSocketIO() {
+            return new Promise((resolve) => {
+                if (typeof io !== 'undefined') {
+                    resolve();
+                } else {
+                    const checkInterval = setInterval(() => {
+                        if (typeof io !== 'undefined') {
+                            clearInterval(checkInterval);
+                            resolve();
+                        }
+                    }, 50);
+                    // Timeout après 10 secondes
+                    setTimeout(() => {
+                        clearInterval(checkInterval);
+                        console.error('[ERROR] Socket.IO non chargé après 10s');
+                        resolve(); // Continuer quand même
+                    }, 10000);
+                }
+            });
+        }
+
+        // Fonction pour attendre que les bibliothèques CDN soient chargées
+        function waitForCDNLibraries() {
+            return new Promise((resolve) => {
+                const checkLibraries = () => {
+                    const allLoaded =
+                        typeof XLSX !== 'undefined' &&
+                        typeof Chart !== 'undefined' &&
+                        typeof jspdf !== 'undefined';
+
+                    if (allLoaded) {
+                        return true;
+                    }
+                    return false;
+                };
+
+                if (checkLibraries()) {
+                    console.log('[OK] Bibliothèques CDN chargées');
+                    resolve();
+                } else {
+                    const checkInterval = setInterval(() => {
+                        if (checkLibraries()) {
+                            clearInterval(checkInterval);
+                            console.log('[OK] Bibliothèques CDN chargées');
+                            resolve();
+                        }
+                    }, 100);
+                    // Timeout après 15 secondes
+                    setTimeout(() => {
+                        clearInterval(checkInterval);
+                        console.warn('[WARNING] Certaines bibliothèques CDN non chargées après 15s');
+                        console.log('[INFO] XLSX:', typeof XLSX !== 'undefined');
+                        console.log('[INFO] Chart:', typeof Chart !== 'undefined');
+                        console.log('[INFO] jspdf:', typeof jspdf !== 'undefined');
+                        resolve(); // Continuer quand même
+                    }, 15000);
+                }
+            });
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // IMPORTANT: Attendre que Socket.IO et les CDN soient chargés
+                await Promise.all([waitForSocketIO(), waitForCDNLibraries()]);
+                console.log('[OK] Socket.IO et bibliothèques CDN chargés');
+
+                // Charger les composants layout
+                await loadComponent('/components/layout/app-loader.html', 'body');
+                await loadComponent('/components/layout/app-header.html', 'app-header-container');
+                await loadComponent('/components/layout/app-navigation.html', 'app-nav-container');
+                await loadComponent('/components/layout/app-modals.html', 'body');
+
+                // Import et initialisation de l'app (sans cache)
+                const { initApp } = await import('./js/app.js');
+                await initApp();
+
+                // Cacher le loader
+                setTimeout(() => {
+                    document.getElementById('app-loader').classList.add('hidden');
+                    document.getElementById('app-container').classList.add('visible');
+                }, 200);
+            } catch (error) {
+                console.error('[ERROR] Initialisation:', error);
+            }
+        });
+
+        // Helper pour charger les composants
+        async function loadComponent(url, containerId) {
+            const response = await fetch(url);
+            const html = await response.text();
+            const container = containerId === 'body' ? document.body : document.getElementById(containerId);
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
+        // Raccourcis clavier
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                window.appActions?.saveAllData();
+            }
+            if (e.ctrlKey && e.key === 'e') {
+                e.preventDefault();
+                window.appActions?.exportAllData();
+            }
+        });
+    </script>
+</head>
+<body>
+    <!-- Loader injecté dynamiquement -->
+
+    <!-- Container principal -->
+    <div id="app-container">
+        <div class="container">
+            <!-- Header injecté dynamiquement -->
+            <div id="app-header-container"></div>
+
+            <!-- Navigation injectée dynamiquement -->
+            <div id="app-nav-container"></div>
+
+            <!-- Pages container -->
+            <div id="pages-container"></div>
+        </div>
+    </div>
+
+    <!-- Textarea resize manager -->
+    <script src="./js/textarea-resize-manager.js"></script>
+</body>
+</html>

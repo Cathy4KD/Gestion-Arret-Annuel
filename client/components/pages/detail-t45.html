@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-t45</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+<div id="detail-t45" class="page">
+            <div class="summary-container" style="max-width: 98%; padding: 20px;">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                    <h2 style="margin: 0; color: #333; flex: 1;">ÉTABLIR LA LISTE DES TRAVAUX EN ESPACE CLOS</h2>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                    <div style="display: flex; gap: 15px; margin-bottom: 15px; align-items: center; flex-wrap: wrap;">
+                        <p style="margin: 0; color: #666; flex: 1; min-width: 300px;">
+                            Cette liste contient tous les travaux en espace clos extraits de IW37N (EP- ou EC- dans Design. opération).
+                        </p>
+                        <button onclick="syncEspaceClosFromIw37n()"
+                                style="padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; white-space: nowrap;">
+                            🔄 Synchroniser avec IW37N
+                        </button>
+                        <button onclick="exportEspaceClosToExcel()"
+                                style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; white-space: nowrap;">
+                            📥 Exporter Excel
+                        </button>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px;">
+                        <div style="background: #fff3cd; padding: 10px; border-radius: 5px;">
+                            <strong>Total d'espaces clos:</strong> <span id="espaceClosCount">0</span>
+                        </div>
+                        <div style="background: #f8d7da; padding: 10px; border-radius: 5px;">
+                            <strong>Surveillants requis:</strong> <span id="surveillantsCount">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="overflow-x: auto; max-height: calc(100vh - 350px); overflow-y: auto;">
+                        <table class="summary-table" style="width: 100%; border-collapse: collapse;">
+                            <thead style="position: sticky; top: 0; background: white; z-index: 10;">
+                                <tr style="background: linear-gradient(135deg, #c9941a 0%, #c9941a 100%); color: white;">
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; min-width: 200px;">Espace clos</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; white-space: nowrap;">Ordre</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; min-width: 300px;">Désign. opér.</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; min-width: 200px;">Poste technique</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; min-width: 150px;">Reclassification</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; min-width: 200px;">Commentaire</th>
+                                </tr>
+                            </thead>
+                            <tbody id="espaceClosTableBody">
+                                <tr>
+                                    <td colspan="6" style="padding: 30px; text-align: center; color: #666;">
+                                        Aucun espace clos dans la liste. Cliquez sur "Synchroniser avec IW37N" pour importer les données.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section Liste Unique des Espaces Clos -->
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-top: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="color: #c9941a; margin: 0; border-bottom: 2px solid #c9941a; padding-bottom: 10px; flex: 1;">
+                            📋 Liste Unique des Espaces Clos (<span id="espaceClosUniqueCount">0</span>)
+                        </h3>
+                        <button onclick="window.exportEspaceClosUniquePDF()" style="padding: 10px 20px; background: linear-gradient(145deg, #e53935, #d32f2f); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.3); transition: all 0.3s ease; margin-left: 15px;">
+                            📄 Export PDF
+                        </button>
+                    </div>
+                    <div style="background: #f0f8ff; padding: 12px; border-radius: 6px; margin-bottom: 15px; border-left: 4px solid #667eea;">
+                        <p style="color: #333; font-size: 0.9em; margin: 0; margin-bottom: 8px;">
+                            💡 <strong>Astuce:</strong> Cliquez sur une carte pour filtrer le tableau ci-dessus
+                        </p>
+                        <p style="color: #555; font-size: 0.85em; margin: 0;">
+                            🎨 <strong>Couleurs:</strong>
+                            <span style="color: #28a745; font-weight: bold;">■ Vert</span> = Tous reclassifiés "Non espace clos" |
+                            <span style="color: #dc3545; font-weight: bold;">■ Rouge</span> = Au moins un "Espace clos" |
+                            <span style="color: #c9941a; font-weight: bold;">■ Orange</span> = À vérifier
+                        </p>
+                    </div>
+                    <div id="espaceClosListeUnique" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px;">
+                        <!-- Liste générée par JavaScript -->
+                        <div style="text-align: center; padding: 40px; color: #999; grid-column: 1 / -1;">
+                            Aucun espace clos. Synchronisez avec IW37N pour commencer.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<div id="detail-t4" class="page">
+                    <div class="summary-container" style="max-width: 95%;">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <button onclick="switchPage('summary')"
+                                    style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">
+                                ← Retour
+                            </button>
+                            <h2 style="margin: 0; color: #333;">AVOIR LA LISTE DES PROJETS / TRAVAUX MAJEURS ENTRETIEN QUI SERONT FAIT À L'ARRÊT</h2>
+                        </div>
+
+                        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            <!-- Boutons d'action -->
+                            <div style="margin-bottom: 20px; display: flex; gap: 10px;">
+                                <button onclick="addProjetRow()"
+                                        style="padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                                    ➕ Ajouter un Projet
+                                </button>
+                                <button onclick="document.getElementById('uploadProjetsExcel').click()"
+                                        style="padding: 10px 20px; background: #217346; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                                    📤 Importer Excel/CSV
+                                </button>
+                                <input type="file" id="uploadProjetsExcel" accept=".xlsx,.xls,.csv" style="display: none;" onchange="handleProjetsUpload(event)">
+                            </div>
+
+                            <!-- Tableau des projets -->
+                            <div style="overflow-x: auto; max-height: 600px; overflow-y: auto;">
+                                <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                                    <thead style="position: sticky; top: 0; background: white; z-index: 10;">
+                                        <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap;">Ordre</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap;">Avis</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; min-width: 150px;">Poste Technique</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; min-width: 200px;">Description</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center; white-space: nowrap;">Décision</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center; white-space: nowrap;">Date</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; min-width: 300px; width: 25%;">Commentaire</th>
+                                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center; min-width: 200px; width: 15%;">Documents</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="projetsTableBody">
+                                        <tr>
+                                            <td colspan="8" style="padding: 30px; text-align: center; color: #666;">
+                                                Aucun projet ajouté. Cliquez sur "Ajouter un Projet" pour commencer.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>

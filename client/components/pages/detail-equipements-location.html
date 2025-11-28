@@ -1,0 +1,133 @@
+<div id="detail-equipements-location" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; margin-bottom: 20px; gap: 15px;">
+            <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                ← Retour
+            </button>
+            <h2 style="margin: 0; color: #333;">RÉSERVATION ÉQUIPEMENTS EN LOCATION</h2>
+        </div>
+
+        <!-- Section Tableau des Équipements -->
+        <div style="background: white; padding: 12px; border-radius: 10px; margin-bottom: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 style="margin: 0; color: #333; font-size: 1.1em;">Liste des Équipements (<span id="equipLocationCount">0</span>)</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="window.equipLocationActions.addEquipement()" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 6px 14px; font-size: 0.9em;">
+                        ➕ Ajouter Équipement
+                    </button>
+                    <button onclick="window.equipLocationActions.exportCompletePDF()" class="btn" style="background: linear-gradient(145deg, #dc3545, #c82333); color: white; padding: 6px 14px; font-size: 0.9em;">
+                        📄 Export PDF Complet
+                    </button>
+                    <button onclick="window.equipLocationActions.exportToExcel()" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 6px 14px; font-size: 0.9em;">
+                        📊 Exporter Excel
+                    </button>
+                </div>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table class="summary-table" style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                    <thead>
+                        <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                            <th style="padding: 6px 8px; text-align: left; border: 1px solid #dee2e6;">Entrepreneur</th>
+                            <th style="padding: 6px 8px; text-align: center; border: 1px solid #dee2e6;">Nombre de Roulottes</th>
+                            <th style="padding: 6px 8px; text-align: left; border: 1px solid #dee2e6;">Dimension</th>
+                            <th style="padding: 6px 8px; text-align: left; border: 1px solid #dee2e6;">Commentaire</th>
+                            <th style="padding: 6px 8px; text-align: center; border: 1px solid #dee2e6; width: 80px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="equipLocationTableBody">
+                        <tr><td colspan="5" style="padding: 20px; text-align: center; color: #666;">Aucun équipement enregistré.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section Plan de Localisation -->
+        <div style="background: white; padding: 20px; border-radius: 10px;">
+            <h3 style="margin: 0 0 15px 0; color: #333;">Plan de Localisation</h3>
+
+            <!-- Contrôles du plan -->
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
+                    <label class="btn" style="background: #28a745; color: white; padding: 10px 20px; cursor: pointer; margin: 0;">
+                        📁 Charger Plan
+                        <input type="file" accept="image/*" onchange="window.equipLocationPlanEditor.loadPlan(event)" style="display: none;">
+                    </label>
+                    <button onclick="window.equipLocationPlanEditor.savePlan()" class="btn" style="background: #007bff; color: white; padding: 10px 20px;">
+                        💾 Sauvegarder
+                    </button>
+                    <button onclick="window.equipLocationPlanEditor.clearPlan()" class="btn" style="background: #dc3545; color: white; padding: 10px 20px;">
+                        🗑️ Effacer Plan
+                    </button>
+                    <button onclick="window.equipLocationPlanEditor.exportToPDF()" class="btn" style="background: #6c757d; color: white; padding: 10px 20px;">
+                        📄 Exporter PDF
+                    </button>
+                </div>
+
+                <!-- Outils de dessin -->
+                <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <div style="font-weight: 600; margin-bottom: 10px; color: #555;">Outils de Dessin</div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button id="equip-tool-select" onclick="window.equipLocationPlanEditor.setTool('select')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                            🖱️ Sélectionner
+                        </button>
+                        <button id="equip-tool-rectangle" onclick="window.equipLocationPlanEditor.setTool('rectangle')" style="padding: 10px 20px; background: #f0f0f0; color: #333; border: none; border-radius: 6px; cursor: pointer;">
+                            ⬜ Rectangle
+                        </button>
+                        <button id="equip-tool-circle" onclick="window.equipLocationPlanEditor.setTool('circle')" style="padding: 10px 20px; background: #f0f0f0; color: #333; border: none; border-radius: 6px; cursor: pointer;">
+                            ⭕ Cercle
+                        </button>
+                        <button id="equip-tool-text" onclick="window.equipLocationPlanEditor.setTool('text')" style="padding: 10px 20px; background: #f0f0f0; color: #333; border: none; border-radius: 6px; cursor: pointer;">
+                            📝 Texte
+                        </button>
+                        <button onclick="window.equipLocationPlanEditor.deleteSelected()" style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                            🗑️ Supprimer Sélection
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Options de couleur et épaisseur -->
+                <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+                    <div>
+                        <label style="font-weight: 600; margin-right: 10px; color: #555;">Couleur:</label>
+                        <input type="color" value="#ff0000" onchange="window.equipLocationPlanEditor.setColor(this.value)" style="width: 60px; height: 40px; border: none; border-radius: 4px; cursor: pointer;">
+                    </div>
+                    <div>
+                        <label style="font-weight: 600; margin-right: 10px; color: #555;">Épaisseur:</label>
+                        <input type="range" min="1" max="10" value="3" onchange="window.equipLocationPlanEditor.setThickness(this.value)" style="width: 150px;">
+                        <span id="equip-thickness-value" style="margin-left: 10px; font-weight: 600;">3</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Canvas -->
+            <div style="position: relative; border: 2px solid #ddd; border-radius: 8px; overflow: hidden; background: #f9f9f9;">
+                <canvas id="equipLocationPlanCanvas" width="1200" height="800" style="display: block; width: 100%; max-width: 100%; cursor: crosshair;"></canvas>
+                <div id="equipCanvasPlaceholder" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #999; font-size: 18px; pointer-events: none;">
+                    <div style="font-size: 48px; margin-bottom: 10px;">📋</div>
+                    <div>Chargez un plan pour commencer à dessiner</div>
+                </div>
+            </div>
+
+            <!-- Tableau des zones dessinées -->
+            <div style="margin-top: 20px;">
+                <h4 style="margin: 0 0 12px 0; color: #555; font-size: 1em;">Localisations Dessinées (<span id="equipZonesDrawnCount">0</span>)</h4>
+                <div style="overflow-x: auto;">
+                    <table class="summary-table" style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                        <thead>
+                            <tr style="background: #f0f0f0;">
+                                <th style="padding: 6px 8px; text-align: left; border: 1px solid #dee2e6;">Type</th>
+                                <th style="padding: 6px 8px; text-align: left; border: 1px solid #dee2e6;">Commentaire</th>
+                                <th style="padding: 6px 8px; text-align: center; border: 1px solid #dee2e6; width: 60px;">Couleur</th>
+                                <th style="padding: 6px 8px; text-align: center; border: 1px solid #dee2e6; width: 100px;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="equipZonesDrawnTableBody">
+                            <tr><td colspan="4" style="padding: 20px; text-align: center; color: #666;">Aucune localisation dessinée.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

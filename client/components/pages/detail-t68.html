@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-t68</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+<div id="detail-t68" class="page">
+            <div class="summary-container" style="max-width: 98%; padding: 20px;">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                    <h2 style="margin: 0; color: #333; flex: 1;">ÉTABLIR LES BESOINS DE NETTOYAGE POUR CHACUNE DES JOBS</h2>
+                </div>
+
+                <!-- Barre d'actions -->
+                <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; display: flex; gap: 10px; align-items: center;">
+                    <button onclick="window.besoinsNettoyageActions.renderBesoinsNettoyageTable()"
+                            style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        🔄 Actualiser
+                    </button>
+                    <button onclick="window.besoinsNettoyageActions.exportToExcel()"
+                            style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        📥 Exporter Excel
+                    </button>
+                    <button onclick="window.besoinsNettoyageActions.exportToPDF()"
+                            style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        📄 Exporter PDF
+                    </button>
+                    <span style="margin-left: auto; color: #666; font-size: 0.9em;">
+                        Total: <strong><span id="besoinsNettoyageCount">0</span></strong> ligne(s)
+                    </span>
+                </div>
+
+                <!-- Légende des postes -->
+                <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                    <h3 style="color: #667eea; margin-bottom: 10px; font-size: 1em;">📌 Filtres appliqués</h3>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="width: 20px; height: 20px; background: #3b82f6; border-radius: 4px;"></span>
+                            <span style="color: #666;">ORTEC</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="width: 20px; height: 20px; background: #10b981; border-radius: 4px;"></span>
+                            <span style="color: #666;">AEROVAC</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="width: 20px; height: 20px; background: #f59e0b; border-radius: 4px;"></span>
+                            <span style="color: #666;">VEOLIA</span>
+                        </div>
+                    </div>
+                    <p style="color: #666; font-size: 0.9em; margin-top: 10px; margin-bottom: 0;">
+                        Ce tableau affiche toutes les opérations IW37N ayant pour <strong>Poste de travail opération</strong> l'une des valeurs ci-dessus.
+                    </p>
+                </div>
+
+                <!-- Tableau des besoins de nettoyage -->
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">📋 Liste des Besoins de Nettoyage</h3>
+
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                    <th style="padding: 8px; border: 1px solid #dee2e6; text-align: center; min-width: 100px; font-size: 0.9em;">Ordre</th>
+                                    <th style="padding: 8px; border: 1px solid #dee2e6; text-align: left; min-width: 250px; font-size: 0.9em;">Désignation Opération</th>
+                                    <th style="padding: 8px; border: 1px solid #dee2e6; text-align: center; min-width: 80px; font-size: 0.9em;">Opération</th>
+                                    <th style="padding: 8px; border: 1px solid #dee2e6; text-align: center; min-width: 120px; font-size: 0.9em;">Poste Travail</th>
+                                    <th style="padding: 8px; border: 1px solid #dee2e6; text-align: left; min-width: 180px; font-size: 0.9em;">Poste Technique</th>
+                                    <th style="padding: 8px; border: 1px solid #dee2e6; text-align: left; min-width: 200px; font-size: 0.9em;">Commentaire</th>
+                                </tr>
+                            </thead>
+                            <tbody id="besoinsNettoyageTableBody">
+                                <tr>
+                                    <td colspan="6" style="padding: 30px; text-align: center; color: #666;">
+                                        Chargement des données...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

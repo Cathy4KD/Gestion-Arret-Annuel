@@ -1,0 +1,49 @@
+<div id="detail-ingq" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                    ← Retour
+                </button>
+                <h2 style="margin: 0; color: #333;">PROJETS INGQ</h2>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="window.ingqActions.addProjet()" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                    ➕ Ajouter un projet
+                </button>
+                <button onclick="window.ingqActions.exportToExcel()" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                    📊 Exporter Excel
+                </button>
+            </div>
+        </div>
+
+        <!-- Tableau des projets INGQ -->
+        <div style="background: white; padding: 20px; border-radius: 10px;">
+            <h3 style="margin: 0 0 15px 0; color: #333;">Liste des Projets (<span id="ingq-count">0</span>)</h3>
+
+            <div style="overflow-x: auto;">
+                <table id="ingq-table" class="summary-table" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 200px;">Nom du Projet</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 150px;">Responsable</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 120px;">Budget ($)</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 120px;">Date Début</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 120px;">Date Fin</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 100px;">Statut</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 300px;">Description</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 100px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ingq-tbody">
+                        <tr>
+                            <td colspan="8" style="padding: 30px; text-align: center; color: #666;">
+                                Aucun projet INGQ. Cliquez sur "Ajouter un projet" pour commencer.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

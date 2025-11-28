@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-t60</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+        <div id="detail-t60" class="page">
+            <div class="summary-container" style="max-width: 98%; padding: 20px;">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                    <h2 style="margin: 0; color: #333;">FAIRE LES COMMANDES À LONG DÉLAI 60J</h2>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="margin: 0; color: #2d3748;">📦 Pièces avec Délai de Livraison 60-89 Jours</h3>
+                        <div>
+                            <button onclick="syncT60FromIW38()" style="padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 10px;">🔄 Charger depuis Gestion des Pièces</button>
+                            <button onclick="exportT60ToExcel()" style="padding: 10px 20px; background: #4299e1; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">📥 Exporter Excel</button>
+                        </div>
+                    </div>
+
+                    <p style="color: #000000; margin-bottom: 15px;">Total de pièces: <strong><span id="t60Count">0</span></strong></p>
+                    <p style="color: #ffa500; margin-bottom: 10px; font-style: italic;">⚠️ Les pièces avec un délai ≥ 75 jours sont affichées en orange (urgent)</p>
+                    <p style="color: #2563eb; margin-bottom: 15px; font-style: italic;">ℹ️ La date de commande est calculée automatiquement : Date début d'arrêt - Délai de livraison</p>
+
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; background: white;">
+                            <thead style="position: sticky; top: 0; background: white; z-index: 5;">
+                                <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 8%;">Ordre</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 20%;">Désignation composant</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 10%;">Article</th>
+                                    <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 7%;">Qté réservée</th>
+                                    <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 5%;">Unité</th>
+                                    <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 8%;">Délai (jours)</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 10%;">Date commande</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 10%;">Statut</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 22%;">Remarques</th>
+                                </tr>
+                            </thead>
+                            <tbody id="t60TableBody">
+                                <tr>
+                                    <td colspan="9" style="padding: 30px; text-align: center; color: #666; border: 1px solid #dee2e6;">
+                                        Aucune pièce avec délai 60-89 jours. Cliquez sur "🔄 Charger depuis Gestion des Pièces" pour charger les données.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

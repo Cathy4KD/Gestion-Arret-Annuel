@@ -1,0 +1,84 @@
+<div id="detail-t36" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                    ← Retour
+                </button>
+                <h2 style="margin: 0; color: #333;">🏗️ VALIDATION DU REGISTRE D'INSPECTION DES ÉQUIPEMENT DE LEVAGE</h2>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin-bottom: 25px; border-left: 4px solid #2196f3;">
+            <h3 style="margin: 0 0 10px 0; color: #1565c0;">
+                ℹ️ À propos
+            </h3>
+            <p style="margin: 0; color: #333; line-height: 1.6;">
+                Validez le registre d'inspection des équipements de levage pour vous assurer que tous les équipements sont conformes et prêts pour l'arrêt.
+            </p>
+        </div>
+
+        <!-- Content Area -->
+        <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <h3 style="margin: 0 0 20px 0; color: #667eea;">
+                📋 Registre d'Inspection
+            </h3>
+
+            <div style="display: grid; gap: 20px;">
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Date de validation</label>
+                    <input type="date" id="validationDate" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px;">
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Responsable de la validation</label>
+                    <input type="text" id="responsable" placeholder="Nom du responsable..."
+                           style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px;">
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Équipements inspectés</label>
+                    <textarea id="equipments" rows="6" placeholder="Liste des équipements de levage inspectés (ponts roulants, grues, palans, etc.)..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Non-conformités identifiées</label>
+                    <textarea id="nonConformites" rows="6" placeholder="Liste des non-conformités trouvées lors de l'inspection..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Actions correctives</label>
+                    <textarea id="actions" rows="6" placeholder="Actions correctives à mettre en place avant l'arrêt..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Statut de validation</label>
+                    <select id="validationStatus" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px;">
+                        <option value="">-- Sélectionner --</option>
+                        <option value="en-cours">En cours</option>
+                        <option value="validé">Validé</option>
+                        <option value="validé-avec-réserves">Validé avec réserves</option>
+                        <option value="non-validé">Non validé</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">Commentaires</label>
+                    <textarea id="comments" rows="4" placeholder="Commentaires additionnels..."
+                              style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 20px;">
+                <button onclick="alert('Sauvegarde des données...')"
+                        class="btn" style="background: #28a745; color: white; padding: 12px 30px;">
+                    💾 Sauvegarder
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

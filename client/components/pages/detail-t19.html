@@ -1,0 +1,127 @@
+<div id="detail-t19" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                    ← Retour
+                </button>
+                <h2 style="margin: 0; color: #333;">LISTE DES PSV</h2>
+            </div>
+        </div>
+
+        <!-- Description et boutons d'action -->
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <p style="margin: 0 0 15px 0; color: #666;">
+                Cette liste contient tous les travaux PSV extraits depuis IW37N (Design. Opération contenant "PSV").
+            </p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button onclick="syncPSVFromIw37n()" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                    🔄 Synchroniser avec IW37N
+                </button>
+                <button onclick="exportPSVToExcel()" class="btn" style="background: linear-gradient(145deg, #007bff, #0056b3); color: white; padding: 10px 20px;">
+                    📊 Exporter Excel
+                </button>
+                <button onclick="importPSVCaracteristiques()" class="btn" style="background: linear-gradient(145deg, #17a2b8, #138496); color: white; padding: 10px 20px;">
+                    📥 Importer Caractéristiques
+                </button>
+                <button onclick="window.switchToPage('psv_caracteristiques')" class="btn" style="background: linear-gradient(145deg, #6f42c1, #5a32a3); color: white; padding: 10px 20px;">
+                    🔍 Voir Caractéristiques
+                </button>
+            </div>
+
+            <div style="margin-top: 15px;">
+                <strong>Total de PSV: <span id="psvCount">0</span></strong>
+            </div>
+        </div>
+
+        <!-- Liste Unique des PSV -->
+        <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: #333;">Liste Unique des PSV (<span id="uniquePSVCount">0</span>)</h3>
+                <button onclick="exportUniquePSVAndSend()" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                    📧 Exporter et Envoyer
+                </button>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table id="uniquePSVTable" class="summary-table" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Numéro PSV</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Caractéristiques</th>
+                        </tr>
+                    </thead>
+                    <tbody id="uniquePSVTableBody">
+                        <tr>
+                            <td colspan="2" style="padding: 30px; text-align: center; color: #666;">
+                                Aucun numéro de PSV trouvé.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tableau principal PSV -->
+        <div style="background: white; padding: 20px; border-radius: 10px;">
+            <h3 style="margin: 0 0 15px 0; color: #333;">Liste Complète</h3>
+
+            <div style="overflow-x: auto; max-height: 500px; overflow-y: auto;">
+                <table id="psvTable" class="summary-table" style="width: 100%; border-collapse: collapse;">
+                    <thead style="position: sticky; top: 0; z-index: 10;">
+                        <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Ordre</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Opération</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Design. Opération</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Poste Technique</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; min-width: 180px;">Photos</th>
+                        </tr>
+                    </thead>
+                    <tbody id="psvTableBody">
+                        <tr>
+                            <td colspan="5" style="padding: 30px; text-align: center; color: #666;">
+                                Aucun PSV dans la liste. Cliquez sur "Synchroniser avec IW37N" pour extraire les PSV.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section Plan avec Marqueurs PSV -->
+        <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
+            <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0;">📍 Plan de Localisation des PSV</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="document.getElementById('psv-plan-upload').click()" class="btn" style="background: #4a7c59; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        📤 Charger Plan (Image/PDF)
+                    </button>
+                    <button onclick="window.psvPlanActions.clearPlan()" class="btn" style="background: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        🗑️ Supprimer Plan Actuel
+                    </button>
+                </div>
+                <input type="file" id="psv-plan-upload" accept="image/*,.pdf" style="display: none;" onchange="window.psvPlanActions.handlePlanUpload(event)">
+            </div>
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #4299e1;">
+                <p style="margin: 0; color: #666; font-size: 0.9em;">
+                    <strong>Instructions:</strong> Importez un ou plusieurs plans. Sélectionnez un PSV dans la liste, puis cliquez sur le plan pour placer un marqueur.
+                </p>
+            </div>
+
+            <!-- Sélecteur de plans -->
+            <div id="psv-plan-selector" style="background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #dee2e6;">
+                <p style="color: #999; font-size: 0.9em;">Aucun plan chargé</p>
+            </div>
+
+            <!-- Sélecteur de PSV -->
+            <div id="psv-selector-container" style="background: #fffbf0; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ffc107;">
+                <p style="color: #999; font-size: 0.9em;">Chargez d'abord les PSV et un plan</p>
+            </div>
+
+            <div id="psv-plan-container" style="border: 2px dashed #dee2e6; border-radius: 8px; padding: 20px; min-height: 300px; background: #fafafa; text-align: center; overflow: auto;">
+                <p style="color: #666; padding: 40px;">Aucun plan chargé. Utilisez le bouton "Charger Plan" ci-dessus.</p>
+            </div>
+        </div>
+    </div>
+</div>

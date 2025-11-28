@@ -1,0 +1,25 @@
+<div id="point-presse-journaliers" class="page">
+                    <div class="summary-container" style="max-width: 98%;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                            <div style="display: flex; align-items: center;">
+                                <button onclick="window.switchToPage('execution')" style="padding: 10px 20px; background: #f093fb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                                <h2 style="margin: 0; color: #333;">📰 Point de Presse Journaliers</h2>
+                            </div>
+                            <button onclick="window.pointPresseActions.exportToExcel()" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                                📥 Exporter vers Excel
+                            </button>
+                        </div>
+
+                        <!-- Bouton Ajouter -->
+                        <div style="margin-bottom: 20px;">
+                            <button onclick="window.pointPresseActions.showAddForm()" style="padding: 12px 25px; background: linear-gradient(145deg, #f093fb, #f5576c); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.3);">
+                                ➕ Ajouter Point de Presse
+                            </button>
+                        </div>
+
+                        <!-- Liste des points de presse -->
+                        <div id="pointPresseList" style="display: flex; flex-direction: column; gap: 20px;">
+                            <!-- Les points de presse seront affichés ici -->
+                        </div>
+                    </div>
+                </div>

@@ -1,0 +1,111 @@
+<div id="iw37n" class="page">
+    <h2>📊 IW37N</h2>
+
+    <div class="card">
+        <h3>Import de fichier Excel IW37N</h3>
+        <p>Cliquez sur le bouton ci-dessous pour importer un fichier Excel IW37N depuis votre ordinateur.</p>
+        <button onclick="window.importIw37nFile()" class="btn" style="padding: 12px 24px; background: #4a7c59; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1em;">
+            Importer fichier Excel IW37N
+        </button>
+    </div>
+
+    <!-- Section de recherche -->
+    <div class="card" style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        <h3 style="margin: 0 0 15px 0; color: #333;">🔍 Recherche</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+            <div>
+                <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555;">Ordre</label>
+                <input type="text"
+                       id="iw37n-filter-ordre"
+                       placeholder="Filtrer par Ordre..."
+                       oninput="window.iw37nActions.filterTable()"
+                       style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px;">
+            </div>
+
+            <div>
+                <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555;">Désign. Opér.</label>
+                <input type="text"
+                       id="iw37n-filter-design"
+                       placeholder="Filtrer par Désign. Opér..."
+                       oninput="window.iw37nActions.filterTable()"
+                       style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px;">
+            </div>
+
+            <div>
+                <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555;">Poste technique</label>
+                <input type="text"
+                       id="iw37n-filter-poste"
+                       placeholder="Filtrer par Poste technique..."
+                       oninput="window.iw37nActions.filterTable()"
+                       style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px;">
+            </div>
+        </div>
+
+        <div style="margin-top: 15px; display: flex; gap: 10px;">
+            <button onclick="window.iw37nActions.resetFilters()"
+                    class="btn"
+                    style="background: #6c757d; color: white; padding: 8px 20px;">
+                🔄 Réinitialiser les filtres
+            </button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Données IW37N</h3>
+        <div id="iw37n-stats" style="margin-bottom: 15px;">
+            <p>Aucune donnée chargée</p>
+        </div>
+        <div style="overflow-x: auto; max-height: 800px; overflow-y: auto;">
+            <table id="iw37nTable" class="summary-table" style="width: 100%; border-collapse: collapse; font-size: 0.85em;">
+                <thead>
+                    <tr style="background: #4a7c59; color: white;">
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Groupe de gest.</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Opération</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Désign. opér.</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Post.trav.opér.</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Ordre</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Poste technique</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Unité productve</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Code ABC</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Révision</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Type d'ordre</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Priorité</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">PosteTravPrinc.</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Désignation</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Clé de commande</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Nombre</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Durée normale</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Travail</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Travail réel</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">EtatImmobilOpér</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Date début +tôt</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Heure déb.+tôt</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Date fin + tôt</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Heure fin + tôt</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">StatUtilisOpér</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Statut util.</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Stat.syst.opér.</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Statut système</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">TotalCoûtsBudg.</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Fournisseur</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Demande d'achat</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Prix</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Grpe de gammes</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Cpteur gr.gamm.</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Poste d'entret.</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Plan d'entret.</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Confirmation</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Réceptionnaire</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Clé de réf.</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; white-space: nowrap;">Point déchargmt</th>
+                    </tr>
+                </thead>
+                <tbody id="iw37nTableBody">
+                    <tr>
+                        <td colspan="39" style="text-align: center; padding: 20px;">Aucune donnée - Importez un fichier Excel</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

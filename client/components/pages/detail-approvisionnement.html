@@ -1,0 +1,62 @@
+<div id="detail-approvisionnement" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                    ← Retour
+                </button>
+                <h2 style="margin: 0; color: #333;">📦 Établir une Stratégie d'Approvisionnement</h2>
+            </div>
+        </div>
+
+        <!-- Section Liste des Fournisseurs et Travaux -->
+        <div style="background: white; padding: 20px; border-radius: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: #333;">Liste des Fournisseurs et Travaux</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="addStrategieRow()" class="btn" style="background: linear-gradient(145deg, #28a745, #20c997); color: white; padding: 10px 20px;">
+                        ➕ Ajouter
+                    </button>
+                    <button onclick="toggleHistoriqueColumns()" class="btn" style="background: linear-gradient(145deg, #007bff, #0056b3); color: white; padding: 10px 20px;">
+                        📊 Afficher/Cacher Historique
+                    </button>
+                    <button onclick="exportApprovisionnementToPDF()" class="btn" style="background: linear-gradient(145deg, #dc3545, #c82333); color: white; padding: 10px 20px;">
+                        📄 Exporter PDF
+                    </button>
+                    <button onclick="exportApprovisionnementToExcel()" class="btn" style="background: linear-gradient(145deg, #4299e1, #3182ce); color: white; padding: 10px 20px;">
+                        📥 Exporter Excel
+                    </button>
+                    <button onclick="exportApprovisionnementToDocx()" class="btn" style="background: linear-gradient(145deg, #2563eb, #1d4ed8); color: white; padding: 10px 20px;">
+                        📝 Exporter DOCX
+                    </button>
+                </div>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table id="strategieTable" class="summary-table" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 150px;">Fournisseur</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 150px;">Type de travaux</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 200px;">Justification</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 120px;">Estimé</th>
+                            <th class="historique-col" style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 120px;">Estimé 2021</th>
+                            <th class="historique-col" style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 120px;">Estimé 2022</th>
+                            <th class="historique-col" style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 120px;">Estimé 2023</th>
+                            <th class="historique-col" style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 120px;">Estimé 2024</th>
+                            <th class="historique-col" style="padding: 12px; text-align: left; border: 1px solid #dee2e6; min-width: 120px;">Estimé 2025</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; min-width: 100px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="strategieTableBody">
+                        <tr>
+                            <td colspan="10" style="padding: 30px; text-align: center; color: #666;">
+                                Aucune stratégie ajoutée. Cliquez sur "Ajouter" pour commencer.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-t65</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+<div id="detail-t65" class="page">
+            <div class="summary-container" style="max-width: 98%; padding: 20px;">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                    <h2 style="margin: 0; color: #333; flex: 1;">DEMANDER PLAN DE LEVAGE POUR LES LEVAGES IMPORTANTS</h2>
+                </div>
+
+                <!-- Barre d'actions -->
+                <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; display: flex; gap: 10px; align-items: center;">
+                    <button onclick="window.planLevageActions.addLevage()"
+                            style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        ➕ Ajouter un Levage
+                    </button>
+                    <button onclick="window.planLevageActions.exportSelectedToPDF()"
+                            style="padding: 10px 20px; background: #ff9800; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        📄 Exporter Sélection en PDF
+                    </button>
+                    <button onclick="window.planLevageActions.exportAllToPDF()"
+                            style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        📑 Exporter Tout en PDF
+                    </button>
+                    <button onclick="window.planLevageActions.exportToExcel()"
+                            style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        📥 Exporter Excel
+                    </button>
+                    <span style="margin-left: auto; color: #666; font-size: 0.9em;">
+                        Total: <strong><span id="planLevageCount">0</span></strong> levage(s)
+                    </span>
+                </div>
+
+                <!-- Tableau des Levages -->
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">📋 Liste des Levages Importants</h3>
+
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center; width: 50px;">
+                                        <input type="checkbox" id="selectAllLevages" onchange="window.planLevageActions.toggleSelectAll(this.checked)"
+                                               style="width: 18px; height: 18px; cursor: pointer;">
+                                    </th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; min-width: 120px;">Ordre</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; min-width: 250px;">Équipement</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; min-width: 200px;">Commentaire</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; min-width: 250px;">Documents</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center; min-width: 100px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="planLevageTableBody">
+                                <tr>
+                                    <td colspan="6" style="padding: 30px; text-align: center; color: #666;">
+                                        Aucun levage enregistré. Cliquez sur "Ajouter un Levage" pour commencer.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

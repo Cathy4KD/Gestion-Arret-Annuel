@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-t24</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+<div id="detail-t24" class="page">
+            <div class="summary-container" style="max-width: 98%; padding: 20px;">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                    <h2 style="margin: 0; color: #333;">NOMMER L'ÉQUIPE DE GESTION D'ARRÊTS (D6.0)</h2>
+                </div>
+
+                <!-- Section Tableau -->
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 30px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="margin: 0; color: #2d3748;">📋 Membres de l'Équipe</h3>
+                        <div>
+                            <button onclick="addTeamMember()" style="padding: 10px 20px; background: #48bb78; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 10px;">➕ Ajouter un membre</button>
+                            <button onclick="exportTeamToExcel()" style="padding: 10px 20px; background: #4299e1; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">📥 Exporter Excel</button>
+                        </div>
+                    </div>
+
+                    <p style="color: #000000; margin-bottom: 15px;">Total de membres: <strong><span id="teamCount">0</span></strong></p>
+
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; background: white;">
+                            <thead>
+                                <tr style="background: #667eea; color: white;">
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 20%;">Nom</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 20%;">Rôle</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 15%;">Téléphone</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 25%;">Adresse mail</th>
+                                    <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 5%;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="teamTableBody">
+                                <tr>
+                                    <td colspan="5" style="padding: 30px; text-align: center; color: #666; border: 1px solid #dee2e6;">
+                                        Aucun membre dans l'équipe. Cliquez sur "Ajouter un membre" pour commencer.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section Organigramme -->
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <h3 style="margin: 0 0 20px 0; color: #2d3748;">🏢 Organigramme de l'Équipe</h3>
+                    <div id="organigramme" style="padding: 20px; min-height: 400px;">
+                        <!-- L'organigramme sera généré automatiquement ici -->
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

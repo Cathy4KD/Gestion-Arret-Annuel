@@ -1,0 +1,34 @@
+<div id="detail-suivi-cout" class="page">
+    <div class="summary-container" style="max-width: 98%; padding: 20px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                    ← Retour
+                </button>
+                <h2 style="margin: 0; color: #333;">💰 PROCESSUS DE SUIVI DE COÛT</h2>
+            </div>
+            <button onclick="window.suiviCoutActions.exportSuiviCoutToExcel()"
+                    style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                📊 Exporter Excel
+            </button>
+        </div>
+
+        <!-- Info Banner -->
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <h3 style="margin: 0 0 10px 0;">📊 Tableau de Bord - Suivi des Coûts</h3>
+            <p style="margin: 0; opacity: 0.95; line-height: 1.6;">
+                Ce tableau de bord agrège automatiquement les coûts depuis plusieurs sources:
+                <strong>Pièces</strong> (Prix×Qté), <strong>Demandes d'Achat</strong>,
+                <strong>Soumissions Entrepreneurs</strong>, et vos <strong>coûts additionnels manuels</strong>.
+            </p>
+        </div>
+
+        <!-- Dashboard Container -->
+        <div id="suiviCoutDashboard">
+            <!-- Généré dynamiquement par JavaScript -->
+            <div style="background: white; padding: 40px; border-radius: 10px; text-align: center; color: #666;">
+                <p>Chargement du tableau de bord...</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,137 @@
+<div id="pieces" class="page">
+    <div class="summary-container" style="max-width: 98%; padding: 20px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <h2 style="margin: 0; color: #333;">Gestion des Pièces</h2>
+            <div style="display: flex; gap: 10px;">
+                <!-- This is now a label for the hidden file input -->
+                <label for="excel-file-input" class="excel-import-button" style="padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; display: inline-block;">
+                    📥 Importer depuis Excel
+                </label>
+                <!-- The actual file input is hidden -->
+                <input type="file" id="excel-file-input" accept=".xlsx, .xls" style="display: none;">
+                <!-- Bouton Export Liste -->
+                <button onclick="window.piecesActions.exportPiecesListToExcel()" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    📤 Exporter Liste Pièces
+                </button>
+            </div>
+        </div>
+
+        <!-- Section de recherche -->
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <h3 style="margin: 0 0 15px 0; color: #333;">🔍 Recherche</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                <div>
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555;">Ordre</label>
+                    <input type="text"
+                           id="pieces-filter-ordre"
+                           placeholder="Rechercher par ordre..."
+                           oninput="window.piecesActions.filterTable()"
+                           style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px;">
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555;">Article</label>
+                    <input type="text"
+                           id="pieces-filter-article"
+                           placeholder="Rechercher par article..."
+                           oninput="window.piecesActions.filterTable()"
+                           style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px;">
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555;">Désignation Article</label>
+                    <input type="text"
+                           id="pieces-filter-designation"
+                           placeholder="Rechercher par désignation..."
+                           oninput="window.piecesActions.filterTable()"
+                           style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px;">
+                </div>
+            </div>
+
+            <div style="margin-top: 15px; display: flex; gap: 10px;">
+                <button onclick="window.piecesActions.resetFilters()"
+                        class="btn"
+                        style="background: #6c757d; color: white; padding: 8px 20px;">
+                    🔄 Réinitialiser les filtres
+                </button>
+                <span id="pieces-filter-count" style="padding: 8px 15px; background: #e3f2fd; border-radius: 5px; color: #1976d2; font-weight: 600;">
+                    0 pièce(s) affichée(s)
+                </span>
+            </div>
+        </div>
+
+        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <div style="overflow-x: auto; overflow-y: auto; max-height: 600px; border: 1px solid #dee2e6; border-radius: 8px;">
+                <table style="width: 100%; border-collapse: collapse; position: relative;" id="pieces-table">
+                    <thead style="position: sticky; top: 0; z-index: 10;">
+                        <tr style="background: #667eea; color: white;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Statut disponibilité article</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Stat. livraison</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Ordre</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Opération</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Poste travail princ.</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Désign. synth. opér.</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Date début plus tôt</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Date du besoin</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Délai prév. livrais.</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Article</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Désignation article</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">A utilisation libre</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Qté non livrée</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Magasin</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Emplacement</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Commentaires</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Document d'achat</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Poste</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Numéro de confirmation de commande</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Réceptionnaire</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Créé par</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Modifié par</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Point déchargement</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Demande d'achat</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Code de lancement</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Nom</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Fournisseur</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Révision</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Gestionnaire MRP</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Poste technique</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Désignation</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Poste travail opérat.</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Quantité requise</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Unité de qté base</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Réservation clôturée</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Temps de réception</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Prix/devise</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Créé le</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Saisi par</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Validation</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Réservation</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Date livraison réaliste</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Date de livraison de site prévue</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Livraison terminée</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Facture finale</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Stock en transit</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Date MàJour</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Heure MàJour</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Date création CAD</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">A bloqu</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Priorité livrais.</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Confirmation de commande créée le</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Numéro de référence de la confirmation</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Qté en transit</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Document article</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Code mouvement</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pieces-table-body">
+                        <tr>
+                            <td colspan="56" style="padding: 30px; text-align: center; color: #666;">
+                                Aucune donnée. Cliquez sur "Importer depuis Excel" pour choisir un fichier à charger.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

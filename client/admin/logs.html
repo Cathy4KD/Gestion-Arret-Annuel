@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logs Système - Administration</title>
+    <link rel="stylesheet" href="../styles/common.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            margin: 0 0 20px 0;
+            color: #333;
+            font-size: 28px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .control-group label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .select-input,
+        .text-input,
+        .number-input {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+            background: white;
+        }
+
+        .select-input:focus,
+        .text-input:focus,
+        .number-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: auto;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .stats-bar {
+            background: white;
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .stat-badge.total {
+            background: #E3F2FD;
+            color: #1976D2;
+        }
+
+        .stat-badge.error {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+
+        .stat-badge.warn {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+
+        .stat-badge.info {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .logs-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            min-height: 400px;
+        }
+
+        .log-entry {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #ccc;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .log-entry:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .log-entry.error {
+            background: #FFEBEE;
+            border-left-color: #f44336;
+        }
+
+        .log-entry.warn {
+            background: #FFF3E0;
+            border-left-color: #FF9800;
+        }
+
+        .log-entry.info {
+            background: #E8F5E9;
+            border-left-color: #4CAF50;
+        }
+
+        .log-entry.debug {
+            background: #F5F5F5;
+            border-left-color: #9E9E9E;
+        }
+
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .log-level {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .log-level.error {
+            background: #f44336;
+            color: white;
+        }
+
+        .log-level.warn {
+            background: #FF9800;
+            color: white;
+        }
+
+        .log-level.info {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .log-level.debug {
+            background: #9E9E9E;
+            color: white;
+        }
+
+        .log-timestamp {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .log-message {
+            color: #333;
+            line-height: 1.6;
+            word-break: break-word;
+        }
+
+        .log-meta {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            font-size: 11px;
+            color: #666;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .empty-state-text {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #667eea;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #FFEBEE;
+            color: #C62828;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .auto-refresh {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .auto-refresh input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .auto-refresh label {
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .control-group {
+                width: 100%;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .log-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Logs Système</h1>
+            <div class="controls">
+                <div class="control-group">
+                    <label for="levelFilter">Niveau</label>
+                    <select id="levelFilter" class="select-input">
+                        <option value="">Tous les niveaux</option>
+                        <option value="error">Error</option>
+                        <option value="warn">Warn</option>
+                        <option value="info">Info</option>
+                        <option value="debug">Debug</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label for="searchInput">Recherche</label>
+                    <input type="text" id="searchInput" class="text-input" placeholder="Rechercher dans les logs..." style="width: 300px;">
+                </div>
+
+                <div class="control-group">
+                    <label for="limitInput">Limite</label>
+                    <input type="number" id="limitInput" class="number-input" value="100" min="10" max="1000" step="10" style="width: 100px;">
+                </div>
+
+                <div class="control-group">
+                    <label>&nbsp;</label>
+                    <button class="btn btn-primary" onclick="loadLogs()">🔍 Filtrer</button>
+                </div>
+
+                <div class="control-group">
+                    <label>&nbsp;</label>
+                    <button class="btn btn-secondary" onclick="clearFilters()">🔄 Réinitialiser</button>
+                </div>
+
+                <div class="control-group">
+                    <label>&nbsp;</label>
+                    <div class="auto-refresh">
+                        <input type="checkbox" id="autoRefreshCheck" onchange="toggleAutoRefresh()">
+                        <label for="autoRefreshCheck">Auto-refresh (10s)</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat">
+                <span class="stat-badge total" id="totalCount">0</span>
+                <span class="stat-label">Total</span>
+            </div>
+            <div class="stat">
+                <span class="stat-badge error" id="errorCount">0</span>
+                <span class="stat-label">Errors</span>
+            </div>
+            <div class="stat">
+                <span class="stat-badge warn" id="warnCount">0</span>
+                <span class="stat-label">Warnings</span>
+            </div>
+            <div class="stat">
+                <span class="stat-badge info" id="infoCount">0</span>
+                <span class="stat-label">Info</span>
+            </div>
+        </div>
+
+        <div id="errorContainer"></div>
+
+        <div class="logs-container">
+            <div id="logsContent"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentLogs = [];
+        let autoRefreshInterval = null;
+
+        // Format timestamp
+        function formatTimestamp(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleString('fr-FR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Render logs
+        function renderLogs(logs) {
+            const container = document.getElementById('logsContent');
+
+            if (logs.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <div class="empty-state-text">Aucun log trouvé</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = logs.map(log => {
+                const level = log.level || 'info';
+                let metaHtml = '';
+
+                if (log.meta && Object.keys(log.meta).length > 0) {
+                    metaHtml = `
+                        <div class="log-meta">
+                            ${Object.entries(log.meta).map(([key, value]) =>
+                                `<div><strong>${escapeHtml(key)}:</strong> ${escapeHtml(JSON.stringify(value))}</div>`
+                            ).join('')}
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div class="log-entry ${level}">
+                        <div class="log-header">
+                            <span class="log-level ${level}">${level}</span>
+                            <span class="log-timestamp">${formatTimestamp(log.timestamp)}</span>
+                        </div>
+                        <div class="log-message">${escapeHtml(log.message)}</div>
+                        ${metaHtml}
+                    </div>
+                `;
+            }).join('');
+
+            // Update stats
+            updateStats(logs);
+        }
+
+        // Update statistics
+        function updateStats(logs) {
+            const total = logs.length;
+            const errorCount = logs.filter(l => l.level === 'error').length;
+            const warnCount = logs.filter(l => l.level === 'warn').length;
+            const infoCount = logs.filter(l => l.level === 'info').length;
+
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('errorCount').textContent = errorCount;
+            document.getElementById('warnCount').textContent = warnCount;
+            document.getElementById('infoCount').textContent = infoCount;
+        }
+
+        // Load logs
+        async function loadLogs() {
+            const errorContainer = document.getElementById('errorContainer');
+            const logsContent = document.getElementById('logsContent');
+
+            errorContainer.innerHTML = '';
+            logsContent.innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <div>Chargement des logs...</div>
+                </div>
+            `;
+
+            try {
+                const level = document.getElementById('levelFilter').value;
+                const search = document.getElementById('searchInput').value;
+                const limit = document.getElementById('limitInput').value;
+
+                const params = new URLSearchParams();
+                if (level) params.append('level', level);
+                if (search) params.append('search', search);
+                if (limit) params.append('limit', limit);
+
+                const response = await fetch(`/api/admin/logs?${params.toString()}`);
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(data.error?.message || 'Erreur lors du chargement des logs');
+                }
+
+                currentLogs = data.data;
+                renderLogs(currentLogs);
+
+            } catch (error) {
+                console.error('Erreur:', error);
+                errorContainer.innerHTML = `
+                    <div class="error-message">
+                        ✗ Erreur: ${error.message}
+                    </div>
+                `;
+                logsContent.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⚠️</div>
+                        <div class="empty-state-text">Erreur lors du chargement</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Clear filters
+        function clearFilters() {
+            document.getElementById('levelFilter').value = '';
+            document.getElementById('searchInput').value = '';
+            document.getElementById('limitInput').value = '100';
+            loadLogs();
+        }
+
+        // Toggle auto-refresh
+        function toggleAutoRefresh() {
+            const checkbox = document.getElementById('autoRefreshCheck');
+
+            if (checkbox.checked) {
+                loadLogs();
+                autoRefreshInterval = setInterval(loadLogs, 10000); // 10 seconds
+            } else {
+                if (autoRefreshInterval) {
+                    clearInterval(autoRefreshInterval);
+                    autoRefreshInterval = null;
+                }
+            }
+        }
+
+        // Handle Enter key in search input
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    loadLogs();
+                }
+            });
+
+            // Load initial logs
+            loadLogs();
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                autoRefreshInterval = null;
+            }
+        });
+    </script>
+</body>
+</html>

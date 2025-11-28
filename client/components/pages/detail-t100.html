@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-t100</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+<div id="detail-t100" class="page">
+            <div class="summary-container" style="max-width: 98%; padding: 20px;">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                    <h2 style="margin: 0; color: #333; flex: 1;">CONCEVOIR LE PLAN D'AMÉNAGEMENT (CHANTIER ET ROULOTTE)</h2>
+                </div>
+
+                <!-- Section Upload d'Images -->
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">🖼️ Plans d'Aménagement</h3>
+                    <div style="margin-bottom: 15px;">
+                        <input type="file" id="amenagementUploadPlan" accept="image/*" style="display: none;" onchange="handleAmenagementImageUpload(event)">
+                        <button onclick="document.getElementById('amenagementUploadPlan').click()"
+                                style="padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                            ➕ Ajouter un Plan
+                        </button>
+                        <button onclick="exportAmenagementData()"
+                                style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-left: 10px;">
+                            💾 Sauvegarder les Données
+                        </button>
+                    </div>
+                    <p style="color: #000000; font-size: 0.9em; margin: 0;">Formats supportés: JPG, PNG, GIF. Cliquez sur un plan pour ajouter des zones (chantier, roulottes, etc.).</p>
+                </div>
+
+                <!-- Liste des Plans -->
+                <div id="amenagementPlansContainer"></div>
+            </div>
+        </div>
+</body>
+</html>

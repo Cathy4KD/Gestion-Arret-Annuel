@@ -1,0 +1,552 @@
+<div id="detail-t25" class="page">
+    <div class="summary-container" style="max-width: 98%;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button onclick="window.switchToPage('summary')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    ← Retour
+                </button>
+                <h2 style="margin: 0; color: #333;">📝 CRÉATION DE LA DA (ACHETEUR 653)</h2>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <label style="font-weight: bold; color: #555; white-space: nowrap;">DA Principale:</label>
+                    <input type="text" id="daPrincipaleInput" placeholder="Ex: 4500123456"
+                           onchange="window.updateDAPrincipale(this.value)"
+                           style="padding: 8px 12px; border: 2px solid #667eea; border-radius: 6px; font-size: 14px; font-weight: 600; width: 150px;">
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="archiveCurrentData()" class="btn" style="background: linear-gradient(145deg, #ff6b6b, #ee5a6f); color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    📦 Archiver vers Historique
+                </button>
+                <button onclick="addDARow()" class="btn" style="background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    ➕ Ajouter une ligne
+                </button>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div style="background: #fff3cd; padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #ffc107;">
+            <p style="margin: 0; color: #856404; line-height: 1.6; font-weight: 600;">
+                💡 Dans le futur : créer un bouton qui envoie un mail pour fournir le No de PO au sous-traitant directement
+            </p>
+        </div>
+
+        <!-- Container avec tableau et historique côte à côte -->
+        <div style="display: flex; gap: 20px;">
+            <!-- Tableau principal -->
+            <div style="flex: 1; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <h3 style="margin: 0 0 15px 0; color: #667eea;">
+                    📋 Suivi des Demandes d'Achat
+                </h3>
+
+                <div style="overflow-x: auto; max-height: 600px; overflow-y: auto;">
+                    <table id="daTable" style="width: 100%; border-collapse: collapse; font-size: 0.85em;">
+                        <thead style="position: sticky; top: 0; background: white; z-index: 10;">
+                            <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                                <th style="padding: 10px 6px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap; font-size: 12px;">Fournisseur</th>
+                                <th style="padding: 10px 6px; border: 1px solid #dee2e6; text-align: left; font-size: 12px;">Travaux</th>
+                                <th style="padding: 10px 6px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap; font-size: 12px;">Cde achat</th>
+                                <th style="padding: 10px 6px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap; font-size: 12px;">DA</th>
+                                <th style="padding: 10px 6px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap; font-size: 12px;">Ordre</th>
+                                <th style="padding: 10px 6px; border: 1px solid #dee2e6; text-align: left; white-space: nowrap; font-size: 12px;">Opé.</th>
+                                <th style="padding: 10px 6px; border: 1px solid #dee2e6; text-align: right; white-space: nowrap; font-size: 12px;">Montant</th>
+                                <th style="padding: 10px 6px; border: 1px solid #dee2e6; text-align: right; white-space: nowrap; font-size: 12px;">Réel</th>
+                                <th style="padding: 10px 6px; border: 1px solid #dee2e6; text-align: right; white-space: nowrap; font-size: 12px;">Ecart</th>
+                                <th style="padding: 10px 6px; border: 1px solid #dee2e6; text-align: center; white-space: nowrap; font-size: 12px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="daTableBody">
+                            <tr>
+                                <td colspan="10" style="padding: 30px; text-align: center; color: #666;">
+                                    Aucune donnée. Cliquez sur "➕ Ajouter une ligne" pour commencer.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Statistiques sous le tableau -->
+                <div style="display: flex; gap: 15px; margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                    <div style="flex: 1;">
+                        <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Nb sur DA</div>
+                        <div id="statNbDA" style="font-weight: bold; font-size: 18px; color: #333;">0</div>
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Montant Total</div>
+                        <div id="statMontantTotal" style="font-weight: bold; font-size: 18px; color: #28a745;">$0.00</div>
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Nb sur PM03</div>
+                        <div id="statNbPM03" style="font-weight: bold; font-size: 18px; color: #333;">0</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 15px;">
+                    <button onclick="saveDAData()" class="btn" style="background: #28a745; color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        💾 Sauvegarder
+                    </button>
+                    <button onclick="exportDAToExcel()" class="btn" style="background: #17a2b8; color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        📊 Exporter Excel
+                    </button>
+                </div>
+            </div>
+
+            <!-- Section Historique -->
+            <div style="min-width: 350px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; cursor: pointer;" onclick="toggleHistorique()">
+                    <h3 style="margin: 0; color: #667eea;">
+                        📊 Historique
+                    </h3>
+                    <button id="historiqueToggleBtn" style="background: #667eea; color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 18px; font-weight: bold;">
+                        −
+                    </button>
+                </div>
+
+                <div id="historiqueContent">
+                    <!-- Années en onglets -->
+                    <div id="historiqueYears" style="display: flex; gap: 5px; margin-bottom: 15px; flex-wrap: wrap;">
+                        <!-- Les onglets d'années seront ajoutés ici dynamiquement -->
+                    </div>
+
+                    <!-- Contenu de l'historique -->
+                    <div style="max-height: 500px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 8px; padding: 10px; background: #f8f9fa;">
+                        <div id="historiqueTableContainer">
+                            <p style="text-align: center; color: #666; padding: 20px;">
+                                Aucun historique. Cliquez sur "📦 Archiver" pour archiver les données actuelles.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Données du tableau DA (scope global)
+window.daData = window.daData || [];
+window.daHistoriqueByYear = window.daHistoriqueByYear || {}; // { "2023": [...], "2024": [...] }
+window.selectedHistoriqueYear = null;
+window.historiqueVisible = true;
+window.daPrincipale = window.daPrincipale || '';
+
+// Charger les données au démarrage
+window.loadDAData = function() {
+    const socket = window.socket;
+    if (!socket) {
+        console.error('[T25] ❌ Socket non disponible');
+        return;
+    }
+
+    console.log('[T25] 📥 Chargement des données DA depuis le serveur...');
+
+    socket.emit('data:getAll', (response) => {
+        if (response && response.success && response.data) {
+            const data = response.data;
+
+            if (data.t25Data) {
+                window.daData = data.t25Data.daData || [];
+                window.daHistoriqueByYear = data.t25Data.daHistoriqueByYear || {};
+                window.daPrincipale = data.t25Data.daPrincipale || '';
+
+                console.log('[T25] ✅ Données chargées:', {
+                    lignes: window.daData.length,
+                    annees: Object.keys(window.daHistoriqueByYear).length,
+                    daPrincipale: window.daPrincipale
+                });
+
+                // Mettre à jour l'input de DA principale
+                const daPrincipaleInput = document.getElementById('daPrincipaleInput');
+                if (daPrincipaleInput) {
+                    daPrincipaleInput.value = window.daPrincipale;
+                }
+
+                window.renderDATable();
+                window.renderHistoriqueYears();
+                window.updateStatistics();
+            } else {
+                console.warn('[T25] ⚠️ Aucune donnée t25Data reçue');
+            }
+        } else {
+            console.error('[T25] ❌ Erreur lors du chargement:', response ? response.error : 'Pas de réponse');
+        }
+    });
+};
+
+// Rendre le tableau
+window.renderDATable = function() {
+    const tbody = document.getElementById('daTableBody');
+
+    if (!window.daData || window.daData.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="10" style="padding: 30px; text-align: center; color: #666;">
+                    Aucune donnée. Cliquez sur "➕ Ajouter une ligne" pour commencer.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = window.daData.map((row, index) => {
+        const montant = parseFloat(row.montant) || 0;
+        const reel = parseFloat(row.reel) || 0;
+        const ecart = reel - montant;
+        const ecartColor = ecart < 0 ? '#28a745' : (ecart > 0 ? '#dc3545' : '#333');
+
+        return `
+        <tr style="background: ${index % 2 === 0 ? '#f8f9fa' : 'white'};">
+            <td style="padding: 8px 4px; border: 1px solid #dee2e6;">
+                <input type="text" value="${row.fournisseur || ''}"
+                       onchange="updateDACell(${index}, 'fournisseur', this.value)"
+                       style="width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;">
+            </td>
+            <td style="padding: 8px 4px; border: 1px solid #dee2e6;">
+                <textarea value="${row.travaux || ''}"
+                       onchange="updateDACell(${index}, 'travaux', this.value)"
+                       style="width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px; min-height: 40px; resize: vertical;">${row.travaux || ''}</textarea>
+            </td>
+            <td style="padding: 8px 4px; border: 1px solid #dee2e6;">
+                <input type="text" value="${row.cdeAchat || ''}"
+                       onchange="updateDACell(${index}, 'cdeAchat', this.value)"
+                       style="width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;">
+            </td>
+            <td style="padding: 8px 4px; border: 1px solid #dee2e6;">
+                <input type="text" value="${row.da || ''}"
+                       onchange="updateDACell(${index}, 'da', this.value)"
+                       style="width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;">
+            </td>
+            <td style="padding: 8px 4px; border: 1px solid #dee2e6;">
+                <input type="text" value="${row.ordre || ''}"
+                       onchange="updateDACell(${index}, 'ordre', this.value)"
+                       style="width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;">
+            </td>
+            <td style="padding: 8px 4px; border: 1px solid #dee2e6;">
+                <input type="text" value="${row.ope || ''}"
+                       onchange="updateDACell(${index}, 'ope', this.value)"
+                       style="width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;">
+            </td>
+            <td style="padding: 8px 4px; border: 1px solid #dee2e6;">
+                <input type="number" value="${row.montant || ''}" step="0.01"
+                       onchange="updateDACell(${index}, 'montant', this.value); renderDATable(); updateStatistics();"
+                       style="width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 3px; text-align: right; font-size: 12px;">
+            </td>
+            <td style="padding: 8px 4px; border: 1px solid #dee2e6;">
+                <input type="number" value="${row.reel || ''}" step="0.01"
+                       onchange="updateDACell(${index}, 'reel', this.value); renderDATable(); updateStatistics();"
+                       style="width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 3px; text-align: right; font-size: 12px;">
+            </td>
+            <td style="padding: 8px 4px; border: 1px solid #dee2e6; text-align: right; font-weight: bold; color: ${ecartColor}; font-size: 12px;">
+                ${ecart !== 0 ? (ecart > 0 ? '+' : '') + ecart.toFixed(2) : '0.00'}
+            </td>
+            <td style="padding: 8px 4px; border: 1px solid #dee2e6; text-align: center;">
+                <button onclick="deleteDARow(${index})"
+                        style="background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 11px;">
+                    🗑️
+                </button>
+            </td>
+        </tr>
+    `}).join('');
+};
+
+// Mettre à jour les statistiques
+window.updateStatistics = function() {
+    const nbDA = window.daData.length;
+    const montantTotal = window.daData.reduce((sum, row) => sum + (parseFloat(row.montant) || 0), 0);
+
+    document.getElementById('statNbDA').textContent = nbDA;
+    document.getElementById('statMontantTotal').textContent = '$' + montantTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById('statNbPM03').textContent = window.daData.filter(r => r.cdeAchat).length;
+};
+
+// Toggle historique
+window.toggleHistorique = function() {
+    window.historiqueVisible = !window.historiqueVisible;
+    const content = document.getElementById('historiqueContent');
+    const btn = document.getElementById('historiqueToggleBtn');
+
+    if (window.historiqueVisible) {
+        content.style.display = 'block';
+        btn.textContent = '−';
+    } else {
+        content.style.display = 'none';
+        btn.textContent = '+';
+    }
+};
+
+// Archiver les données actuelles
+window.archiveCurrentData = function() {
+    if (!window.daData || window.daData.length === 0) {
+        alert('⚠️ Aucune donnée à archiver.');
+        return;
+    }
+
+    const year = prompt('Entrez l\'année pour archiver ces données:', new Date().getFullYear());
+    if (!year) return;
+
+    if (!window.daHistoriqueByYear[year]) {
+        window.daHistoriqueByYear[year] = [];
+    }
+
+    // Ajouter les données avec timestamp
+    const archiveEntry = {
+        date: new Date().toISOString(),
+        data: JSON.parse(JSON.stringify(window.daData)),
+        totalMontant: window.daData.reduce((sum, row) => sum + (parseFloat(row.montant) || 0), 0),
+        totalReel: window.daData.reduce((sum, row) => sum + (parseFloat(row.reel) || 0), 0)
+    };
+
+    window.daHistoriqueByYear[year].push(archiveEntry);
+
+    alert(`✅ Données archivées pour l'année ${year}!`);
+
+    window.renderHistoriqueYears();
+    window.saveDAData();
+};
+
+// Rendre les onglets d'années
+window.renderHistoriqueYears = function() {
+    const container = document.getElementById('historiqueYears');
+    const years = Object.keys(window.daHistoriqueByYear).sort((a, b) => b - a);
+
+    if (years.length === 0) {
+        container.innerHTML = '<p style="color: #666; font-size: 13px;">Aucune année archivée</p>';
+        document.getElementById('historiqueTableContainer').innerHTML = `
+            <p style="text-align: center; color: #666; padding: 20px; font-size: 13px;">
+                Aucun historique. Cliquez sur "📦 Archiver" pour archiver les données actuelles.
+            </p>
+        `;
+        return;
+    }
+
+    if (!window.selectedHistoriqueYear && years.length > 0) {
+        window.selectedHistoriqueYear = years[0];
+    }
+
+    container.innerHTML = years.map(year => `
+        <button onclick="selectHistoriqueYear('${year}')"
+                style="padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; ${
+                    year === window.selectedHistoriqueYear
+                    ? 'background: linear-gradient(145deg, #667eea, #764ba2); color: white;'
+                    : 'background: #e9ecef; color: #333;'
+                }">
+            ${year}
+        </button>
+    `).join('');
+
+    if (window.selectedHistoriqueYear) {
+        renderHistoriqueForYear(window.selectedHistoriqueYear);
+    }
+};
+
+// Sélectionner une année
+window.selectHistoriqueYear = function(year) {
+    window.selectedHistoriqueYear = year;
+    window.renderHistoriqueYears();
+};
+
+// Rendre l'historique pour une année
+window.renderHistoriqueForYear = function(year) {
+    const container = document.getElementById('historiqueTableContainer');
+    const entries = window.daHistoriqueByYear[year] || [];
+
+    if (entries.length === 0) {
+        container.innerHTML = `<p style="text-align: center; color: #666; padding: 20px; font-size: 13px;">Aucune archive pour ${year}</p>`;
+        return;
+    }
+
+    container.innerHTML = entries.map((entry, index) => `
+        <div style="background: white; padding: 12px; border-radius: 6px; margin-bottom: 10px; border: 1px solid #dee2e6;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <div style="font-size: 12px; color: #666;">
+                    ${new Date(entry.date).toLocaleDateString('fr-CA')}
+                </div>
+                <button onclick="deleteHistoriqueEntry('${year}', ${index})"
+                        style="background: #dc3545; color: white; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 11px;">
+                    🗑️
+                </button>
+            </div>
+            <div style="font-size: 13px; font-weight: bold; color: #333; margin-bottom: 4px;">
+                ${entry.data.length} lignes
+            </div>
+            <div style="font-size: 12px; color: #666;">
+                Montant: <strong style="color: #28a745;">$${entry.totalMontant.toLocaleString('en-US', {minimumFractionDigits: 2})}</strong>
+            </div>
+            <div style="font-size: 12px; color: #666;">
+                Réel: <strong>$${entry.totalReel.toLocaleString('en-US', {minimumFractionDigits: 2})}</strong>
+            </div>
+        </div>
+    `).join('');
+};
+
+// Supprimer une entrée d'historique
+window.deleteHistoriqueEntry = function(year, index) {
+    if (confirm('Supprimer cette archive ?')) {
+        window.daHistoriqueByYear[year].splice(index, 1);
+        if (window.daHistoriqueByYear[year].length === 0) {
+            delete window.daHistoriqueByYear[year];
+        }
+        window.renderHistoriqueYears();
+        window.saveDAData();
+    }
+};
+
+// Ajouter une ligne
+window.addDARow = function() {
+    window.daData.push({
+        fournisseur: '',
+        travaux: '',
+        cdeAchat: '',
+        da: '',
+        ordre: '',
+        ope: '',
+        montant: '',
+        reel: ''
+    });
+    window.renderDATable();
+    window.updateStatistics();
+};
+
+// Mettre à jour une cellule
+window.updateDACell = function(index, field, value) {
+    if (window.daData[index]) {
+        window.daData[index][field] = value;
+    }
+};
+
+// Supprimer une ligne
+window.deleteDARow = function(index) {
+    if (confirm('Supprimer cette ligne ?')) {
+        window.daData.splice(index, 1);
+        window.renderDATable();
+        window.updateStatistics();
+    }
+};
+
+// Mettre à jour la DA principale
+window.updateDAPrincipale = function(value) {
+    window.daPrincipale = value;
+    window.saveDAData();
+};
+
+// Sauvegarder les données
+window.saveDAData = function() {
+    const socket = window.socket;
+    if (!socket) {
+        alert('❌ Erreur: Socket non disponible');
+        return;
+    }
+
+    console.log('[T25] 💾 Sauvegarde des données DA...');
+
+    const allData = {
+        daData: window.daData || [],
+        daHistoriqueByYear: window.daHistoriqueByYear || {},
+        daPrincipale: window.daPrincipale || ''
+    };
+
+    socket.emit('data:updateModule', {
+        moduleName: 't25Data',
+        data: allData,
+        userName: 'User'
+    }, (response) => {
+        if (response && response.success) {
+            console.log('[T25] ✅ Données sauvegardées avec succès');
+            alert('✅ Données sauvegardées!');
+        } else {
+            console.error('[T25] ❌ Erreur lors de la sauvegarde:', response ? response.error : 'Pas de réponse');
+            alert('❌ Erreur lors de la sauvegarde: ' + (response ? response.error : 'Pas de réponse'));
+        }
+    });
+};
+
+// Exporter vers Excel
+window.exportDAToExcel = function() {
+    if (!window.daData || window.daData.length === 0) {
+        alert('Aucune donnée à exporter');
+        return;
+    }
+
+    const headers = ['Fournisseur', 'Travaux', 'Cde achat', 'DA', 'Ordre', 'Opé.', 'Montant', 'Réel', 'Ecart'];
+    const rows = window.daData.map(row => {
+        const montant = parseFloat(row.montant) || 0;
+        const reel = parseFloat(row.reel) || 0;
+        const ecart = reel - montant;
+
+        return [
+            row.fournisseur || '',
+            row.travaux || '',
+            row.cdeAchat || '',
+            row.da || '',
+            row.ordre || '',
+            row.ope || '',
+            montant,
+            reel,
+            ecart
+        ];
+    });
+
+    const csv = [
+        headers.join(','),
+        ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `DA_Acheteur653_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+};
+
+// Écouter les mises à jour en temps réel des autres clients
+if (window.socket) {
+    window.socket.on('data:moduleUpdated', (update) => {
+        if (update.moduleName === 't25Data') {
+            console.log('[T25] 🔄 Mise à jour reçue d\'un autre client par:', update.updatedBy);
+
+            // Recharger les données sans alert pour ne pas interrompre l'utilisateur
+            const socket = window.socket;
+            if (socket) {
+                socket.emit('data:getAll', (response) => {
+                    if (response && response.success && response.data && response.data.t25Data) {
+                        window.daData = response.data.t25Data.daData || [];
+                        window.daHistoriqueByYear = response.data.t25Data.daHistoriqueByYear || {};
+                        window.daPrincipale = response.data.t25Data.daPrincipale || '';
+
+                        // Mettre à jour l'interface si on est sur la page
+                        const page = document.getElementById('detail-t25');
+                        if (page && !page.classList.contains('hidden')) {
+                            const daPrincipaleInput = document.getElementById('daPrincipaleInput');
+                            if (daPrincipaleInput) {
+                                daPrincipaleInput.value = window.daPrincipale;
+                            }
+                            window.renderDATable();
+                            window.renderHistoriqueYears();
+                            window.updateStatistics();
+                        }
+
+                        console.log('[T25] ✅ Interface mise à jour automatiquement');
+                    }
+                });
+            }
+        }
+    });
+}
+
+// Charger les données quand la page est affichée
+document.addEventListener('DOMContentLoaded', () => {
+    const observer = new MutationObserver(() => {
+        const page = document.getElementById('detail-t25');
+        if (page && !page.classList.contains('hidden')) {
+            window.loadDAData();
+        }
+    });
+
+    const page = document.getElementById('detail-t25');
+    if (page) {
+        observer.observe(page, { attributes: true, attributeFilter: ['class'] });
+        if (!page.classList.contains('hidden')) {
+            window.loadDAData();
+        }
+    }
+});
+</script>

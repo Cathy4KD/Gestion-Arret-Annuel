@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-t72</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+<div id="detail-t72" class="page">
+            <div class="summary-container" style="max-width: 100%;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center;">
+                        <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                        <h2 style="margin: 0; color: #333;">ÉTABLIR LE PROCESSUS DE SUIVI DE COÛT</h2>
+                    </div>
+                    <button onclick="generateT72Report()" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        📊 Générer un Rapport
+                    </button>
+                </div>
+
+                <!-- Alert Section pour rappel d'enregistrement -->
+                <div style="background: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px;">
+                    <div style="font-size: 2em;">⚠️</div>
+                    <div>
+                        <strong style="color: #856404;">Important :</strong>
+                        <span style="color: #856404;"> N'oubliez pas d'enregistrer le Budget Total dans les Paramètres de l'Arrêt Annuel (⚙️) pour synchroniser avec le serveur.</span>
+                    </div>
+                </div>
+
+                <!-- Budget Global Section - Vue d'ensemble -->
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin-bottom: 25px; color: white;">
+                    <h3 style="margin: 0 0 20px 0; color: white; font-size: 1.4em; display: flex; align-items: center; gap: 10px;">
+                        <span>💰</span> BILAN BUDGÉTAIRE GLOBAL
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
+                        <!-- Budget Total des Paramètres -->
+                        <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); padding: 20px; border-radius: 10px; border: 2px solid rgba(255, 255, 255, 0.3);">
+                            <div style="font-size: 0.9em; opacity: 0.9; margin-bottom: 8px;">Budget Total Autorisé</div>
+                            <div style="font-size: 2.2em; font-weight: bold;" id="t72GlobalBudgetTotal">0 €</div>
+                            <div style="font-size: 0.8em; opacity: 0.8; margin-top: 5px;">(Paramètres Arrêt)</div>
+                        </div>
+
+                        <!-- Budget Prévisionnel T72 -->
+                        <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); padding: 20px; border-radius: 10px; border: 2px solid rgba(255, 255, 255, 0.3);">
+                            <div style="font-size: 0.9em; opacity: 0.9; margin-bottom: 8px;">Budget Prévisionnel</div>
+                            <div style="font-size: 2.2em; font-weight: bold;" id="t72GlobalBudgetPrevu">0 €</div>
+                            <div style="font-size: 0.8em; opacity: 0.8; margin-top: 5px;">(Planifié T72)</div>
+                        </div>
+
+                        <!-- Dépenses Réelles -->
+                        <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); padding: 20px; border-radius: 10px; border: 2px solid rgba(255, 255, 255, 0.3);">
+                            <div style="font-size: 0.9em; opacity: 0.9; margin-bottom: 8px;">Dépenses Réelles</div>
+                            <div style="font-size: 2.2em; font-weight: bold;" id="t72GlobalActualTotal">0 €</div>
+                            <div style="font-size: 0.8em; opacity: 0.8; margin-top: 5px;" id="t72GlobalPercentage">0% utilisé</div>
+                        </div>
+
+                        <!-- Solde Disponible -->
+                        <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); padding: 20px; border-radius: 10px; border: 2px solid rgba(255, 255, 255, 0.3);">
+                            <div style="font-size: 0.9em; opacity: 0.9; margin-bottom: 8px;">Solde Disponible</div>
+                            <div style="font-size: 2.2em; font-weight: bold;" id="t72GlobalRemaining">0 €</div>
+                            <div style="font-size: 0.8em; opacity: 0.8; margin-top: 5px;" id="t72GlobalStatus">À suivre</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Synthèse par Catégorie -->
+                <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                    <h3 style="margin: 0 0 20px 0; color: #333; font-size: 1.3em;">📊 Synthèse par Catégorie</h3>
+                    <div id="t72SummaryContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                        <!-- Summary cards will be rendered here -->
+                    </div>
+                </div>
+
+                <!-- Section Budget et Dépenses -->
+                <div style="display: grid; grid-template-columns: 400px 1fr; gap: 20px;">
+
+                    <!-- Budget Prévisionnel -->
+                    <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); height: fit-content;">
+                        <h3 style="margin-top: 0; color: #333; border-bottom: 3px solid #667eea; padding-bottom: 10px;">💵 Budget Prévisionnel</h3>
+                        <div style="display: grid; gap: 15px;">
+                            <div>
+                                <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #555;">Externes (€):</label>
+                                <input type="number" id="budgetExterne" class="budget-input" onchange="updateT72Budget()" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 1em;">
+                            </div>
+                            <div>
+                                <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #555;">Pièces (€):</label>
+                                <input type="number" id="budgetPieces" class="budget-input" onchange="updateT72Budget()" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 1em;">
+                            </div>
+                            <div>
+                                <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #555;">Main d'œuvre (€):</label>
+                                <input type="number" id="budgetMainDoeuvre" class="budget-input" onchange="updateT72Budget()" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 1em;">
+                            </div>
+                            <div style="background: #e8eaf6; padding: 15px; border-radius: 8px; margin-top: 10px; border-left: 4px solid #667eea;">
+                                <div style="font-size: 0.9em; color: #555; margin-bottom: 5px;">TOTAL BUDGET PRÉVU</div>
+                                <div style="font-weight: bold; font-size: 1.8em; color: #667eea;">
+                                    <span id="budgetTotal">0.00</span> €
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coûts Réels -->
+                    <div>
+                        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <h4 style="margin: 0; color: #c5554a;">💼 Coûts Réels - Externes</h4>
+                                <button onclick="addT72Actual('externe')" class="add-cost-btn" style="padding: 8px 16px; background: #4a7c59; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">➕ Ajouter</button>
+                            </div>
+                            <div class="summary-table-wrapper" style="max-height: 200px; overflow-y: auto;"><table class="summary-table"><thead><tr><th>Description</th><th>Montant (€)</th><th>Action</th></tr></thead><tbody id="actualExterneTableBody"></tbody></table></div>
+                        </div>
+                        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <h4 style="margin: 0; color: #c5554a;">🔧 Coûts Réels - Pièces</h4>
+                                <button onclick="addT72Actual('pieces')" class="add-cost-btn" style="padding: 8px 16px; background: #4a7c59; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">➕ Ajouter</button>
+                            </div>
+                            <div class="summary-table-wrapper" style="max-height: 200px; overflow-y: auto;"><table class="summary-table"><thead><tr><th>Description</th><th>Montant (€)</th><th>Action</th></tr></thead><tbody id="actualPiecesTableBody"></tbody></table></div>
+                        </div>
+                        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <h4 style="margin: 0; color: #c5554a;">👷 Coûts Réels - Main d'œuvre</h4>
+                                <button onclick="addT72Actual('mainDoeuvre')" class="add-cost-btn" style="padding: 8px 16px; background: #4a7c59; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">➕ Ajouter</button>
+                            </div>
+                            <div class="summary-table-wrapper" style="max-height: 200px; overflow-y: auto;"><table class="summary-table"><thead><tr><th>Description</th><th>Montant (€)</th><th>Action</th></tr></thead><tbody id="actualMainDoeuvreTableBody"></tbody></table></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail-t79</title>
+    <!-- Styles seront chargés par l'app principale -->
+</head>
+<body>
+<div id="detail-t79" class="page">
+            <div class="summary-container" style="max-width: 98%; padding: 20px;">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <button onclick="switchPage('summary')" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 15px;">← Retour</button>
+                    <h2 style="margin: 0; color: #333; flex: 1;">RÉSERVATION ÉQUIPEMENTS EN LOCATION (EX: ROULOTTES, GÉNÉRATRICE, ETC)</h2>
+                </div>
+
+                <!-- Tableau des Équipements en Location -->
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="color: #667eea; margin: 0;">📋 Liste des Équipements Réservés (<span id="equipLocationCount">0</span>)</h3>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="window.equipLocationActions.addEquipement()"
+                                    style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                                ➕ Ajouter Équipement
+                            </button>
+                            <button onclick="window.equipLocationActions.exportToExcel()"
+                                    style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                                📥 Exporter Excel
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; min-width: 200px;">Entrepreneur</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center; min-width: 150px;">Nombre de Roulottes</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; min-width: 180px;">Dimension de la Roulotte</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left; min-width: 250px;">Commentaire</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center; min-width: 100px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="equipLocationTableBody">
+                                <tr>
+                                    <td colspan="5" style="padding: 30px; text-align: center; color: #666;">
+                                        Aucun équipement enregistré. Cliquez sur "Ajouter Équipement" pour commencer.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section Import de Plan -->
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">🖼️ Importer un Plan de Localisation</h3>
+                    <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+                        <input type="file" id="equipLocationPlanUpload" accept="image/*" style="display: none;" onchange="window.equipLocationPlanEditor.loadPlan(event)">
+                        <button onclick="document.getElementById('equipLocationPlanUpload').click()"
+                                style="padding: 10px 20px; background: #4a7c59; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                            📂 Charger un Plan
+                        </button>
+                        <button onclick="window.equipLocationPlanEditor.clearPlan()"
+                                style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                            🗑️ Effacer le Plan
+                        </button>
+                        <button onclick="window.equipLocationPlanEditor.savePlan()"
+                                style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                            💾 Sauvegarder
+                        </button>
+                        <button onclick="window.equipLocationPlanEditor.exportToPDF()"
+                                style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                            📄 Exporter PDF
+                        </button>
+                    </div>
+                    <p style="color: #666; font-size: 0.9em; margin: 0;">Formats supportés: JPG, PNG, GIF. Importez un plan puis utilisez les outils ci-dessous pour localiser vos équipements.</p>
+                </div>
+
+                <!-- Outils de Dessin -->
+                <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">🛠️ Outils de Dessin</h3>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button onclick="window.equipLocationPlanEditor.setTool('select')" id="equip-tool-select"
+                                style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                            ✋ Sélectionner
+                        </button>
+                        <button onclick="window.equipLocationPlanEditor.setTool('rectangle')" id="equip-tool-rectangle"
+                                style="padding: 8px 16px; background: #f0f0f0; color: #333; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                            ⬜ Rectangle
+                        </button>
+                        <button onclick="window.equipLocationPlanEditor.setTool('circle')" id="equip-tool-circle"
+                                style="padding: 8px 16px; background: #f0f0f0; color: #333; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                            ⭕ Cercle
+                        </button>
+                        <button onclick="window.equipLocationPlanEditor.setTool('text')" id="equip-tool-text"
+                                style="padding: 8px 16px; background: #f0f0f0; color: #333; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                            📝 Texte
+                        </button>
+                        <button onclick="window.equipLocationPlanEditor.deleteSelected()"
+                                style="padding: 8px 16px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                            🗑️ Supprimer Sélection
+                        </button>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-left: 20px;">
+                            <label style="font-weight: 600; color: #555;">Couleur:</label>
+                            <input type="color" id="equip-zone-color" value="#ff0000" onchange="window.equipLocationPlanEditor.setColor(this.value)"
+                                   style="width: 50px; height: 35px; border: none; border-radius: 4px; cursor: pointer;">
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <label style="font-weight: 600; color: #555;">Épaisseur:</label>
+                            <input type="range" id="equip-zone-thickness" min="1" max="10" value="3" onchange="window.equipLocationPlanEditor.setThickness(this.value)"
+                                   style="width: 100px;">
+                            <span id="equip-thickness-value" style="font-weight: 600; color: #555;">3</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Canvas de Dessin -->
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                    <div style="position: relative; border: 2px solid #dee2e6; border-radius: 8px; overflow: hidden; background: #f8f9fa;">
+                        <canvas id="equipLocationPlanCanvas" width="1200" height="800" style="display: block; cursor: crosshair; max-width: 100%;"></canvas>
+                        <div id="equipCanvasPlaceholder" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #999; pointer-events: none;">
+                            <div style="font-size: 3em; margin-bottom: 10px;">📋</div>
+                            <div style="font-size: 1.2em; font-weight: 600;">Aucun plan chargé</div>
+                            <div style="font-size: 0.9em; margin-top: 5px;">Cliquez sur "Charger un Plan" pour commencer</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Liste des Zones Dessinées -->
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">📋 Localisations Dessinées (<span id="equipZonesDrawnCount">0</span>)</h3>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left;">Type</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left;">Commentaire</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center;">Couleur</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="equipZonesDrawnTableBody">
+                                <tr>
+                                    <td colspan="4" style="padding: 30px; text-align: center; color: #666;">
+                                        Aucune localisation dessinée. Utilisez les outils ci-dessus pour dessiner sur le plan.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

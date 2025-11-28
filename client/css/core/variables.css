@@ -1,0 +1,168 @@
+/* ==============================================
+   CORE VARIABLES - SINGLE SOURCE OF TRUTH
+   Toutes les variables CSS centralisées
+   ============================================== */
+
+:root {
+  /* ========================================
+     COULEURS PRIMAIRES
+     ======================================== */
+  --color-bg: #ecf0f3;
+  --color-primary: #667eea;
+  --color-primary-dark: #764ba2;
+  --color-primary-light: #8b9ff5;
+
+  --color-success: #4a7c59;
+  --color-success-dark: #3a6449;
+  --color-success-light: #5fa175;
+
+  --color-danger: #c5554a;
+  --color-danger-dark: #a5453a;
+  --color-danger-light: #e57373;
+
+  --color-warning: #ffc107;
+  --color-warning-dark: #e0a800;
+  --color-warning-light: #ffb300;
+
+  --color-info: #43e97b;
+  --color-info-dark: #38d66b;
+  --color-info-light: #38d9a9;
+
+  /* ========================================
+     COULEURS BACKGROUNDS
+     ======================================== */
+  --bg-primary: #ecf0f3;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+
+  /* ========================================
+     COULEURS NEUMORPHIQUES
+     ======================================== */
+  --color-shadow-light: rgba(255, 255, 255, 0.9);
+  --color-shadow-dark: rgba(163, 177, 198, 0.4);
+
+  /* ========================================
+     COULEURS TEXTE
+     ======================================== */
+  --text-primary: #000000;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --color-text-primary: #2d3748;
+  --color-text-secondary: #4a5568;
+  --color-text-muted: #718096;
+  --color-text-disabled: #a0aec0;
+
+  /* ========================================
+     BORDURES
+     ======================================== */
+  --border-color: #e0e0e0;
+
+  /* ========================================
+     OMBRES NEUMORPHIQUES
+     ======================================== */
+  --shadow-neumorphic: 3px 3px 8px rgba(163, 177, 198, 0.4), -3px -3px 8px rgba(255, 255, 255, 0.9);
+  --shadow-neumorphic-inset: inset 2px 2px 4px rgba(163, 177, 198, 0.3), inset -2px -2px 4px rgba(255, 255, 255, 0.6);
+  --shadow-neumorphic-hover: 5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 1);
+
+  /* ========================================
+     OMBRES CLASSIQUES
+     ======================================== */
+  --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.15);
+
+  /* ========================================
+     OMBRES COLORÉES
+     ======================================== */
+  --shadow-gradient: 0 8px 24px rgba(102, 126, 234, 0.2);
+  --shadow-gradient-hover: 0 12px 32px rgba(102, 126, 234, 0.3);
+
+  /* ========================================
+     ESPACEMENTS
+     ======================================== */
+  --space-xs: 4px;     /* 0.25rem */
+  --space-sm: 8px;     /* 0.5rem */
+  --space-md: 16px;    /* 1rem */
+  --space-lg: 24px;    /* 1.5rem */
+  --space-xl: 32px;    /* 2rem */
+  --space-2xl: 48px;   /* 3rem */
+  --space-3xl: 64px;   /* 4rem */
+
+  /* ========================================
+     BORDER RADIUS
+     ======================================== */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-full: 9999px;
+
+  /* ========================================
+     TRANSITIONS
+     ======================================== */
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base-ease: 0.3s ease;
+
+  /* ========================================
+     TYPOGRAPHIE
+     ======================================== */
+  --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  --font-family-heading: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-family-mono: 'Courier New', Courier, monospace;
+
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.85rem;    /* 13.6px */
+  --font-size-base: 0.95rem;  /* 15.2px */
+  --font-size-md: 1rem;       /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 1.875rem;  /* 30px */
+  --font-size-4xl: 2.25rem;   /* 36px */
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* ========================================
+     LINE HEIGHT
+     ======================================== */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.6;
+  --line-height-relaxed: 1.7;
+
+  /* ========================================
+     LETTER SPACING
+     ======================================== */
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+
+  /* ========================================
+     Z-INDEX
+     ======================================== */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  --z-notification: 1080;
+
+  /* ========================================
+     BREAKPOINTS (pour référence JS)
+     ======================================== */
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-2xl: 1400px;
+}

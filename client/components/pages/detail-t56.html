@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inspections NDT</title>
+</head>
+<body>
+<div id="detail-t56" class="page">
+    <div class="summary-container" style="max-width: 95%;">
+        <!-- Bouton Retour -->
+        <div style="display: flex; align-items: center; margin-bottom: 10px;">
+            <button onclick="switchPage('summary')"
+                    style="padding: 6px 14px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-right: 10px; font-size: 0.9em;">
+                Retour
+            </button>
+            <h2 style="margin: 0; color: #333; font-size: 1.3em;">ETABLIR LA LISTE DES INSPECTIONS NDT</h2>
+        </div>
+
+        <!-- Tableau des inspections NDT -->
+        <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <div style="margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; color: #333; font-size: 1.05em;">
+                    Inspections NDT (Post.trav.oper. = MECEXT15)
+                    <span id="ndtCount" style="color: #667eea; font-weight: bold;"></span>
+                </h3>
+                <button onclick="window.ndtActions?.exportToExcel()"
+                        style="padding: 6px 14px; background: #217346; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.9em;">
+                    Exporter Excel
+                </button>
+            </div>
+
+            <!-- Tableau -->
+            <div style="overflow-x: auto; max-height: 600px; overflow-y: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.85em;">
+                    <thead style="position: sticky; top: 0; background: white; z-index: 10;">
+                        <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                            <th style="padding: 6px 8px; border: 1px solid #dee2e6; text-align: left;">Ordre</th>
+                            <th style="padding: 6px 8px; border: 1px solid #dee2e6; text-align: left; min-width: 300px;">Design. Oper.</th>
+                            <th style="padding: 6px 8px; border: 1px solid #dee2e6; text-align: left;">Poste technique</th>
+                            <th style="padding: 6px 8px; border: 1px solid #dee2e6; text-align: left; min-width: 250px;">Commentaire</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ndtTableBody">
+                        <tr>
+                            <td colspan="4" style="padding: 20px; text-align: center; color: #666;">
+                                Chargement des donnees...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

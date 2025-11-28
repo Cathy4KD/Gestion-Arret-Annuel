@@ -1,0 +1,236 @@
+<div id="detail-notes-prochain-arret" class="page">
+    <div class="card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button onclick="window.switchToPage('post_mortem')" class="btn" style="background: linear-gradient(145deg, #667eea, #764ba2); color: white; padding: 10px 20px;">
+                    ← Retour
+                </button>
+                <h2 style="margin: 0; color: #333;">📝 Notes et Commentaires prochain Arrêt annuel</h2>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="addNotesRow()" class="btn" style="background: #28a745; color: white; padding: 10px 20px;">
+                    ➕ Ajouter une ligne
+                </button>
+                <button onclick="saveNotesData()" class="btn" style="background: #667eea; color: white; padding: 10px 20px;">
+                    💾 Sauvegarder
+                </button>
+                <button onclick="exportNotesToExcel()" class="btn" style="background: #17a2b8; color: white; padding: 10px 20px;">
+                    📊 Exporter Excel
+                </button>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div style="background: #e3f2fd; padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #2196f3;">
+            <p style="margin: 0; color: #1565c0; line-height: 1.6;">
+                ℹ️ Cette section permet de documenter les leçons apprises et les recommandations pour le prochain arrêt annuel.
+            </p>
+        </div>
+
+        <!-- Tableau des notes -->
+        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <h3 style="margin: 0 0 15px 0; color: #667eea;">
+                📋 Actions et Recommandations
+            </h3>
+
+            <div style="overflow-x: auto;">
+                <table id="notesTable" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: linear-gradient(145deg, #667eea, #764ba2); color: white;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 25%;">Action</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 20%;">Document</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6; width: 40%;">Commentaires</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 10%;">Statut</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6; width: 5%;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="notesTableBody">
+                        <tr>
+                            <td colspan="5" style="padding: 30px; text-align: center; color: #666;">
+                                Aucune donnée. Cliquez sur "➕ Ajouter une ligne" pour commencer.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Données des notes (scope global)
+window.notesProchainArret = window.notesProchainArret || [];
+
+// Charger les données au démarrage
+window.loadNotesData = function() {
+    const socket = window.socket;
+    if (!socket) {
+        console.error('[NOTES] ❌ Socket non disponible');
+        return;
+    }
+
+    console.log('[NOTES] 📥 Chargement des données notes depuis le serveur...');
+
+    socket.emit('data:getAll', (response) => {
+        if (response && response.success && response.data) {
+            const data = response.data;
+
+            if (data.notesProchainArret) {
+                window.notesProchainArret = data.notesProchainArret || [];
+                console.log('[NOTES] ✅ Données chargées:', window.notesProchainArret.length, 'lignes');
+                window.renderNotesTable();
+            } else {
+                console.warn('[NOTES] ⚠️ Aucune donnée notesProchainArret reçue');
+            }
+        } else {
+            console.error('[NOTES] ❌ Erreur lors du chargement:', response ? response.error : 'Pas de réponse');
+        }
+    });
+};
+
+// Rendre le tableau
+window.renderNotesTable = function() {
+    const tbody = document.getElementById('notesTableBody');
+
+    if (!window.notesProchainArret || window.notesProchainArret.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="5" style="padding: 30px; text-align: center; color: #666;">
+                    Aucune donnée. Cliquez sur "➕ Ajouter une ligne" pour commencer.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = window.notesProchainArret.map((row, index) => {
+        const statusColor = row.statut === 'Complété' ? '#28a745' :
+                           row.statut === 'En cours' ? '#ffc107' : '#dc3545';
+
+        return `
+        <tr style="background: ${index % 2 === 0 ? '#f8f9fa' : 'white'};">
+            <td style="padding: 8px; border: 1px solid #dee2e6;">
+                <input type="text" value="${row.action || ''}"
+                       onchange="updateNotesCell(${index}, 'action', this.value)"
+                       style="width: 100%; padding: 6px; border: 1px solid #ddd; border-radius: 4px;">
+            </td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">
+                <input type="text" value="${row.document || ''}"
+                       onchange="updateNotesCell(${index}, 'document', this.value)"
+                       style="width: 100%; padding: 6px; border: 1px solid #ddd; border-radius: 4px;">
+            </td>
+            <td style="padding: 8px; border: 1px solid #dee2e6;">
+                <textarea onchange="updateNotesCell(${index}, 'commentaires', this.value)"
+                       style="width: 100%; padding: 6px; border: 1px solid #ddd; border-radius: 4px; min-height: 60px; resize: vertical;">${row.commentaires || ''}</textarea>
+            </td>
+            <td style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">
+                <select onchange="updateNotesCell(${index}, 'statut', this.value)"
+                        style="width: 100%; padding: 6px; border: 1px solid #ddd; border-radius: 4px; background: ${statusColor}; color: white; font-weight: bold;">
+                    <option value="À faire" ${row.statut === 'À faire' ? 'selected' : ''}>À faire</option>
+                    <option value="En cours" ${row.statut === 'En cours' ? 'selected' : ''}>En cours</option>
+                    <option value="Complété" ${row.statut === 'Complété' ? 'selected' : ''}>Complété</option>
+                </select>
+            </td>
+            <td style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">
+                <button onclick="deleteNotesRow(${index})"
+                        style="background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                    🗑️
+                </button>
+            </td>
+        </tr>
+    `}).join('');
+};
+
+// Ajouter une ligne
+window.addNotesRow = function() {
+    window.notesProchainArret.push({
+        action: '',
+        document: '',
+        commentaires: '',
+        statut: 'À faire'
+    });
+    window.renderNotesTable();
+};
+
+// Mettre à jour une cellule
+window.updateNotesCell = function(index, field, value) {
+    if (window.notesProchainArret[index]) {
+        window.notesProchainArret[index][field] = value;
+        if (field === 'statut') {
+            window.renderNotesTable();
+        }
+    }
+};
+
+// Supprimer une ligne
+window.deleteNotesRow = function(index) {
+    if (confirm('Supprimer cette ligne ?')) {
+        window.notesProchainArret.splice(index, 1);
+        window.renderNotesTable();
+    }
+};
+
+// Sauvegarder les données
+window.saveNotesData = function() {
+    const socket = window.socket;
+    if (!socket) {
+        alert('❌ Erreur: Socket non disponible');
+        return;
+    }
+
+    console.log('[NOTES] 💾 Sauvegarde des données notes...');
+
+    socket.emit('data:updateModule', {
+        moduleName: 'notesProchainArret',
+        data: window.notesProchainArret || [],
+        userName: 'User'
+    }, (response) => {
+        if (response && response.success) {
+            console.log('[NOTES] ✅ Données sauvegardées avec succès');
+            alert('✅ Données sauvegardées!');
+        } else {
+            console.error('[NOTES] ❌ Erreur lors de la sauvegarde:', response ? response.error : 'Pas de réponse');
+            alert('❌ Erreur lors de la sauvegarde: ' + (response ? response.error : 'Pas de réponse'));
+        }
+    });
+};
+
+// Exporter vers Excel
+window.exportNotesToExcel = function() {
+    if (!window.notesProchainArret || window.notesProchainArret.length === 0) {
+        alert('Aucune donnée à exporter');
+        return;
+    }
+
+    const headers = ['Action', 'Document', 'Commentaires', 'Statut'];
+    const rows = window.notesProchainArret.map(row => [
+        row.action || '',
+        row.document || '',
+        row.commentaires || '',
+        row.statut || ''
+    ]);
+
+    const csv = [
+        headers.join(','),
+        ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `Notes_Prochain_Arret_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+};
+
+// Écouter les mises à jour en temps réel
+if (window.socket) {
+    window.socket.on('data:moduleUpdated', (update) => {
+        if (update.moduleName === 'notesProchainArret') {
+            console.log('[NOTES] 🔄 Mise à jour reçue d\'un autre client');
+            window.loadNotesData();
+        }
+    });
+}
+
+// Le chargement initial est géré par page-loader.js qui appelle window.loadNotesData()
+</script>

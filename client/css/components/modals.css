@@ -1,0 +1,295 @@
+/* ==============================================
+   MODALS & POPUPS STYLES
+   ============================================== */
+
+/* Modal Overlay */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(163, 177, 198, 0.3);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+/* Modal Content */
+.modal-content {
+    background: #ecf0f3;
+    border-radius: 25px;
+    padding: 40px;
+    max-width: 800px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 15px 15px 30px rgba(163, 177, 198, 0.6),
+                -15px -15px 30px rgba(255, 255, 255, 0.5);
+    border: none;
+}
+
+/* Modal Sizes */
+.modal-small {
+    max-width: 400px;
+}
+
+.modal-medium {
+    max-width: 800px;
+}
+
+.modal-large {
+    max-width: 1000px;
+}
+
+.modal-xlarge {
+    max-width: 1400px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: none;
+}
+
+.modal-header h3 {
+    color: #000000;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.modal-body {
+    color: #000000;
+    line-height: 1.6;
+}
+
+.modal-footer {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.modal-close {
+    background: #ecf0f3;
+    color: #c5554a;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    transition: all 0.3s ease;
+    box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.5),
+                -5px -5px 10px rgba(255, 255, 255, 0.7);
+}
+
+.modal-close:hover {
+    box-shadow: inset 2px 2px 5px rgba(163, 177, 198, 0.5),
+                inset -2px -2px 5px rgba(255, 255, 255, 0.5);
+}
+
+/* Checkbox List */
+.checkbox-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    background: #ecf0f3;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.5),
+                -5px -5px 10px rgba(255, 255, 255, 0.7);
+}
+
+.checkbox-item:hover {
+    box-shadow: 3px 3px 6px rgba(163, 177, 198, 0.5),
+                -3px -3px 6px rgba(255, 255, 255, 0.7);
+}
+
+.checkbox-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    cursor: pointer;
+}
+
+.checkbox-item label {
+    flex: 1;
+    cursor: pointer;
+    font-size: 14px;
+    color: #000000;
+}
+
+/* Modal Buttons */
+.modal-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.modal-btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.modal-btn-primary {
+    background: linear-gradient(145deg, #4a7c59, #217346);
+    color: white;
+    box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.5),
+                -5px -5px 10px rgba(255, 255, 255, 0.3);
+}
+
+.modal-btn-primary:hover {
+    box-shadow: 3px 3px 6px rgba(163, 177, 198, 0.5),
+                -3px -3px 6px rgba(255, 255, 255, 0.3);
+}
+
+.modal-btn-primary:active {
+    box-shadow: inset 2px 2px 5px rgba(163, 177, 198, 0.5),
+                inset -2px -2px 5px rgba(255, 255, 255, 0.2);
+}
+
+.modal-btn-secondary {
+    background: #ecf0f3;
+    color: #000000;
+    box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.5),
+                -5px -5px 10px rgba(255, 255, 255, 0.7);
+}
+
+.modal-btn-secondary:hover {
+    box-shadow: 3px 3px 6px rgba(163, 177, 198, 0.5),
+                -3px -3px 6px rgba(255, 255, 255, 0.7);
+}
+
+.modal-btn-danger {
+    background: linear-gradient(145deg, #c5554a, #a83f35);
+    color: white;
+    box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.5),
+                -5px -5px 10px rgba(255, 255, 255, 0.3);
+}
+
+.modal-btn-danger:hover {
+    box-shadow: 3px 3px 6px rgba(163, 177, 198, 0.5),
+                -3px -3px 6px rgba(255, 255, 255, 0.3);
+}
+
+.modal-btn-danger:active {
+    box-shadow: inset 2px 2px 5px rgba(163, 177, 198, 0.5),
+                inset -2px -2px 5px rgba(255, 255, 255, 0.2);
+}
+
+/* Task List in Modal */
+.tasks-list-container {
+    display: grid;
+    gap: 15px;
+}
+
+.task-item {
+    background: #ecf0f3;
+    border-left: none;
+    padding: 18px;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.5),
+                -5px -5px 10px rgba(255, 255, 255, 0.7);
+}
+
+.task-item:hover {
+    box-shadow: 3px 3px 6px rgba(163, 177, 198, 0.5),
+                -3px -3px 6px rgba(255, 255, 255, 0.7);
+}
+
+.task-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.task-item-title {
+    font-weight: 600;
+    color: #000000;
+    font-size: 15px;
+}
+
+.task-item-phase {
+    background: linear-gradient(145deg, #4a7c59, #217346);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 12px;
+    font-size: 12px;
+    box-shadow: 3px 3px 6px rgba(163, 177, 198, 0.4);
+}
+
+.task-item-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.task-item-detail {
+    font-size: 13px;
+    color: #000000;
+}
+
+.task-item-detail strong {
+    color: #000000;
+}
+
+/* Important Task Clickable */
+.important-task-clickable {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 10px;
+    margin: -10px;
+    border-radius: 8px;
+}
+
+.important-task-clickable:hover {
+    background: rgba(44, 62, 80, 0.04);
+    transform: scale(1.01);
+}
+
+.late-task-clickable {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.late-task-clickable:hover {
+    background: rgba(255, 193, 7, 0.1) !important;
+    transform: translateX(3px);
+}
